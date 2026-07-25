@@ -2,7 +2,7 @@
 
 ```text
 Canonical MKO JSON
-├── Vite + KaTeX 人類閱讀介面
+├── Node + 原生 MathML 人類閱讀介面
 ├── MCP Server AI 介面
 ├── JSONL 批次匯出
 ├── Python 計算伴隨
