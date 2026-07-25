@@ -82,19 +82,20 @@ function renderObjectList(currentId, query = '') {
   </button>`).join('')
 }
 
-function bindObjectNavigation() {
+function bindObjectLinks() {
   document.querySelectorAll('[data-object-id]').forEach(button => {
     button.addEventListener('click', () => selectObject(button.dataset.objectId))
   })
+}
+
+function bindObjectNavigation() {
+  bindObjectLinks()
   const search = $('#object-search')
-  if (search) {
-    search.addEventListener('input', () => {
-      $('#object-list').innerHTML = renderObjectList(state.currentId, search.value)
-      bindObjectNavigation()
-      search.focus()
-      search.setSelectionRange(search.value.length, search.value.length)
-    })
-  }
+  if (!search) return
+  search.addEventListener('input', () => {
+    $('#object-list').innerHTML = renderObjectList(state.currentId, search.value)
+    bindObjectLinks()
+  })
 }
 
 function renderObject(mko) {
