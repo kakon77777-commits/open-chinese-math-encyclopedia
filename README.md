@@ -4,7 +4,7 @@
 
 ```text
 MKO JSON
-→ KaTeX 人類介面
+→ 原生 MathML 人類介面
 → MCP AI 介面
 → Python 計算伴隨
 → FELRA 專案
@@ -72,7 +72,7 @@ Claude Desktop 類設定：
   "mcpServers": {
     "ocme": {
       "command": "node",
-      "args": ["/absolute/path/to/ocme-mvp/mcp-server.js"]
+      "args": ["/absolute/path/to/open-chinese-math-encyclopedia/mcp-server.js"]
     }
   }
 }
