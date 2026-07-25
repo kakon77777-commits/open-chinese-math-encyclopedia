@@ -3,22 +3,49 @@ const escapeHtml = (value = '') => String(value)
   .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
   .replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;')
 
-async function loadObject() {
-  const indexResponse = await fetch('/data/index.json')
-  if (!indexResponse.ok) throw new Error('無法讀取數學物件索引')
-  const index = await indexResponse.json()
-  const first = index.objects[0]
-  const objectResponse = await fetch(first.path)
-  if (!objectResponse.ok) throw new Error('無法讀取數學知識物件')
-  return objectResponse.json()
+const state = {
+  index: null,
+  currentId: null,
+  cache: new Map(),
+}
+
+async function loadIndex() {
+  const response = await fetch('/data/index.json')
+  if (!response.ok) throw new Error('無法讀取數學物件索引')
+  return response.json()
+}
+
+async function loadObject(id) {
+  if (state.cache.has(id)) return state.cache.get(id)
+  const entry = state.index.objects.find(object => object.id === id)
+  if (!entry) throw new Error(`未知數學物件：${id}`)
+  const response = await fetch(entry.path)
+  if (!response.ok) throw new Error(`無法讀取數學知識物件：${id}`)
+  const object = await response.json()
+  state.cache.set(id, object)
+  return object
 }
 
 function statusLabel(value) {
   const labels = {
     human_proof_available: '人工證明可用',
+    not_applicable: '不適用',
     not_formalized: '尚未形式化',
     finite_cases_passed: '有限案例通過',
+    not_run: '尚未執行',
     reference_only: '僅供參考',
+  }
+  return labels[value] || value || '未標記'
+}
+
+function typeLabel(value) {
+  const labels = {
+    definition: '定義',
+    theorem: '定理',
+    concept: '概念',
+    lemma: '引理',
+    proposition: '命題',
+    conjecture: '猜想',
   }
   return labels[value] || value
 }
@@ -27,15 +54,47 @@ function renderFormula(formula) {
   return `<div class="mathml" aria-label="${escapeHtml(formula.tex)}">${formula.mathml}</div><code class="tex-source">${escapeHtml(formula.tex)}</code>`
 }
 
-function renderCode(companion) {
-  return `<div class="notice warning"><strong>非同一性聲明：</strong>${escapeHtml(companion.warning)}</div>
+function renderCompanions(companions = []) {
+  if (!companions.length) return '<div class="notice">此物件目前沒有計算伴隨。</div>'
+  return companions.map(companion => `<section class="companion-card">
+    <h3>${escapeHtml(companion.language)} · ${escapeHtml(companion.id)}</h3>
+    <div class="notice warning"><strong>非同一性聲明：</strong>${escapeHtml(companion.warning)}</div>
     <pre><code>${escapeHtml(companion.source)}</code></pre>
     <dl class="definition-list">
       <div><dt>關係</dt><dd>${escapeHtml(companion.relation)}</dd></div>
-      <div><dt>保存</dt><dd>${companion.non_identity.preserved.map(escapeHtml).join('、')}</dd></div>
-      <div><dt>近似</dt><dd>${companion.non_identity.approximated.map(escapeHtml).join('、') || '無'}</dd></div>
-      <div><dt>遺漏</dt><dd>${companion.non_identity.omitted.map(escapeHtml).join('、')}</dd></div>
-    </dl>`
+      <div><dt>保存</dt><dd>${(companion.non_identity?.preserved || []).map(escapeHtml).join('、') || '未標記'}</dd></div>
+      <div><dt>近似</dt><dd>${(companion.non_identity?.approximated || []).map(escapeHtml).join('、') || '無'}</dd></div>
+      <div><dt>遺漏</dt><dd>${(companion.non_identity?.omitted || []).map(escapeHtml).join('、') || '無'}</dd></div>
+    </dl>
+  </section>`).join('')
+}
+
+function renderObjectList(currentId, query = '') {
+  const q = query.trim().toLowerCase()
+  const entries = state.index.objects.filter(entry => {
+    const haystack = `${entry.id} ${entry.title} ${entry.type} ${(entry.tags || []).join(' ')}`.toLowerCase()
+    return !q || haystack.includes(q)
+  })
+  if (!entries.length) return '<p class="empty">找不到符合的數學物件。</p>'
+  return entries.map(entry => `<button class="object-link ${entry.id === currentId ? 'active' : ''}" data-object-id="${escapeHtml(entry.id)}">
+    <span>${escapeHtml(entry.title)}</span>
+    <small>${escapeHtml(typeLabel(entry.type))}</small>
+  </button>`).join('')
+}
+
+function bindObjectNavigation() {
+  document.querySelectorAll('[data-object-id]').forEach(button => {
+    button.addEventListener('click', () => selectObject(button.dataset.objectId))
+  })
+  const search = $('#object-search')
+  if (search) {
+    search.addEventListener('input', () => {
+      $('#object-list').innerHTML = renderObjectList(state.currentId, search.value)
+      bindObjectNavigation()
+      search.focus()
+      search.setSelectionRange(search.value.length, search.value.length)
+    })
+  }
 }
 
 function renderObject(mko) {
@@ -43,22 +102,34 @@ function renderObject(mko) {
     ['math', '數學'], ['explain', '解釋'], ['code', '程式碼'],
     ['evidence', '計算證據'], ['formal', '形式化'], ['ai', 'AI 結構']
   ]
-  const symbols = mko.symbols.map(symbol => `
+  const symbols = (mko.symbols || []).map(symbol => `
     <tr><td><code>${escapeHtml(symbol.token)}</code></td><td>${escapeHtml(symbol.role_zh)}</td><td>${escapeHtml(symbol.scope)}</td></tr>`).join('')
-  const deps = mko.dependencies.map(dep => `<li><strong>${escapeHtml(dep.title_zh)}</strong>：${escapeHtml(dep.reason_zh)}</li>`).join('')
-  const tests = mko.verification.evidence.tests.map(test => `
+  const deps = (mko.dependencies || []).length
+    ? mko.dependencies.map(dep => `<li><button class="dep-link" data-object-id="${escapeHtml(dep.id)}"><strong>${escapeHtml(dep.title_zh)}</strong></button><span>：${escapeHtml(dep.reason_zh)}</span></li>`).join('')
+    : '<li class="empty">此物件沒有已宣告的前置依賴。</li>'
+  const tests = mko.verification?.evidence?.tests || []
+  const testRows = tests.map(test => `
     <tr><td>${escapeHtml(test.name_zh)}</td><td>${escapeHtml(test.method)}</td><td>${escapeHtml(test.result)}</td></tr>`).join('')
+  const proofs = mko.proofs || []
+  const proofStatus = proofs[0]?.status ?? 'not_applicable'
+  const proofBlock = proofs.length
+    ? `<h3>人工證明摘要</h3>${proofs.map(proof => `<p>${escapeHtml(proof.summary_zh)}</p>`).join('')}`
+    : `<div class="notice">此物件類型為「${escapeHtml(typeLabel(mko.type))}」，目前沒有獨立證明物件。</div>`
+  const formalTargets = mko.formalization?.target_systems || []
+  const statementHeading = mko.type === 'definition' ? '定義敘述' : mko.type === 'theorem' ? '定理敘述' : '數學敘述'
 
+  document.title = `${mko.titles['zh-Hant']} · 開源中文數學百科`
   $('#app').innerHTML = `
     <header class="hero">
       <div class="hero-inner">
-        <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.1</p>
+        <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.2</p>
+        <div class="type-chip">${escapeHtml(typeLabel(mko.type))}</div>
         <h1>${escapeHtml(mko.titles['zh-Hant'])}</h1>
-        <p class="lead">${escapeHtml(mko.summary['zh-Hant'])}</p>
+        <p class="lead">${escapeHtml(mko.summary?.['zh-Hant'] || '')}</p>
         <div class="status-row">
-          <span>${statusLabel(mko.proofs[0].status)}</span>
-          <span>${statusLabel(mko.verification.computational_status)}</span>
-          <span>${statusLabel(mko.formalization.status)}</span>
+          <span>${statusLabel(proofStatus)}</span>
+          <span>${statusLabel(mko.verification?.computational_status)}</span>
+          <span>${statusLabel(mko.formalization?.status)}</span>
           <span>版本 ${escapeHtml(mko.version)}</span>
         </div>
       </div>
@@ -67,12 +138,15 @@ function renderObject(mko) {
       <aside class="toc">
         <div class="brand">數學知識物件</div>
         <code>${escapeHtml(mko.id)}</code>
+        <label class="search-label" for="object-search">物件目錄</label>
+        <input id="object-search" class="object-search" type="search" placeholder="搜尋標題、類型或標籤" autocomplete="off" />
+        <div id="object-list" class="object-list">${renderObjectList(mko.id)}</div>
         <hr />
         <strong>前置知識</strong>
-        <ul>${deps}</ul>
+        <ul class="dependency-list">${deps}</ul>
         <hr />
         <strong>來源</strong>
-        <p>${escapeHtml(mko.provenance.note_zh)}</p>
+        <p>${escapeHtml(mko.provenance?.note_zh || '未標記')}</p>
       </aside>
       <article class="article">
         <nav class="tabs" aria-label="知識層切換">
@@ -80,50 +154,49 @@ function renderObject(mko) {
         </nav>
 
         <section class="panel active" data-panel="math">
-          <h2>定理敘述</h2>
+          <h2>${statementHeading}</h2>
           <p>${escapeHtml(mko.statement['zh-Hant'])}</p>
           <div class="formula-card">${renderFormula(mko.formula)}</div>
           <h3>成立條件</h3>
-          <ul>${mko.assumptions.map(x => `<li>${escapeHtml(x['zh-Hant'])}</li>`).join('')}</ul>
+          <ul>${(mko.assumptions || []).map(x => `<li>${escapeHtml(x['zh-Hant'])}</li>`).join('') || '<li>未宣告額外條件。</li>'}</ul>
           <h3>符號表</h3>
           <table><thead><tr><th>符號</th><th>角色</th><th>作用域</th></tr></thead><tbody>${symbols}</tbody></table>
-          <h3>人工證明摘要</h3>
-          <p>${escapeHtml(mko.proofs[0].summary_zh)}</p>
+          ${proofBlock}
         </section>
 
         <section class="panel" data-panel="explain">
           <h2>直觀解釋</h2>
-          ${mko.explanation.paragraphs_zh.map(p => `<p>${escapeHtml(p)}</p>`).join('')}
-          <div class="notice"><strong>常見誤解：</strong>${escapeHtml(mko.explanation.common_misconception_zh)}</div>
+          ${(mko.explanation?.paragraphs_zh || []).map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+          ${mko.explanation?.common_misconception_zh ? `<div class="notice"><strong>常見誤解：</strong>${escapeHtml(mko.explanation.common_misconception_zh)}</div>` : ''}
         </section>
 
         <section class="panel" data-panel="code">
-          <h2>Python 計算伴隨</h2>
-          ${renderCode(mko.computational_companions[0])}
+          <h2>計算伴隨</h2>
+          ${renderCompanions(mko.computational_companions)}
         </section>
 
         <section class="panel" data-panel="evidence">
-          <h2>有限計算證據</h2>
-          <div class="notice warning"><strong>重要：</strong>${escapeHtml(mko.verification.warning_zh)}</div>
-          <table><thead><tr><th>檢查</th><th>方法</th><th>結果</th></tr></thead><tbody>${tests}</tbody></table>
+          <h2>計算證據</h2>
+          <div class="notice warning"><strong>重要：</strong>${escapeHtml(mko.verification?.warning_zh || '尚無驗證聲明。')}</div>
+          ${tests.length ? `<table><thead><tr><th>檢查</th><th>方法</th><th>結果</th></tr></thead><tbody>${testRows}</tbody></table>` : '<p>目前沒有已登錄的計算測試。</p>'}
           <h3>重播</h3>
-          <pre><code>npm run verify:python\nnpm run verify:felra</code></pre>
-          <p>FELRA 專案：<code>${escapeHtml(mko.verification.felra_project)}</code></p>
+          <pre><code>npm run validate\nnpm test\nnpm run export</code></pre>
+          ${mko.verification?.felra_project ? `<p>FELRA 專案：<code>${escapeHtml(mko.verification.felra_project)}</code></p>` : ''}
         </section>
 
         <section class="panel" data-panel="formal">
           <h2>形式化狀態</h2>
           <dl class="definition-list">
-            <div><dt>狀態</dt><dd>${statusLabel(mko.formalization.status)}</dd></div>
-            <div><dt>目標系統</dt><dd>${escapeHtml(mko.formalization.target_systems.join('、'))}</dd></div>
-            <div><dt>待辦</dt><dd>${escapeHtml(mko.formalization.next_obligation_zh)}</dd></div>
+            <div><dt>狀態</dt><dd>${statusLabel(mko.formalization?.status)}</dd></div>
+            <div><dt>目標系統</dt><dd>${escapeHtml(formalTargets.join('、') || '尚未指定')}</dd></div>
+            <div><dt>待辦</dt><dd>${escapeHtml(mko.formalization?.next_obligation_zh || '尚未指定')}</dd></div>
           </dl>
-          <p>人工證明存在，不代表本專案已完成機器可檢查的形式證明。</p>
+          <p>人工說明、有限計算與形式證明是不同狀態，介面不將它們合併成單一「已驗證」。</p>
         </section>
 
         <section class="panel" data-panel="ai">
           <h2>AI 原始結構</h2>
-          <p>下列資料與 MCP 回傳使用同一份 Canonical MKO。</p>
+          <p>下列資料與 MCP 回傳使用同一份 Canonical MKO。公式不需從 SVG 或頁面截圖重新辨識。</p>
           <pre><code>${escapeHtml(JSON.stringify(mko, null, 2))}</code></pre>
         </section>
       </article>
@@ -138,8 +211,37 @@ function renderObject(mko) {
       $(`[data-panel="${button.dataset.tab}"]`).classList.add('active')
     })
   })
+  bindObjectNavigation()
 }
 
-loadObject().then(renderObject).catch(error => {
-  $('#app').innerHTML = `<main class="error"><h1>載入失敗</h1><pre>${escapeHtml(error.stack || error.message)}</pre></main>`
+async function selectObject(id, { replace = false } = {}) {
+  const object = await loadObject(id)
+  state.currentId = id
+  const url = new URL(window.location.href)
+  url.searchParams.set('id', id)
+  window.history[replace ? 'replaceState' : 'pushState']({ id }, '', url)
+  renderObject(object)
+  window.scrollTo({ top: 0, behavior: replace ? 'auto' : 'smooth' })
+}
+
+async function init() {
+  state.index = await loadIndex()
+  const requested = new URLSearchParams(window.location.search).get('id')
+  const fallback = state.index.objects.find(entry => entry.type === 'theorem')?.id || state.index.objects[0]?.id
+  const id = state.index.objects.some(entry => entry.id === requested) ? requested : fallback
+  await selectObject(id, { replace: true })
+}
+
+window.addEventListener('popstate', event => {
+  const id = event.state?.id || new URLSearchParams(window.location.search).get('id')
+  if (id && id !== state.currentId) loadObject(id).then(object => {
+    state.currentId = id
+    renderObject(object)
+  }).catch(showError)
 })
+
+function showError(error) {
+  $('#app').innerHTML = `<main class="error"><h1>載入失敗</h1><pre>${escapeHtml(error.stack || error.message)}</pre></main>`
+}
+
+init().catch(showError)
