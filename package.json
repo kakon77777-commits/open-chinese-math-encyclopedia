@@ -1,0 +1,23 @@
+{
+  "name": "open-chinese-math-encyclopedia-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "開源中文數學百科 MVP：MKO、原生 MathML 人類介面、MCP、JSONL 與 FELRA 計算伴隨。",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "mcp": "node mcp-server.js",
+    "validate": "node scripts/validate.mjs",
+    "export": "node scripts/export-jsonl.mjs",
+    "verify:python": "python reference/python/pythagorean.py",
+    "verify:felra": "node scripts/run-felra.mjs",
+    "test": "node tests/smoke.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  }
+}
