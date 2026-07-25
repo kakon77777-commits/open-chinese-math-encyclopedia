@@ -1,0 +1,28 @@
+{
+  "object_id": "mko-euclid-pythagorean-theorem",
+  "method": "finite_integer_enumeration",
+  "limit": 200,
+  "triple_count": 127,
+  "sample": [
+    [3, 4, 5],
+    [5, 12, 13],
+    [6, 8, 10],
+    [7, 24, 25],
+    [8, 15, 17],
+    [9, 12, 15],
+    [9, 40, 41],
+    [10, 24, 26],
+    [11, 60, 61],
+    [12, 16, 20],
+    [12, 35, 37],
+    [13, 84, 85]
+  ],
+  "checks": {
+    "3-4-5": true,
+    "5-12-13": true,
+    "2-3-4_rejected": true,
+    "all_generated_exact": true
+  },
+  "status": "passed",
+  "warning": "Finite computation is not a universal mathematical proof."
+}
