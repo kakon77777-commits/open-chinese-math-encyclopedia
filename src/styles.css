@@ -1,0 +1,52 @@
+:root {
+  font-family: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  color: #172033;
+  background: #f5f7fb;
+  font-synthesis: none;
+  line-height: 1.7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, code, pre { font: inherit; }
+.hero { background: radial-gradient(circle at 15% 20%, #24375f 0, #111a31 48%, #080d19 100%); color: white; }
+.hero-inner { max-width: 1180px; margin: auto; padding: 72px 32px 56px; }
+.eyebrow { font-size: .78rem; letter-spacing: .16em; opacity: .7; }
+h1 { font-family: Georgia, "Noto Serif TC", serif; font-size: clamp(2.5rem, 6vw, 5.2rem); margin: .25rem 0 .75rem; line-height: 1.05; }
+.lead { max-width: 760px; font-size: 1.15rem; opacity: .86; }
+.status-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+.status-row span { border: 1px solid rgba(255,255,255,.22); border-radius: 999px; padding: 6px 12px; background: rgba(255,255,255,.06); }
+.shell { max-width: 1180px; margin: 0 auto; padding: 34px 32px 70px; display: grid; grid-template-columns: 250px 1fr; gap: 36px; }
+.toc { position: sticky; top: 24px; align-self: start; border: 1px solid #dfe4ef; border-radius: 18px; padding: 20px; background: white; box-shadow: 0 10px 35px rgba(28,39,69,.05); font-size: .92rem; }
+.toc code { word-break: break-all; color: #53627d; }
+.toc ul { padding-left: 18px; }
+.toc hr { border: 0; border-top: 1px solid #e7ebf2; margin: 18px 0; }
+.brand { font-weight: 800; margin-bottom: 4px; }
+.article { min-width: 0; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.tab { border: 1px solid #d9dfeb; border-radius: 999px; background: white; padding: 9px 15px; cursor: pointer; }
+.tab.active { background: #172033; color: white; border-color: #172033; }
+.panel { display: none; background: white; border: 1px solid #dfe4ef; border-radius: 22px; padding: clamp(22px, 5vw, 44px); box-shadow: 0 16px 50px rgba(28,39,69,.06); }
+.panel.active { display: block; }
+h2, h3 { font-family: Georgia, "Noto Serif TC", serif; line-height: 1.3; }
+h2 { font-size: 2rem; margin-top: 0; }
+h3 { margin-top: 2.2rem; }
+.formula-card { overflow-x: auto; border: 1px solid #e2e7f0; background: #fafbfe; border-radius: 16px; padding: 28px 12px; margin: 24px 0; }
+table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; }
+th, td { text-align: left; border-bottom: 1px solid #e5e9f1; padding: 11px 9px; vertical-align: top; }
+th { color: #56637b; font-size: .88rem; }
+pre { overflow-x: auto; background: #101725; color: #dce6ff; border-radius: 14px; padding: 18px; font-size: .88rem; line-height: 1.55; }
+.notice { border-left: 4px solid #405ea8; background: #eef3ff; border-radius: 0 12px 12px 0; padding: 14px 16px; margin: 18px 0; }
+.notice.warning { border-color: #b06a15; background: #fff5e9; }
+.definition-list > div { display: grid; grid-template-columns: 160px 1fr; gap: 18px; padding: 10px 0; border-bottom: 1px solid #e8ebf1; }
+.definition-list dt { font-weight: 800; }
+.definition-list dd { margin: 0; }
+footer { max-width: 1180px; margin: auto; padding: 0 32px 50px; color: #738099; font-size: .9rem; }
+.error { padding: 40px; }
+@media (max-width: 820px) {
+  .shell { grid-template-columns: 1fr; padding: 22px 16px 60px; }
+  .toc { position: static; }
+  .hero-inner { padding: 52px 20px 42px; }
+  .definition-list > div { grid-template-columns: 1fr; gap: 2px; }
+}
+.mathml { display: flex; justify-content: center; font-size: 2rem; overflow-x: auto; }
+.tex-source { display: block; text-align: center; margin-top: 14px; color: #5f6d87; }
