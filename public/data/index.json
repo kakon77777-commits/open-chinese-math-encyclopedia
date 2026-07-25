@@ -1,0 +1,11 @@
+{
+  "schema_version": "ocme-index-v0.1",
+  "objects": [
+    {
+      "id": "mko-euclid-pythagorean-theorem",
+      "title": "畢達哥拉斯定理",
+      "type": "theorem",
+      "path": "/data/mko/pythagorean-theorem.json"
+    }
+  ]
+}
