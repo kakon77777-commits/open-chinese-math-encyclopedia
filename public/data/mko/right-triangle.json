@@ -1,0 +1,90 @@
+{
+  "$schema": "../../../schemas/mko.schema.json",
+  "schema_version": "mko-v0.1",
+  "id": "mko-right-triangle",
+  "semantic_family_id": "sf-right-triangle",
+  "type": "definition",
+  "version": "0.2.0",
+  "language": "zh-Hant",
+  "titles": {
+    "zh-Hant": "直角三角形",
+    "en": "Right triangle"
+  },
+  "summary": {
+    "zh-Hant": "具有一個內角為直角的三角形。"
+  },
+  "statement": {
+    "zh-Hant": "若三角形的一個內角等於九十度，或以弧度表示為 π/2，則此三角形稱為直角三角形。"
+  },
+  "formula": {
+    "tex": "\\gamma=\\frac{\\pi}{2}",
+    "mathml": "<math><mrow><mi>γ</mi><mo>=</mo><mfrac><mi>π</mi><mn>2</mn></mfrac></mrow></math>",
+    "semantic_ast": {
+      "type": "equation",
+      "lhs": { "type": "symbol", "name": "gamma", "role": "right_angle" },
+      "rhs": {
+        "type": "division",
+        "numerator": { "type": "constant", "name": "pi" },
+        "denominator": 2
+      }
+    }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "討論對象是平面中的非退化三角形。" },
+    { "id": "a2", "zh-Hant": "角度使用度數或弧度表示，且 90° 與 π/2 表示同一角度。" }
+  ],
+  "symbols": [
+    { "token": "γ", "role": "right_angle", "role_zh": "被指定為直角的內角", "scope": "definition" },
+    { "token": "π", "role": "circle_constant", "role_zh": "圓周率", "scope": "definition" }
+  ],
+  "dependencies": [],
+  "explanation": {
+    "paragraphs_zh": [
+      "三角形最多只能有一個直角，因為三個內角的總和為 180°。",
+      "直角所對的邊稱為斜邊，另外兩邊稱為股；斜邊是三邊中最長的一邊。",
+      "程式可以檢查三個輸入角是否在容差內加總為 180°，並判斷其中是否存在 90°；這仍只是對具體輸入的檢查。"
+    ],
+    "common_misconception_zh": "只看到某兩條邊互相垂直，卻沒有確認它們與第三邊構成非退化三角形。"
+  },
+  "proofs": [],
+  "computational_companions": [
+    {
+      "id": "cc-python-right-triangle-001",
+      "language": "python",
+      "relation": "finite_angle_definition_checker",
+      "status": "reference_only",
+      "path": "reference/python/right_triangle.py",
+      "warning": "此程式只在有限精度與指定容差下檢查具體角度輸入，不等同於幾何定義本身。",
+      "source": "from math import isclose\n\ndef is_right_triangle_angles(alpha, beta, gamma, *, tol=1e-9):\n    angles = (alpha, beta, gamma)\n    if min(angles) <= 0:\n        return False\n    return isclose(sum(angles), 180.0, abs_tol=tol) and any(isclose(x, 90.0, abs_tol=tol) for x in angles)",
+      "non_identity": {
+        "preserved": ["三個正角度輸入", "內角和為 180°", "其中一角為 90°"],
+        "approximated": ["角度比較使用浮點容差"],
+        "omitted": ["三角形幾何構造的存在性", "歐幾里得公理背景"]
+      }
+    }
+  ],
+  "verification": {
+    "computational_status": "finite_cases_passed",
+    "warning_zh": "有限角度案例通過只表示參考程式符合所列測試，不等於完成幾何定義的形式化。",
+    "evidence": {
+      "generated_at": "2026-07-25",
+      "tests": [
+        { "name_zh": "30°-60°-90°", "method": "floating-point angle check", "result": "passed" },
+        { "name_zh": "45°-45°-90°", "method": "floating-point angle check", "result": "passed" },
+        { "name_zh": "60°-60°-60°", "method": "floating-point angle check", "result": "correctly rejected" }
+      ]
+    }
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4"],
+    "next_obligation_zh": "對接 Mathlib 的三角形、角度與垂直關係定義。"
+  },
+  "provenance": {
+    "origin": "evemisslab_original_mvp",
+    "note_zh": "此定義物件為 OCME v0.2 的原生架構示範。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-07-25"
+  }
+}
