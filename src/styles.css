@@ -45,6 +45,8 @@ h2, h3 { font-family: Georgia, "Noto Serif TC", serif; line-height: 1.3; }
 h2 { font-size: 2rem; margin-top: 0; }
 h3 { margin-top: 2.2rem; }
 .formula-card { overflow-x: auto; border: 1px solid #e2e7f0; background: #fafbfe; border-radius: 16px; padding: 28px 12px; margin: 24px 0; }
+.formula-provenance { margin-top: 14px; text-align: center; color: #6f7c94; font-size: .78rem; }
+.formula-provenance code { color: #465570; }
 table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; }
 th, td { text-align: left; border-bottom: 1px solid #e5e9f1; padding: 11px 9px; vertical-align: top; }
 th { color: #56637b; font-size: .88rem; }
