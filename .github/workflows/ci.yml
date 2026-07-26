@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: npm
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -30,8 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm install --ignore-scripts
 
-      - name: Run OCME checks
-        run: npm run check
+      - name: Rebuild formula derivatives
+        run: npm run compile:formulas
 
       - name: Ensure generated formula data is committed
-        run: git diff --exit-code -- public/data/mko artifacts/formula-compilation.json
+        run: git diff --exit-code -- public/data/mko
+
+      - name: Run OCME checks
+        run: npm run check
