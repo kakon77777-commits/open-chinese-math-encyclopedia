@@ -1,0 +1,32 @@
+{
+  "schema_version": "felra-run-manifest-v0.1",
+  "subject_id": "mko-euclid-pythagorean-theorem",
+  "project_id": "ocme-pythagorean-finite-check",
+  "producer_version": "0.1.0",
+  "runtime": "python/felra-cli",
+  "command": "felra run felra/pythagorean/project.yaml --output artifacts/felra",
+  "evidence_type": "counterexample_search",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "finite_declared_domain",
+    "universal_proof": false,
+    "statement_zh": "在 FELRA 專案宣告的有限整數域與搜尋預算內未發現反例。"
+  },
+  "checks": [
+    { "id": "boundaries", "status": "passed" },
+    { "id": "counterexample_search", "status": "passed" },
+    { "id": "numerical", "status": "passed" }
+  ],
+  "limitations": [
+    "只涵蓋專案宣告的有限參數域。",
+    "搜尋預算與隨機種子固定。",
+    "未發現反例不構成普遍證明。"
+  ],
+  "project_path": "felra/pythagorean/project.yaml",
+  "result_sources": [],
+  "replay": {
+    "command": "npm run verify:felra",
+    "expected_exit_code": 0,
+    "source_artifact": "artifacts/felra"
+  }
+}
