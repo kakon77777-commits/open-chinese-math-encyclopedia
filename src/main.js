@@ -51,7 +51,11 @@ function typeLabel(value) {
 }
 
 function renderFormula(formula) {
-  return `<div class="mathml" aria-label="${escapeHtml(formula.tex)}">${formula.mathml}</div><code class="tex-source">${escapeHtml(formula.tex)}</code>`
+  const compiler = formula.compiler || {}
+  const hash = compiler.source_sha256 ? compiler.source_sha256.slice(0, 16) : '未記錄'
+  return `<div class="mathml" aria-label="${escapeHtml(formula.tex)}">${formula.mathml}</div>
+    <code class="tex-source">${escapeHtml(formula.tex)}</code>
+    <div class="formula-provenance">由 <code>${escapeHtml(compiler.id || '未標記')}</code> v${escapeHtml(compiler.version || '?')} 編譯 · SHA-256 <code>${escapeHtml(hash)}…</code></div>`
 }
 
 function renderCompanions(companions = []) {
@@ -123,7 +127,7 @@ function renderObject(mko) {
   $('#app').innerHTML = `
     <header class="hero">
       <div class="hero-inner">
-        <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.2</p>
+        <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.3</p>
         <div class="type-chip">${escapeHtml(typeLabel(mko.type))}</div>
         <h1>${escapeHtml(mko.titles['zh-Hant'])}</h1>
         <p class="lead">${escapeHtml(mko.summary?.['zh-Hant'] || '')}</p>
@@ -181,7 +185,7 @@ function renderObject(mko) {
           <div class="notice warning"><strong>重要：</strong>${escapeHtml(mko.verification?.warning_zh || '尚無驗證聲明。')}</div>
           ${tests.length ? `<table><thead><tr><th>檢查</th><th>方法</th><th>結果</th></tr></thead><tbody>${testRows}</tbody></table>` : '<p>目前沒有已登錄的計算測試。</p>'}
           <h3>重播</h3>
-          <pre><code>npm run validate\nnpm test\nnpm run export</code></pre>
+          <pre><code>npm run verify:formulas\nnpm run validate\nnpm test\nnpm run export</code></pre>
           ${mko.verification?.felra_project ? `<p>FELRA 專案：<code>${escapeHtml(mko.verification.felra_project)}</code></p>` : ''}
         </section>
 
@@ -197,12 +201,12 @@ function renderObject(mko) {
 
         <section class="panel" data-panel="ai">
           <h2>AI 原始結構</h2>
-          <p>下列資料與 MCP 回傳使用同一份 Canonical MKO。公式不需從 SVG 或頁面截圖重新辨識。</p>
+          <p>下列資料與 MCP 回傳使用同一份 Canonical MKO。公式由 TeX 經 OCME Formula Core 重建，不需從 SVG 或頁面截圖重新辨識。</p>
           <pre><code>${escapeHtml(JSON.stringify(mko, null, 2))}</code></pre>
         </section>
       </article>
     </main>
-    <footer>資料層、程式層、證據層與證明層彼此分離。開源中文數學百科 MVP。</footer>`
+    <footer>資料層、程式層、證據層與證明層彼此分離。開源中文數學百科 MVP v0.3。</footer>`
 
   document.querySelectorAll('.tab').forEach(button => {
     button.addEventListener('click', () => {
