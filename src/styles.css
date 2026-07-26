@@ -54,6 +54,14 @@ pre { overflow-x: auto; background: #101725; color: #dce6ff; border-radius: 14px
 .notice { border-left: 4px solid #405ea8; background: #eef3ff; border-radius: 0 12px 12px 0; padding: 14px 16px; margin: 18px 0; }
 .notice.warning { border-color: #b06a15; background: #fff5e9; }
 .companion-card + .companion-card { border-top: 1px solid #e5e9f1; margin-top: 32px; padding-top: 20px; }
+.producer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0 28px; }
+.producer-card { position: relative; border: 1px solid #dce2ee; background: #fbfcff; border-radius: 14px; padding: 16px; }
+.producer-card p { margin: 10px 0 4px; overflow-wrap: anywhere; }
+.producer-card small { color: #68758d; }
+.producer-status { position: absolute; top: 13px; right: 13px; border-radius: 999px; padding: 3px 8px; background: #eceff4; font-size: .72rem; font-weight: 800; }
+.producer-status.active { background: #dcf5e7; color: #125b35; }
+.producer-status.configured { background: #fff0d9; color: #7b4c0d; }
+.producer-status.unavailable { background: #f8dddd; color: #7b2424; }
 .evidence-card { border: 1px solid #d8e2dc; background: #fbfefc; border-radius: 16px; padding: 20px; margin: 20px 0; }
 .evidence-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .evidence-status { border-radius: 999px; padding: 4px 10px; background: #eceff4; font-weight: 800; font-size: .78rem; text-transform: uppercase; }
@@ -63,8 +71,6 @@ pre { overflow-x: auto; background: #101725; color: #dce6ff; border-radius: 14px
 .evidence-sources { display: grid; gap: 10px; }
 .evidence-sources small { color: #6d7890; overflow-wrap: anywhere; }
 .evidence-digest { border-top: 1px solid #dfe7e2; padding-top: 14px; color: #5e6c64; font-size: .82rem; }
-.compat-evidence { margin: 24px 0; }
-.compat-evidence summary { cursor: pointer; font-weight: 800; }
 .definition-list > div { display: grid; grid-template-columns: 160px 1fr; gap: 18px; padding: 10px 0; border-bottom: 1px solid #e8ebf1; }
 .definition-list dt { font-weight: 800; }
 .definition-list dd { margin: 0; }
