@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evemisslab.com/schemas/ocme/mko-v0.3.json",
+  "title": "OCME Mathematical Knowledge Object v0.3",
+  "type": "object",
+  "required": [
+    "schema_version", "id", "semantic_family_id", "type", "version", "language",
+    "titles", "summary", "statement", "formula", "assumptions", "symbols",
+    "dependencies", "explanation", "proofs", "computational_companions",
+    "verification", "formalization", "provenance"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": "mko-v0.3" },
+    "id": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" },
+    "semantic_family_id": { "type": "string", "pattern": "^sf-[a-z0-9-]+$" },
+    "type": {
+      "enum": [
+        "concept", "definition", "axiom", "notation", "formula", "identity",
+        "proposition", "lemma", "theorem", "corollary", "conjecture", "proof",
+        "counterexample", "algorithm", "example", "exercise"
+      ]
+    },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "language": { "type": "string", "minLength": 2 },
+    "titles": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/localizedText" },
+    "summary": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/localizedText" },
+    "statement": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/localizedText" },
+    "formula": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/formula" },
+    "assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/assumption" }
+    },
+    "symbols": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/symbolBinding" }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/dependency" }
+    },
+    "explanation": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/explanation" },
+    "proofs": {
+      "type": "array",
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/proof" }
+    },
+    "computational_companions": {
+      "type": "array",
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/computationalCompanion" }
+    },
+    "verification": { "$ref": "#/$defs/verification" },
+    "formalization": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/formalization" },
+    "provenance": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/provenance" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "verification": {
+      "type": "object",
+      "required": ["computational_status", "warning_zh", "evidence_refs", "producers"],
+      "properties": {
+        "computational_status": { "type": "string", "minLength": 1 },
+        "warning_zh": { "type": "string", "minLength": 1 },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "role", "producer_id"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^evidence-sha256-[a-f0-9]{64}$" },
+              "role": {
+                "enum": [
+                  "finite_computational_check", "counterexample_search", "symbolic_check",
+                  "property_check", "formal_proof"
+                ]
+              },
+              "producer_id": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "producers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "adapter", "config_path", "status"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "adapter": { "enum": ["native_python", "felra", "formal_system"] },
+              "config_path": { "type": "string", "minLength": 1 },
+              "status": { "enum": ["active", "configured", "unavailable"] }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
