@@ -1,0 +1,100 @@
+{
+  "$schema": "../../../schemas/mko.schema.json",
+  "schema_version": "mko-v0.1",
+  "id": "mko-euclidean-length",
+  "semantic_family_id": "sf-euclidean-length",
+  "type": "definition",
+  "version": "0.2.0",
+  "language": "zh-Hant",
+  "titles": {
+    "zh-Hant": "歐幾里得長度",
+    "en": "Euclidean length"
+  },
+  "summary": {
+    "zh-Hant": "平面上兩點之間由座標差平方和的正平方根所定義的距離。"
+  },
+  "statement": {
+    "zh-Hant": "在歐幾里得平面中，若 P=(x₁,y₁)、Q=(x₂,y₂)，則兩點距離定義為座標差平方和的正平方根。"
+  },
+  "formula": {
+    "tex": "d(P,Q)=\\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}",
+    "mathml": "<math><mrow><mi>d</mi><mo>(</mo><mi>P</mi><mo>,</mo><mi>Q</mi><mo>)</mo><mo>=</mo><msqrt><mrow><msup><mrow><mo>(</mo><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub><mo>)</mo></mrow><mn>2</mn></msup></mrow></msqrt></mrow></math>",
+    "semantic_ast": {
+      "type": "function_definition",
+      "function": "distance",
+      "arguments": ["P", "Q"],
+      "body": {
+        "type": "square_root",
+        "radicand": {
+          "type": "addition",
+          "operands": [
+            { "type": "power", "base": { "type": "subtraction", "operands": ["x2", "x1"] }, "exponent": 2 },
+            { "type": "power", "base": { "type": "subtraction", "operands": ["y2", "y1"] }, "exponent": 2 }
+          ]
+        }
+      }
+    }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "P 與 Q 是二維歐幾里得平面中的點。" },
+    { "id": "a2", "zh-Hant": "座標 x₁、y₁、x₂、y₂ 為實數。" },
+    { "id": "a3", "zh-Hant": "平方根取非負主值，因此距離必為非負。" }
+  ],
+  "symbols": [
+    { "token": "d", "role": "distance_function", "role_zh": "距離函數", "scope": "definition" },
+    { "token": "P", "role": "point", "role_zh": "第一個平面點", "scope": "definition" },
+    { "token": "Q", "role": "point", "role_zh": "第二個平面點", "scope": "definition" },
+    { "token": "x₁,y₁", "role": "coordinates", "role_zh": "P 的座標", "scope": "definition" },
+    { "token": "x₂,y₂", "role": "coordinates", "role_zh": "Q 的座標", "scope": "definition" }
+  ],
+  "dependencies": [],
+  "explanation": {
+    "paragraphs_zh": [
+      "距離公式把水平位移與垂直位移視為互相垂直的兩個分量，再取平方和的正平方根。",
+      "當 P 與 Q 相同時，兩個座標差皆為零，因此距離為零；交換 P 與 Q 不會改變距離。",
+      "程式可用 hypot 或平方根計算具體距離，但浮點表示與數學中的實數並不完全相同。"
+    ],
+    "common_misconception_zh": "忽略平方根的非負主值，或將座標差直接相加而沒有先平方。"
+  },
+  "proofs": [],
+  "computational_companions": [
+    {
+      "id": "cc-python-euclidean-length-001",
+      "language": "python",
+      "relation": "numeric_distance_evaluator",
+      "status": "reference_only",
+      "path": "reference/python/euclidean_length.py",
+      "warning": "此程式在有限浮點精度下計算具體座標距離，不等同於實數度量空間中的完整定義。",
+      "source": "from math import hypot\n\ndef euclidean_distance(p, q):\n    x1, y1 = p\n    x2, y2 = q\n    return hypot(x2 - x1, y2 - y1)",
+      "non_identity": {
+        "preserved": ["二維座標差", "平方和", "非負距離"],
+        "approximated": ["實數運算由有限精度浮點數近似"],
+        "omitted": ["度量公理的普遍證明", "任意維度的一般化"]
+      }
+    }
+  ],
+  "verification": {
+    "computational_status": "finite_cases_passed",
+    "warning_zh": "具體座標測試只驗證參考實作，不等於證明距離函數對所有實數點滿足全部度量公理。",
+    "evidence": {
+      "generated_at": "2026-07-25",
+      "tests": [
+        { "name_zh": "(0,0) 到 (3,4)", "method": "floating-point hypot", "result": "5.0" },
+        { "name_zh": "同一點距離", "method": "floating-point hypot", "result": "0.0" },
+        { "name_zh": "交換兩點的對稱性", "method": "finite example comparison", "result": "passed" }
+      ]
+    }
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4"],
+    "next_obligation_zh": "對接 Mathlib 的 EuclideanSpace 與 dist 定義，並記錄二維座標公式與抽象距離之間的定理。"
+  },
+  "provenance": {
+    "origin": "evemisslab_original_mvp",
+    "note_zh": "此定義物件為 OCME v0.2 的原生架構示範。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-07-25"
+  }
+}

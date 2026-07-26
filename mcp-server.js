@@ -1,21 +1,27 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
-import { compactObject, listObjects, loadObject } from './lib/store.js'
+import {
+  buildDependencyGraph,
+  compactObject,
+  listObjects,
+  loadObject,
+  resolveDependencies,
+} from './lib/store.js'
 
 const jsonResult = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] })
 const errorResult = error => ({ content: [{ type: 'text', text: `Error: ${error?.message || error}` }], isError: true })
-const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.1.0' })
+const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.2.0' })
 
 server.registerTool('search_math_objects', {
   title: '搜尋數學知識物件',
-  description: '依繁體中文標題或物件 ID 搜尋 OCME 數學知識物件。',
+  description: '依繁體中文標題、物件 ID、類型或標籤搜尋 OCME 數學知識物件。',
   inputSchema: { query: z.string().default('').describe('搜尋字串；空字串列出全部物件') },
 }, async ({ query }) => {
   try {
     const q = query.trim().toLowerCase()
     const objects = await listObjects()
-    const results = !q ? objects : objects.filter(x => `${x.id} ${x.title}`.toLowerCase().includes(q))
+    const results = !q ? objects : objects.filter(x => `${x.id} ${x.title} ${x.type} ${(x.tags || []).join(' ')}`.toLowerCase().includes(q))
     return jsonResult({ results })
   } catch (error) { return errorResult(error) }
 })
@@ -35,6 +41,37 @@ server.registerTool('get_math_context_bundle', {
   inputSchema: { id: z.string().describe('數學知識物件 ID') },
 }, async ({ id }) => {
   try { return jsonResult(compactObject(await loadObject(id))) }
+  catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_dependencies', {
+  title: '解析數學物件依賴',
+  description: '將 dependency ID 解析為實際數學知識物件；可選擇只取直接依賴或遞迴取得全部前置知識。',
+  inputSchema: {
+    id: z.string().describe('數學知識物件 ID'),
+    recursive: z.boolean().default(false).describe('是否遞迴解析全部前置依賴'),
+  },
+}, async ({ id, recursive }) => {
+  try { return jsonResult({ object_id: id, recursive, dependencies: await resolveDependencies(id, { recursive }) }) }
+  catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_formula_ast', {
+  title: '取得公式語義 AST',
+  description: '取得公式的 TeX、MathML 與 Semantic AST，不需解析網頁或公式圖片。',
+  inputSchema: { id: z.string().describe('數學知識物件 ID') },
+}, async ({ id }) => {
+  try {
+    const object = await loadObject(id)
+    return jsonResult({ object_id: id, formula: object.formula, symbols: object.symbols })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_dependency_graph', {
+  title: '取得數學知識依賴圖',
+  description: '取得目前 OCME 物件的節點與 prerequisite_of 邊。',
+}, async () => {
+  try { return jsonResult(await buildDependencyGraph()) }
   catch (error) { return errorResult(error) }
 })
 
@@ -58,7 +95,7 @@ server.registerTool('get_verification_status', {
     const object = await loadObject(id)
     return jsonResult({
       object_id: id,
-      human_proofs: object.proofs,
+      human_proofs: object.proofs || [],
       computational: object.verification,
       formalization: object.formalization,
     })
