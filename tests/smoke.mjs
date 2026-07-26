@@ -16,8 +16,11 @@ assert.deepEqual(index.map(entry => entry.id), [
 ])
 
 const theorem = await loadObject('mko-euclid-pythagorean-theorem')
+assert.equal(theorem.schema_version, 'mko-v0.2')
 assert.equal(theorem.formula.tex, 'a^2+b^2=c^2')
 assert.equal(theorem.formula.semantic_ast.type, 'equation')
+assert.equal(theorem.formula.compiler.id, 'ocme-formula-core')
+assert.equal(theorem.formula.compiler.version, '0.3.0')
 assert.equal(theorem.computational_companions[0].non_identity.omitted.includes('全稱量詞的普遍證明'), true)
 assert.equal(compactObject(theorem).formal_status, 'not_formalized')
 
@@ -27,13 +30,15 @@ assert.deepEqual(new Set(dependencies.map(dep => dep.id)), new Set(['mko-right-t
 
 const rightTriangle = await loadObject('mko-right-triangle')
 assert.equal(rightTriangle.type, 'definition')
-assert.equal(rightTriangle.formula.semantic_ast.rhs.type, 'division')
+assert.equal(rightTriangle.formula.semantic_ast.rhs.type, 'fraction')
 
 const length = await loadObject('mko-euclidean-length')
-assert.equal(length.formula.semantic_ast.type, 'function_definition')
+assert.equal(length.formula.semantic_ast.type, 'equation')
+assert.equal(length.formula.semantic_ast.lhs.type, 'function_call')
+assert.equal(length.formula.semantic_ast.rhs.type, 'square_root')
 
 const graph = await buildDependencyGraph()
 assert.equal(graph.nodes.length, 3)
 assert.equal(graph.edges.length, 2)
 assert.equal(graph.edges.every(edge => edge.to === theorem.id), true)
-console.log('Smoke tests passed: 3 objects, 2 resolved dependency edges.')
+console.log('Smoke tests passed: 3 compiled objects, 2 resolved dependency edges.')
