@@ -1,10 +1,10 @@
 {
   "$schema": "../../../schemas/mko.schema.json",
-  "schema_version": "mko-v0.1",
+  "schema_version": "mko-v0.2",
   "id": "mko-euclidean-length",
   "semantic_family_id": "sf-euclidean-length",
   "type": "definition",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "language": "zh-Hant",
   "titles": {
     "zh-Hant": "歐幾里得長度",
@@ -18,21 +18,70 @@
   },
   "formula": {
     "tex": "d(P,Q)=\\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}",
-    "mathml": "<math><mrow><mi>d</mi><mo>(</mo><mi>P</mi><mo>,</mo><mi>Q</mi><mo>)</mo><mo>=</mo><msqrt><mrow><msup><mrow><mo>(</mo><msub><mi>x</mi><mn>2</mn></msub><mo>-</mo><msub><mi>x</mi><mn>1</mn></msub><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>(</mo><msub><mi>y</mi><mn>2</mn></msub><mo>-</mo><msub><mi>y</mi><mn>1</mn></msub><mo>)</mo></mrow><mn>2</mn></msup></mrow></msqrt></mrow></math>",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mrow><mi>d</mi><mo>(</mo><mi>P</mi><mo>,</mo><mi>Q</mi><mo>)</mo></mrow><mo>=</mo><msqrt><mrow><msup><mrow><mo>(</mo><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>−</mo><msub><mi>x</mi><mn>1</mn></msub></mrow><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>(</mo><mrow><msub><mi>y</mi><mn>2</mn></msub><mo>−</mo><msub><mi>y</mi><mn>1</mn></msub></mrow><mo>)</mo></mrow><mn>2</mn></msup></mrow></msqrt></mrow></math>",
     "semantic_ast": {
-      "type": "function_definition",
-      "function": "distance",
-      "arguments": ["P", "Q"],
-      "body": {
+      "type": "equation",
+      "lhs": {
+        "type": "function_call",
+        "callee": { "type": "symbol", "name": "d", "glyph": "d" },
+        "arguments": [
+          { "type": "symbol", "name": "P", "glyph": "P" },
+          { "type": "symbol", "name": "Q", "glyph": "Q" }
+        ]
+      },
+      "rhs": {
         "type": "square_root",
         "radicand": {
           "type": "addition",
           "operands": [
-            { "type": "power", "base": { "type": "subtraction", "operands": ["x2", "x1"] }, "exponent": 2 },
-            { "type": "power", "base": { "type": "subtraction", "operands": ["y2", "y1"] }, "exponent": 2 }
+            {
+              "type": "power",
+              "base": {
+                "type": "group",
+                "body": {
+                  "type": "subtraction",
+                  "left": {
+                    "type": "subscript",
+                    "base": { "type": "symbol", "name": "x", "glyph": "x" },
+                    "subscript": { "type": "number", "value": 2 }
+                  },
+                  "right": {
+                    "type": "subscript",
+                    "base": { "type": "symbol", "name": "x", "glyph": "x" },
+                    "subscript": { "type": "number", "value": 1 }
+                  }
+                }
+              },
+              "exponent": { "type": "number", "value": 2 }
+            },
+            {
+              "type": "power",
+              "base": {
+                "type": "group",
+                "body": {
+                  "type": "subtraction",
+                  "left": {
+                    "type": "subscript",
+                    "base": { "type": "symbol", "name": "y", "glyph": "y" },
+                    "subscript": { "type": "number", "value": 2 }
+                  },
+                  "right": {
+                    "type": "subscript",
+                    "base": { "type": "symbol", "name": "y", "glyph": "y" },
+                    "subscript": { "type": "number", "value": 1 }
+                  }
+                }
+              },
+              "exponent": { "type": "number", "value": 2 }
+            }
           ]
         }
       }
+    },
+    "compiler": {
+      "id": "ocme-formula-core",
+      "version": "0.3.0",
+      "source_sha256": "1e1c9f11e53bf6639ab84fb44c67d06df41db6672cd37e61aba68e70e35c42ac"
     }
   },
   "assumptions": [
