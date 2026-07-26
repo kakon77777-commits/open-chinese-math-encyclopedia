@@ -1,6 +1,12 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
+import {
+  evidenceForSubject,
+  listEvidence,
+  loadEvidence,
+  verifyEvidenceAddress,
+} from './lib/evidence-store.js'
 import { compileFormula } from './lib/formula-compiler.js'
 import {
   buildDependencyGraph,
@@ -12,7 +18,7 @@ import {
 
 const jsonResult = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] })
 const errorResult = error => ({ content: [{ type: 'text', text: `Error: ${error?.message || error}` }], isError: true })
-const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.3.0' })
+const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.4.0' })
 
 server.registerTool('search_math_objects', {
   title: '搜尋數學知識物件',
@@ -29,7 +35,7 @@ server.registerTool('search_math_objects', {
 
 server.registerTool('get_math_object', {
   title: '取得數學知識物件',
-  description: '取得完整 Canonical MKO，包括公式 AST、符號、前提、程式伴隨、證據與來源。',
+  description: '取得完整 Canonical MKO，包括公式 AST、符號、前提、程式伴隨、摘要驗證狀態與來源。',
   inputSchema: { id: z.string().describe('數學知識物件 ID') },
 }, async ({ id }) => {
   try { return jsonResult(await loadObject(id)) }
@@ -41,8 +47,12 @@ server.registerTool('get_math_context_bundle', {
   description: '取得適合放入模型上下文的精簡物件，避免載入整篇 UI 或無關資料。',
   inputSchema: { id: z.string().describe('數學知識物件 ID') },
 }, async ({ id }) => {
-  try { return jsonResult(compactObject(await loadObject(id))) }
-  catch (error) { return errorResult(error) }
+  try {
+    return jsonResult({
+      object: compactObject(await loadObject(id)),
+      evidence: await evidenceForSubject(id),
+    })
+  } catch (error) { return errorResult(error) }
 })
 
 server.registerTool('get_dependencies', {
@@ -91,6 +101,34 @@ server.registerTool('get_dependency_graph', {
   catch (error) { return errorResult(error) }
 })
 
+server.registerTool('list_evidence', {
+  title: '列出證據物件',
+  description: '列出內容定址 Evidence Object 的 ID、主體、類型、狀態與路徑。',
+}, async () => {
+  try { return jsonResult({ results: await listEvidence() }) }
+  catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_evidence', {
+  title: '取得證據物件',
+  description: '按 Evidence ID 取得證據範圍、檢查結果、限制、來源雜湊與重播命令，並重新驗證內容地址。',
+  inputSchema: { id: z.string().describe('Evidence Object ID') },
+}, async ({ id }) => {
+  try {
+    const evidence = await loadEvidence(id)
+    return jsonResult({ evidence, address_verification: verifyEvidenceAddress(evidence) })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_evidence_for_object', {
+  title: '取得數學物件的證據',
+  description: '按 MKO ID 解析全部外部 Evidence Object。',
+  inputSchema: { id: z.string().describe('數學知識物件 ID') },
+}, async ({ id }) => {
+  try { return jsonResult({ object_id: id, evidence: await evidenceForSubject(id) }) }
+  catch (error) { return errorResult(error) }
+})
+
 server.registerTool('get_computational_companion', {
   title: '取得計算伴隨與非同一性聲明',
   description: '取得參考程式、其與數學物件的關係，以及保存、近似與遺漏的語義。',
@@ -104,7 +142,7 @@ server.registerTool('get_computational_companion', {
 
 server.registerTool('get_verification_status', {
   title: '取得計算與形式驗證狀態',
-  description: '明確區分有限計算證據、人工證明與形式證明。',
+  description: '明確區分摘要驗證狀態、外部內容定址證據、人工證明與形式證明。',
   inputSchema: { id: z.string().describe('數學知識物件 ID') },
 }, async ({ id }) => {
   try {
@@ -112,7 +150,8 @@ server.registerTool('get_verification_status', {
     return jsonResult({
       object_id: id,
       human_proofs: object.proofs || [],
-      computational: object.verification,
+      computational_summary: object.verification,
+      evidence: await evidenceForSubject(id),
       formalization: object.formalization,
     })
   } catch (error) { return errorResult(error) }

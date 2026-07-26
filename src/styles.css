@@ -54,6 +54,17 @@ pre { overflow-x: auto; background: #101725; color: #dce6ff; border-radius: 14px
 .notice { border-left: 4px solid #405ea8; background: #eef3ff; border-radius: 0 12px 12px 0; padding: 14px 16px; margin: 18px 0; }
 .notice.warning { border-color: #b06a15; background: #fff5e9; }
 .companion-card + .companion-card { border-top: 1px solid #e5e9f1; margin-top: 32px; padding-top: 20px; }
+.evidence-card { border: 1px solid #d8e2dc; background: #fbfefc; border-radius: 16px; padding: 20px; margin: 20px 0; }
+.evidence-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.evidence-status { border-radius: 999px; padding: 4px 10px; background: #eceff4; font-weight: 800; font-size: .78rem; text-transform: uppercase; }
+.evidence-status.passed { color: #125b35; background: #dcf5e7; }
+.evidence-id, .evidence-digest code, .evidence-sources code { overflow-wrap: anywhere; word-break: break-word; }
+.evidence-id { color: #52617a; font-size: .78rem; }
+.evidence-sources { display: grid; gap: 10px; }
+.evidence-sources small { color: #6d7890; overflow-wrap: anywhere; }
+.evidence-digest { border-top: 1px solid #dfe7e2; padding-top: 14px; color: #5e6c64; font-size: .82rem; }
+.compat-evidence { margin: 24px 0; }
+.compat-evidence summary { cursor: pointer; font-weight: 800; }
 .definition-list > div { display: grid; grid-template-columns: 160px 1fr; gap: 18px; padding: 10px 0; border-bottom: 1px solid #e8ebf1; }
 .definition-list dt { font-weight: 800; }
 .definition-list dd { margin: 0; }

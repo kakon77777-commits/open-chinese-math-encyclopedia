@@ -1,0 +1,52 @@
+{
+  "id": "evidence-sha256-49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-euclid-pythagorean-theorem",
+  "evidence_type": "finite_computational_check",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "finite_declared_cases",
+    "universal_proof": false,
+    "statement_zh": "在整數範圍 1 至 200 與指定案例中，參考程式正確辨識平方關係並列舉 127 組整數畢氏三元組。"
+  },
+  "producer": {
+    "id": "ocme-python-suite",
+    "version": "0.4.0",
+    "runtime": "python",
+    "command": "python reference/python/verify_all.py"
+  },
+  "sources": [
+    {
+      "role": "computational_companion",
+      "path": "reference/python/pythagorean.py",
+      "sha256": "13ac68251152dea55ba8741647746389738c53361147db3a24586e6295d0664e"
+    },
+    {
+      "role": "suite_orchestrator",
+      "path": "reference/python/verify_all.py",
+      "sha256": "1b3596374e90739504e59c4cc9c90412bed6b314c935d8e35d49a30e9bf0a520"
+    }
+  ],
+  "formula_source_sha256": "586b9ebeb1716b0a613280de2bfdbd96b2cf47ff1239e1a9aa5001709e9cc4b2",
+  "checks": [
+    { "id": "2-3-4_rejected", "status": "passed" },
+    { "id": "3-4-5", "status": "passed" },
+    { "id": "5-12-13", "status": "passed" },
+    { "id": "all_generated_exact", "status": "passed" },
+    { "id": "triple_count_is_127", "status": "passed" }
+  ],
+  "limitations": [
+    "搜尋範圍限制於整數 1 至 200。",
+    "浮點案例使用有限精度容差。",
+    "未發現反例不構成畢達哥拉斯定理的普遍證明。"
+  ],
+  "replay": {
+    "command": "npm run verify:python",
+    "expected_exit_code": 0,
+    "source_artifact": "artifacts/python-evidence-v0.2.json"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "evidence-sha256-d2f7e95c5eb44099070a59498f1ad1b82c0818327df33683b6e82d8624544ea9",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-right-triangle",
+  "evidence_type": "finite_computational_check",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "finite_declared_cases",
+    "universal_proof": false,
+    "statement_zh": "在指定的四組角度案例中，參考程式正確接受直角三角形案例並拒絕非直角或退化案例。"
+  },
+  "producer": {
+    "id": "ocme-python-suite",
+    "version": "0.4.0",
+    "runtime": "python",
+    "command": "python reference/python/verify_all.py"
+  },
+  "sources": [
+    {
+      "role": "computational_companion",
+      "path": "reference/python/right_triangle.py",
+      "sha256": "32622d0ab02da69c82a9c9ac4b4cd3fba076323e4509ac1771374d35e9e3410e"
+    },
+    {
+      "role": "suite_orchestrator",
+      "path": "reference/python/verify_all.py",
+      "sha256": "1b3596374e90739504e59c4cc9c90412bed6b314c935d8e35d49a30e9bf0a520"
+    }
+  ],
+  "formula_source_sha256": "20b9e60078ce5a031211422ad449d3a270be3065b34a17bfabafb331e6d0686a",
+  "checks": [
+    { "id": "30-60-90", "status": "passed" },
+    { "id": "45-45-90", "status": "passed" },
+    { "id": "60-60-60_rejected", "status": "passed" },
+    { "id": "degenerate_rejected", "status": "passed" }
+  ],
+  "limitations": [
+    "只涵蓋四組宣告案例。",
+    "角度比較使用有限精度浮點容差。",
+    "不證明直角三角形定義的幾何存在性或普遍性。"
+  ],
+  "replay": {
+    "command": "npm run verify:python",
+    "expected_exit_code": 0,
+    "source_artifact": "artifacts/python-evidence-v0.2.json"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "d2f7e95c5eb44099070a59498f1ad1b82c0818327df33683b6e82d8624544ea9"
+  }
+}
