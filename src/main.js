@@ -11,9 +11,9 @@ const state = {
   evidenceCache: new Map(),
 }
 
-async function loadIndex() {
-  const response = await fetch('/data/index.json')
-  if (!response.ok) throw new Error('無法讀取數學物件索引')
+async function loadJson(url, message) {
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(message)
   return response.json()
 }
 
@@ -21,33 +21,22 @@ async function loadObject(id) {
   if (state.cache.has(id)) return state.cache.get(id)
   const entry = state.index.objects.find(object => object.id === id)
   if (!entry) throw new Error(`未知數學物件：${id}`)
-  const response = await fetch(entry.path)
-  if (!response.ok) throw new Error(`無法讀取數學知識物件：${id}`)
-  const object = await response.json()
+  const object = await loadJson(entry.path, `無法讀取數學知識物件：${id}`)
   state.cache.set(id, object)
   return object
-}
-
-async function loadEvidenceIndex() {
-  const response = await fetch('/data/evidence/index.json')
-  if (!response.ok) throw new Error('無法讀取證據物件索引')
-  return response.json()
 }
 
 async function loadEvidence(id) {
   if (state.evidenceCache.has(id)) return state.evidenceCache.get(id)
   const entry = state.evidenceIndex.objects.find(object => object.id === id)
   if (!entry) throw new Error(`未知證據物件：${id}`)
-  const response = await fetch(entry.path)
-  if (!response.ok) throw new Error(`無法讀取證據物件：${id}`)
-  const evidence = await response.json()
+  const evidence = await loadJson(entry.path, `無法讀取證據物件：${id}`)
   state.evidenceCache.set(id, evidence)
   return evidence
 }
 
-async function loadEvidenceForSubject(subjectId) {
-  const entries = state.evidenceIndex.objects.filter(entry => entry.subject_id === subjectId)
-  return Promise.all(entries.map(entry => loadEvidence(entry.id)))
+async function loadReferencedEvidence(mko) {
+  return Promise.all((mko.verification?.evidence_refs || []).map(ref => loadEvidence(ref.id)))
 }
 
 function statusLabel(value) {
@@ -58,18 +47,17 @@ function statusLabel(value) {
     finite_cases_passed: '有限案例通過',
     not_run: '尚未執行',
     reference_only: '僅供參考',
+    active: '已啟用',
+    configured: '已設定',
+    unavailable: '不可用',
   }
   return labels[value] || value || '未標記'
 }
 
 function typeLabel(value) {
   const labels = {
-    definition: '定義',
-    theorem: '定理',
-    concept: '概念',
-    lemma: '引理',
-    proposition: '命題',
-    conjecture: '猜想',
+    definition: '定義', theorem: '定理', concept: '概念', lemma: '引理',
+    proposition: '命題', conjecture: '猜想',
   }
   return labels[value] || value
 }
@@ -97,8 +85,21 @@ function renderCompanions(companions = []) {
   </section>`).join('')
 }
 
+function renderProducers(mko, evidenceObjects) {
+  const evidenceProducerIds = new Set(evidenceObjects.map(evidence => evidence.producer.id))
+  return (mko.verification?.producers || []).map(producer => {
+    const hasEvidence = evidenceProducerIds.has(producer.id)
+    return `<article class="producer-card">
+      <div><strong>${escapeHtml(producer.id)}</strong> · ${escapeHtml(producer.adapter)}</div>
+      <span class="producer-status ${producer.status}">${escapeHtml(statusLabel(producer.status))}</span>
+      <p><code>${escapeHtml(producer.config_path)}</code></p>
+      <small>${hasEvidence ? '已有被 MKO 引用的證據' : '尚無被 MKO 引用的證據'}</small>
+    </article>`
+  }).join('') || '<p>沒有宣告證據生產者。</p>'
+}
+
 function renderEvidenceObjects(evidenceObjects = []) {
-  if (!evidenceObjects.length) return '<div class="notice">目前沒有外部 Evidence Object。</div>'
+  if (!evidenceObjects.length) return '<div class="notice">此 MKO 目前沒有引用 Evidence Object。</div>'
   return evidenceObjects.map(evidence => {
     const checks = evidence.checks.map(check => `<tr><td><code>${escapeHtml(check.id)}</code></td><td>${escapeHtml(check.status)}</td></tr>`).join('')
     const sources = evidence.sources.map(source => `<li><strong>${escapeHtml(source.role)}</strong>：<code>${escapeHtml(source.path)}</code><br><small>SHA-256 ${escapeHtml(source.sha256)}</small></li>`).join('')
@@ -116,10 +117,8 @@ function renderEvidenceObjects(evidenceObjects = []) {
       </dl>
       <h3>檢查項目</h3>
       <table><thead><tr><th>檢查</th><th>狀態</th></tr></thead><tbody>${checks}</tbody></table>
-      <h3>限制</h3>
-      <ul>${evidence.limitations.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
-      <h3>來源</h3>
-      <ul class="evidence-sources">${sources}</ul>
+      <h3>限制</h3><ul>${evidence.limitations.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
+      <h3>來源</h3><ul class="evidence-sources">${sources}</ul>
       <p class="evidence-digest">內容地址：<code>${escapeHtml(evidence.digest.canonical_payload_sha256)}</code></p>
     </section>`
   }).join('')
@@ -133,8 +132,7 @@ function renderObjectList(currentId, query = '') {
   })
   if (!entries.length) return '<p class="empty">找不到符合的數學物件。</p>'
   return entries.map(entry => `<button class="object-link ${entry.id === currentId ? 'active' : ''}" data-object-id="${escapeHtml(entry.id)}">
-    <span>${escapeHtml(entry.title)}</span>
-    <small>${escapeHtml(typeLabel(entry.type))}</small>
+    <span>${escapeHtml(entry.title)}</span><small>${escapeHtml(typeLabel(entry.type))}</small>
   </button>`).join('')
 }
 
@@ -157,16 +155,12 @@ function bindObjectNavigation() {
 function renderObject(mko, evidenceObjects = []) {
   const tabs = [
     ['math', '數學'], ['explain', '解釋'], ['code', '程式碼'],
-    ['evidence', '計算證據'], ['formal', '形式化'], ['ai', 'AI 結構']
+    ['evidence', '計算證據'], ['formal', '形式化'], ['ai', 'AI 結構'],
   ]
-  const symbols = (mko.symbols || []).map(symbol => `
-    <tr><td><code>${escapeHtml(symbol.token)}</code></td><td>${escapeHtml(symbol.role_zh)}</td><td>${escapeHtml(symbol.scope)}</td></tr>`).join('')
+  const symbols = (mko.symbols || []).map(symbol => `<tr><td><code>${escapeHtml(symbol.token)}</code></td><td>${escapeHtml(symbol.role_zh)}</td><td>${escapeHtml(symbol.scope)}</td></tr>`).join('')
   const deps = (mko.dependencies || []).length
     ? mko.dependencies.map(dep => `<li><button class="dep-link" data-object-id="${escapeHtml(dep.id)}"><strong>${escapeHtml(dep.title_zh)}</strong></button><span>：${escapeHtml(dep.reason_zh)}</span></li>`).join('')
     : '<li class="empty">此物件沒有已宣告的前置依賴。</li>'
-  const tests = mko.verification?.evidence?.tests || []
-  const testRows = tests.map(test => `
-    <tr><td>${escapeHtml(test.name_zh)}</td><td>${escapeHtml(test.method)}</td><td>${escapeHtml(test.result)}</td></tr>`).join('')
   const proofs = mko.proofs || []
   const proofStatus = proofs[0]?.status ?? 'not_applicable'
   const proofBlock = proofs.length
@@ -177,90 +171,60 @@ function renderObject(mko, evidenceObjects = []) {
 
   document.title = `${mko.titles['zh-Hant']} · 開源中文數學百科`
   $('#app').innerHTML = `
-    <header class="hero">
-      <div class="hero-inner">
-        <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.4</p>
-        <div class="type-chip">${escapeHtml(typeLabel(mko.type))}</div>
-        <h1>${escapeHtml(mko.titles['zh-Hant'])}</h1>
-        <p class="lead">${escapeHtml(mko.summary?.['zh-Hant'] || '')}</p>
-        <div class="status-row">
-          <span>${statusLabel(proofStatus)}</span>
-          <span>${statusLabel(mko.verification?.computational_status)}</span>
-          <span>${statusLabel(mko.formalization?.status)}</span>
-          <span>版本 ${escapeHtml(mko.version)}</span>
-        </div>
+    <header class="hero"><div class="hero-inner">
+      <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.5</p>
+      <div class="type-chip">${escapeHtml(typeLabel(mko.type))}</div>
+      <h1>${escapeHtml(mko.titles['zh-Hant'])}</h1>
+      <p class="lead">${escapeHtml(mko.summary?.['zh-Hant'] || '')}</p>
+      <div class="status-row">
+        <span>${statusLabel(proofStatus)}</span>
+        <span>${statusLabel(mko.verification?.computational_status)}</span>
+        <span>${statusLabel(mko.formalization?.status)}</span>
+        <span>版本 ${escapeHtml(mko.version)}</span>
       </div>
-    </header>
+    </div></header>
     <main class="shell">
       <aside class="toc">
-        <div class="brand">數學知識物件</div>
-        <code>${escapeHtml(mko.id)}</code>
+        <div class="brand">數學知識物件</div><code>${escapeHtml(mko.id)}</code>
         <label class="search-label" for="object-search">物件目錄</label>
         <input id="object-search" class="object-search" type="search" placeholder="搜尋標題、類型或標籤" autocomplete="off" />
         <div id="object-list" class="object-list">${renderObjectList(mko.id)}</div>
-        <hr />
-        <strong>前置知識</strong>
-        <ul class="dependency-list">${deps}</ul>
-        <hr />
-        <strong>來源</strong>
-        <p>${escapeHtml(mko.provenance?.note_zh || '未標記')}</p>
+        <hr /><strong>前置知識</strong><ul class="dependency-list">${deps}</ul>
+        <hr /><strong>來源</strong><p>${escapeHtml(mko.provenance?.note_zh || '未標記')}</p>
       </aside>
       <article class="article">
-        <nav class="tabs" aria-label="知識層切換">
-          ${tabs.map(([id, label], i) => `<button class="tab ${i === 0 ? 'active' : ''}" data-tab="${id}">${label}</button>`).join('')}
-        </nav>
-
+        <nav class="tabs" aria-label="知識層切換">${tabs.map(([id, label], i) => `<button class="tab ${i === 0 ? 'active' : ''}" data-tab="${id}">${label}</button>`).join('')}</nav>
         <section class="panel active" data-panel="math">
-          <h2>${statementHeading}</h2>
-          <p>${escapeHtml(mko.statement['zh-Hant'])}</p>
+          <h2>${statementHeading}</h2><p>${escapeHtml(mko.statement['zh-Hant'])}</p>
           <div class="formula-card">${renderFormula(mko.formula)}</div>
-          <h3>成立條件</h3>
-          <ul>${(mko.assumptions || []).map(x => `<li>${escapeHtml(x['zh-Hant'])}</li>`).join('') || '<li>未宣告額外條件。</li>'}</ul>
-          <h3>符號表</h3>
-          <table><thead><tr><th>符號</th><th>角色</th><th>作用域</th></tr></thead><tbody>${symbols}</tbody></table>
+          <h3>成立條件</h3><ul>${(mko.assumptions || []).map(x => `<li>${escapeHtml(x['zh-Hant'])}</li>`).join('')}</ul>
+          <h3>符號表</h3><table><thead><tr><th>符號</th><th>角色</th><th>作用域</th></tr></thead><tbody>${symbols}</tbody></table>
           ${proofBlock}
         </section>
-
         <section class="panel" data-panel="explain">
-          <h2>直觀解釋</h2>
-          ${(mko.explanation?.paragraphs_zh || []).map(p => `<p>${escapeHtml(p)}</p>`).join('')}
-          ${mko.explanation?.common_misconception_zh ? `<div class="notice"><strong>常見誤解：</strong>${escapeHtml(mko.explanation.common_misconception_zh)}</div>` : ''}
+          <h2>直觀解釋</h2>${(mko.explanation?.paragraphs_zh || []).map(p => `<p>${escapeHtml(p)}</p>`).join('')}
+          <div class="notice"><strong>常見誤解：</strong>${escapeHtml(mko.explanation?.common_misconception_zh || '未標記')}</div>
         </section>
-
-        <section class="panel" data-panel="code">
-          <h2>計算伴隨</h2>
-          ${renderCompanions(mko.computational_companions)}
-        </section>
-
+        <section class="panel" data-panel="code"><h2>計算伴隨</h2>${renderCompanions(mko.computational_companions)}</section>
         <section class="panel" data-panel="evidence">
-          <h2>內容定址證據</h2>
+          <h2>證據生產者</h2><div class="producer-grid">${renderProducers(mko, evidenceObjects)}</div>
           <div class="notice warning"><strong>重要：</strong>${escapeHtml(mko.verification?.warning_zh || '尚無驗證聲明。')}</div>
-          ${renderEvidenceObjects(evidenceObjects)}
-          <details class="compat-evidence">
-            <summary>相容性摘要</summary>
-            ${tests.length ? `<table><thead><tr><th>檢查</th><th>方法</th><th>結果</th></tr></thead><tbody>${testRows}</tbody></table>` : '<p>目前沒有舊版摘要。</p>'}
-          </details>
-          ${mko.verification?.felra_project ? `<p>FELRA 專案：<code>${escapeHtml(mko.verification.felra_project)}</code></p>` : ''}
+          <h2>引用的 Evidence Object</h2>${renderEvidenceObjects(evidenceObjects)}
         </section>
-
         <section class="panel" data-panel="formal">
-          <h2>形式化狀態</h2>
-          <dl class="definition-list">
+          <h2>形式化狀態</h2><dl class="definition-list">
             <div><dt>狀態</dt><dd>${statusLabel(mko.formalization?.status)}</dd></div>
             <div><dt>目標系統</dt><dd>${escapeHtml(formalTargets.join('、') || '尚未指定')}</dd></div>
             <div><dt>待辦</dt><dd>${escapeHtml(mko.formalization?.next_obligation_zh || '尚未指定')}</dd></div>
-          </dl>
-          <p>人工說明、有限計算與形式證明是不同狀態，介面不將它們合併成單一「已驗證」。</p>
+          </dl><p>人工說明、有限計算與形式證明是不同狀態，介面不將它們合併成單一「已驗證」。</p>
         </section>
-
         <section class="panel" data-panel="ai">
-          <h2>AI 原始結構</h2>
-          <p>下列資料與 MCP 回傳使用同一份 Canonical MKO 與外部 Evidence Object。公式由 TeX 經 OCME Formula Core 重建，證據則以 SHA-256 內容定址。</p>
+          <h2>AI 原始結構</h2><p>MKO 透過 evidence_refs 明確引用內容定址證據。</p>
           <pre><code>${escapeHtml(JSON.stringify({ object: mko, evidence: evidenceObjects }, null, 2))}</code></pre>
         </section>
       </article>
     </main>
-    <footer>資料層、程式層、證據層與證明層彼此分離。開源中文數學百科 MVP v0.4。</footer>`
+    <footer>數學、程式、證據與證明彼此分離。開源中文數學百科 MVP v0.5。</footer>`
 
   document.querySelectorAll('.tab').forEach(button => {
     button.addEventListener('click', () => {
@@ -274,10 +238,8 @@ function renderObject(mko, evidenceObjects = []) {
 }
 
 async function selectObject(id, { replace = false } = {}) {
-  const [object, evidenceObjects] = await Promise.all([
-    loadObject(id),
-    loadEvidenceForSubject(id),
-  ])
+  const object = await loadObject(id)
+  const evidenceObjects = await loadReferencedEvidence(object)
   state.currentId = id
   const url = new URL(window.location.href)
   url.searchParams.set('id', id)
@@ -287,7 +249,10 @@ async function selectObject(id, { replace = false } = {}) {
 }
 
 async function init() {
-  ;[state.index, state.evidenceIndex] = await Promise.all([loadIndex(), loadEvidenceIndex()])
+  ;[state.index, state.evidenceIndex] = await Promise.all([
+    loadJson('/data/index.json', '無法讀取數學物件索引'),
+    loadJson('/data/evidence/index.json', '無法讀取證據物件索引'),
+  ])
   const requested = new URLSearchParams(window.location.search).get('id')
   const fallback = state.index.objects.find(entry => entry.type === 'theorem')?.id || state.index.objects[0]?.id
   const id = state.index.objects.some(entry => entry.id === requested) ? requested : fallback
@@ -296,9 +261,9 @@ async function init() {
 
 window.addEventListener('popstate', event => {
   const id = event.state?.id || new URLSearchParams(window.location.search).get('id')
-  if (id && id !== state.currentId) Promise.all([loadObject(id), loadEvidenceForSubject(id)]).then(([object, evidenceObjects]) => {
+  if (id && id !== state.currentId) loadObject(id).then(async object => {
     state.currentId = id
-    renderObject(object, evidenceObjects)
+    renderObject(object, await loadReferencedEvidence(object))
   }).catch(showError)
 })
 
