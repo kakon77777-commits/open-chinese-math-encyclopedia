@@ -64,7 +64,7 @@ async function buildPythonEvidence(subjectId, config) {
     },
     producer: {
       id: 'ocme-python-suite',
-      version: '0.5.0',
+      version: '0.4.0',
       runtime: 'python',
       command: 'python reference/python/verify_all.py',
     },
