@@ -1,24 +1,27 @@
 {
   "name": "open-chinese-math-encyclopedia-mvp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
-  "description": "開源中文數學百科 MVP：多物件 MKO 知識圖、原生 MathML 人類介面、MCP、JSONL 與 FELRA 計算伴隨。",
+  "description": "開源中文數學百科 MVP：嚴格 MKO Schema、可重建公式衍生層、知識圖、MCP 與計算伴隨。",
   "license": "MIT",
   "engines": { "node": ">=18" },
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
     "mcp": "node mcp-server.js",
+    "compile:formulas": "node scripts/compile-formulas.mjs --write",
+    "verify:formulas": "node scripts/compile-formulas.mjs --check",
     "validate": "node scripts/validate.mjs",
     "export": "node scripts/export-jsonl.mjs",
     "verify:python": "python reference/python/verify_all.py",
     "verify:felra": "node scripts/run-felra.mjs",
-    "test": "node tests/smoke.mjs",
-    "check": "npm run validate && npm test && npm run verify:python && npm run export"
+    "test": "node tests/smoke.mjs && node tests/formula-compiler.mjs && node tests/schema-negative.mjs",
+    "check": "npm run verify:formulas && npm run validate && npm test && npm run verify:python && npm run export"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "ajv": "8.17.1",
     "zod": "^4.4.3"
   }
 }
