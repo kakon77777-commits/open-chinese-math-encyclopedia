@@ -4,8 +4,9 @@ import path from 'node:path'
 import { ROOT, loadObject } from '../lib/store.js'
 import { createMkoValidator } from '../lib/schema-validation.js'
 
-const schema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'mko.schema.json'), 'utf8'))
-const validate = createMkoValidator(schema)
+const legacySchema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'mko.schema.json'), 'utf8'))
+const schema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'mko-v0.3.schema.json'), 'utf8'))
+const validate = createMkoValidator(schema, [legacySchema])
 const source = await loadObject('mko-euclid-pythagorean-theorem')
 
 assert.equal(validate(structuredClone(source)), true)
@@ -25,5 +26,17 @@ assert.equal(validate(extraTopLevel), false)
 const malformedHash = structuredClone(source)
 malformedHash.formula.compiler.source_sha256 = 'not-a-sha256'
 assert.equal(validate(malformedHash), false)
+
+const embeddedEvidence = structuredClone(source)
+embeddedEvidence.verification.evidence = { generated_at: '2026-07-25', tests: [] }
+assert.equal(validate(embeddedEvidence), false)
+
+const legacyFelraPath = structuredClone(source)
+legacyFelraPath.verification.felra_project = 'felra/pythagorean/project.yaml'
+assert.equal(validate(legacyFelraPath), false)
+
+const malformedEvidenceRef = structuredClone(source)
+malformedEvidenceRef.verification.evidence_refs[0].id = 'evidence-not-a-hash'
+assert.equal(validate(malformedEvidenceRef), false)
 
 console.log('Schema negative tests passed.')

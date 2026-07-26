@@ -1,17 +1,31 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
+import { listEvidence, loadEvidence } from '../lib/evidence-store.js'
 import { ROOT, listObjects, loadAllObjects } from '../lib/store.js'
 import { createMkoValidator, formatSchemaErrors } from '../lib/schema-validation.js'
 
 const errors = []
 const entries = await listObjects()
 const objects = await loadAllObjects()
+const evidenceEntries = await listEvidence()
+const evidenceObjects = await Promise.all(evidenceEntries.map(entry => loadEvidence(entry.id)))
 const entryIds = entries.map(entry => entry.id)
 const objectIds = objects.map(object => object.id)
 const knownIds = new Set(objectIds)
+const evidenceById = new Map(evidenceObjects.map(evidence => [evidence.id, evidence]))
 
-const schema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'mko.schema.json'), 'utf8'))
-const validateSchema = createMkoValidator(schema)
+const legacySchema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'mko.schema.json'), 'utf8'))
+const schema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'mko-v0.3.schema.json'), 'utf8'))
+const validateSchema = createMkoValidator(schema, [legacySchema])
+
+function resolveInsideRepository(relativePath, label) {
+  const target = path.resolve(ROOT, relativePath)
+  if (target !== ROOT && !target.startsWith(`${ROOT}${path.sep}`)) {
+    errors.push(`${label}: path escapes repository: ${relativePath}`)
+    return null
+  }
+  return target
+}
 
 for (const id of new Set(entryIds)) {
   if (entryIds.filter(value => value === id).length > 1) errors.push(`index: duplicate id ${id}`)
@@ -24,14 +38,13 @@ for (let index = 0; index < objects.length; index += 1) {
   const object = objects[index]
   const entry = entries[index]
   if (entry?.id !== object.id) errors.push(`index/object mismatch: ${entry?.id} != ${object.id}`)
-
   if (!validateSchema(object)) errors.push(...formatSchemaErrors(object.id, validateSchema.errors))
+  if ('evidence' in (object.verification || {})) errors.push(`${object.id}: embedded verification.evidence is forbidden in MKO v0.3`)
+  if ('felra_project' in (object.verification || {})) errors.push(`${object.id}: legacy verification.felra_project is forbidden in MKO v0.3`)
 
   for (const companion of object.computational_companions || []) {
-    const companionPath = path.resolve(ROOT, companion.path)
-    if (companionPath !== ROOT && !companionPath.startsWith(`${ROOT}${path.sep}`)) {
-      errors.push(`${object.id}/${companion.id}: companion path escapes repository`)
-    } else {
+    const companionPath = resolveInsideRepository(companion.path, `${object.id}/${companion.id}`)
+    if (companionPath) {
       const stat = await fs.stat(companionPath).catch(() => null)
       if (!stat?.isFile()) errors.push(`${object.id}/${companion.id}: missing companion file ${companion.path}`)
     }
@@ -41,6 +54,50 @@ for (let index = 0; index < objects.length; index += 1) {
     if (dependency.id === object.id) errors.push(`${object.id}: self dependency`)
     if (!knownIds.has(dependency.id)) errors.push(`${object.id}: unresolved dependency ${dependency.id}`)
   }
+
+  const producers = object.verification?.producers || []
+  const producerIds = producers.map(producer => producer.id)
+  for (const id of new Set(producerIds)) {
+    if (producerIds.filter(value => value === id).length > 1) errors.push(`${object.id}: duplicate producer ${id}`)
+  }
+  for (const producer of producers) {
+    const configPath = resolveInsideRepository(producer.config_path, `${object.id}/${producer.id}`)
+    if (configPath) {
+      const stat = await fs.stat(configPath).catch(() => null)
+      if (!stat?.isFile()) errors.push(`${object.id}/${producer.id}: missing producer config ${producer.config_path}`)
+    }
+  }
+
+  const refs = object.verification?.evidence_refs || []
+  const refIds = refs.map(ref => ref.id)
+  for (const id of new Set(refIds)) {
+    if (refIds.filter(value => value === id).length > 1) errors.push(`${object.id}: duplicate evidence ref ${id}`)
+  }
+  for (const ref of refs) {
+    const producer = producers.find(candidate => candidate.id === ref.producer_id)
+    if (!producer) errors.push(`${object.id}: evidence ref ${ref.id} uses undeclared producer ${ref.producer_id}`)
+    const evidence = evidenceById.get(ref.id)
+    if (!evidence) {
+      errors.push(`${object.id}: unresolved evidence ref ${ref.id}`)
+      continue
+    }
+    if (evidence.subject_id !== object.id) errors.push(`${object.id}: evidence ${ref.id} belongs to ${evidence.subject_id}`)
+    if (evidence.evidence_type !== ref.role) errors.push(`${object.id}: evidence ${ref.id} type ${evidence.evidence_type} != ref role ${ref.role}`)
+    if (evidence.producer.id !== ref.producer_id) errors.push(`${object.id}: evidence ${ref.id} producer ${evidence.producer.id} != ${ref.producer_id}`)
+  }
+  for (const producer of producers.filter(item => item.status === 'active')) {
+    if (!refs.some(ref => ref.producer_id === producer.id)) errors.push(`${object.id}: active producer ${producer.id} has no evidence ref`)
+  }
+}
+
+for (const evidence of evidenceObjects) {
+  const subject = objects.find(object => object.id === evidence.subject_id)
+  if (!subject) {
+    errors.push(`${evidence.id}: unknown subject ${evidence.subject_id}`)
+    continue
+  }
+  const referenced = (subject.verification?.evidence_refs || []).some(ref => ref.id === evidence.id)
+  if (!referenced) errors.push(`${evidence.id}: evidence is not referenced by subject ${evidence.subject_id}`)
 }
 
 const byId = new Map(objects.map(object => [object.id, object]))
@@ -70,15 +127,20 @@ if (errors.length) {
 const dependencyEdges = objects.reduce((sum, object) => sum + (object.dependencies || []).length, 0)
 const result = {
   ok: true,
-  schema_version: 'ocme-validation-v0.3',
+  schema_version: 'ocme-validation-v0.5',
   json_schema_draft: '2020-12',
-  mko_schema_version: 'mko-v0.2',
+  mko_schema_version: 'mko-v0.3',
   object_count: objects.length,
+  evidence_object_count: evidenceObjects.length,
+  evidence_ref_count: objects.reduce((sum, object) => sum + object.verification.evidence_refs.length, 0),
+  configured_producer_count: objects.reduce((sum, object) => sum + object.verification.producers.length, 0),
   dependency_edges: dependencyEdges,
   unresolved_dependencies: 0,
+  unresolved_evidence_refs: 0,
   dependency_cycles: 0,
   missing_companion_files: 0,
+  missing_producer_configs: 0,
 }
 await fs.mkdir('artifacts', { recursive: true })
-await fs.writeFile('artifacts/validation-v0.3.json', `${JSON.stringify(result, null, 2)}\n`, 'utf8')
-console.log(`MKO validation passed: ${objects.length} objects, ${dependencyEdges} dependency edge(s), Draft 2020-12 schema.`)
+await fs.writeFile('artifacts/validation-v0.5.json', `${JSON.stringify(result, null, 2)}\n`, 'utf8')
+console.log(`MKO validation passed: ${objects.length} objects, ${evidenceObjects.length} evidence objects, ${dependencyEdges} dependency edge(s).`)

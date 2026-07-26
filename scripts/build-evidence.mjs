@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { isDeepStrictEqual } from 'node:util'
+import { adaptFelraManifest } from '../lib/evidence-adapters/felra.js'
 import { canonicalJson, EVIDENCE_DIR } from '../lib/evidence-store.js'
 import { ROOT, loadAllObjects } from '../lib/store.js'
 import { createMkoValidator, formatSchemaErrors } from '../lib/schema-validation.js'
@@ -15,7 +16,7 @@ const orchestratorPath = 'reference/python/verify_all.py'
 const orchestratorBytes = await fs.readFile(path.join(ROOT, orchestratorPath))
 const orchestratorSha = createHash('sha256').update(orchestratorBytes).digest('hex')
 
-const configs = {
+const pythonConfigs = {
   'mko-right-triangle': {
     companion_path: 'reference/python/right_triangle.py',
     statement_zh: '在指定的四組角度案例中，參考程式正確接受直角三角形案例並拒絕非直角或退化案例。',
@@ -45,79 +46,104 @@ const configs = {
   },
 }
 
-function buildObject(subjectId, config) {
+async function buildPythonEvidence(subjectId, config) {
   const subject = byId.get(subjectId)
   if (!subject) throw new Error(`unknown evidence subject: ${subjectId}`)
   const suite = artifact.suites?.[subjectId]
   if (!suite) throw new Error(`missing Python evidence suite: ${subjectId}`)
-  return fs.readFile(path.join(ROOT, config.companion_path)).then(companionBytes => {
-    const payload = {
-      schema_version: 'evidence-v0.1',
-      subject_id: subjectId,
-      evidence_type: 'finite_computational_check',
-      status: Object.values(suite).every(Boolean) ? 'passed' : 'failed',
-      claim_scope: {
-        quantification: 'finite_declared_cases',
-        universal_proof: false,
-        statement_zh: config.statement_zh,
+  const companionBytes = await fs.readFile(path.join(ROOT, config.companion_path))
+  const payload = {
+    schema_version: 'evidence-v0.1',
+    subject_id: subjectId,
+    evidence_type: 'finite_computational_check',
+    status: Object.values(suite).every(Boolean) ? 'passed' : 'failed',
+    claim_scope: {
+      quantification: 'finite_declared_cases',
+      universal_proof: false,
+      statement_zh: config.statement_zh,
+    },
+    producer: {
+      id: 'ocme-python-suite',
+      version: '0.4.0',
+      runtime: 'python',
+      command: 'python reference/python/verify_all.py',
+    },
+    sources: [
+      {
+        role: 'computational_companion',
+        path: config.companion_path,
+        sha256: createHash('sha256').update(companionBytes).digest('hex'),
       },
-      producer: {
-        id: 'ocme-python-suite',
-        version: '0.4.0',
-        runtime: 'python',
-        command: 'python reference/python/verify_all.py',
+      {
+        role: 'suite_orchestrator',
+        path: orchestratorPath,
+        sha256: orchestratorSha,
       },
-      sources: [
-        {
-          role: 'computational_companion',
-          path: config.companion_path,
-          sha256: createHash('sha256').update(companionBytes).digest('hex'),
-        },
-        {
-          role: 'suite_orchestrator',
-          path: orchestratorPath,
-          sha256: orchestratorSha,
-        },
-      ],
-      formula_source_sha256: subject.formula.compiler.source_sha256,
-      checks: Object.entries(suite).sort(([a], [b]) => a.localeCompare(b)).map(([id, passed]) => ({
-        id,
-        status: passed ? 'passed' : 'failed',
-      })),
-      limitations: config.limitations,
-      replay: {
-        command: 'npm run verify:python',
-        expected_exit_code: 0,
-        source_artifact: 'artifacts/python-evidence-v0.2.json',
-      },
-    }
-    const digest = createHash('sha256').update(canonicalJson(payload), 'utf8').digest('hex')
-    return {
-      id: `evidence-sha256-${digest}`,
-      ...payload,
-      digest: {
-        algorithm: 'sha256',
-        canonical_payload_sha256: digest,
-      },
-    }
-  })
+    ],
+    formula_source_sha256: subject.formula.compiler.source_sha256,
+    checks: Object.entries(suite).sort(([a], [b]) => a.localeCompare(b)).map(([id, passed]) => ({
+      id,
+      status: passed ? 'passed' : 'failed',
+    })),
+    limitations: config.limitations,
+    replay: {
+      command: 'npm run verify:python',
+      expected_exit_code: 0,
+      source_artifact: 'artifacts/python-evidence-v0.2.json',
+    },
+  }
+  const digest = createHash('sha256').update(canonicalJson(payload), 'utf8').digest('hex')
+  return {
+    id: `evidence-sha256-${digest}`,
+    ...payload,
+    digest: { algorithm: 'sha256', canonical_payload_sha256: digest },
+  }
 }
 
-const expected = await Promise.all(Object.entries(configs).map(([subjectId, config]) => buildObject(subjectId, config)))
+async function buildFelraEvidence(errors) {
+  const sourceDir = path.join(ROOT, 'evidence-sources', 'felra')
+  const names = (await fs.readdir(sourceDir).catch(() => [])).filter(name => name.endsWith('.json')).sort()
+  if (!names.length) return []
+
+  const manifestSchema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'felra-run-manifest.schema.json'), 'utf8'))
+  const validateManifest = createMkoValidator(manifestSchema)
+  const evidence = []
+  for (const name of names) {
+    const manifest = JSON.parse(await fs.readFile(path.join(sourceDir, name), 'utf8'))
+    if (!validateManifest(manifest)) {
+      errors.push(...formatSchemaErrors(`FELRA manifest ${name}`, validateManifest.errors))
+      continue
+    }
+    try {
+      evidence.push(await adaptFelraManifest(manifest, {
+        subject: byId.get(manifest.subject_id),
+        root: ROOT,
+      }))
+    } catch (error) {
+      errors.push(`FELRA manifest ${name}: ${error.message}`)
+    }
+  }
+  return evidence
+}
+
+const errors = []
+const pythonEvidence = await Promise.all(Object.entries(pythonConfigs).map(([subjectId, config]) => buildPythonEvidence(subjectId, config)))
+const felraEvidence = await buildFelraEvidence(errors)
+const expected = [...pythonEvidence, ...felraEvidence].sort((a, b) => a.id.localeCompare(b.id))
 const expectedIndex = {
-  schema_version: 'ocme-evidence-index-v0.1',
+  schema_version: 'ocme-evidence-index-v0.2',
   objects: expected.map(evidence => ({
     id: evidence.id,
     subject_id: evidence.subject_id,
     evidence_type: evidence.evidence_type,
     status: evidence.status,
+    producer_id: evidence.producer.id,
     path: `/data/evidence/${evidence.id.replace('evidence-sha256-', '')}.json`,
   })),
 }
 
-const schema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'evidence.schema.json'), 'utf8'))
-const validateEvidence = createMkoValidator(schema)
-const errors = []
+const evidenceSchema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'evidence.schema.json'), 'utf8'))
+const validateEvidence = createMkoValidator(evidenceSchema)
 for (const evidence of expected) {
   if (!validateEvidence(evidence)) errors.push(...formatSchemaErrors(evidence.id, validateEvidence.errors))
 }
@@ -125,9 +151,7 @@ for (const evidence of expected) {
 await fs.mkdir(EVIDENCE_DIR, { recursive: true })
 if (mode === 'write') {
   const existing = await fs.readdir(EVIDENCE_DIR).catch(() => [])
-  for (const name of existing) {
-    if (name.endsWith('.json')) await fs.rm(path.join(EVIDENCE_DIR, name))
-  }
+  for (const name of existing) if (name.endsWith('.json')) await fs.rm(path.join(EVIDENCE_DIR, name))
   for (const evidence of expected) {
     const digest = evidence.digest.canonical_payload_sha256
     await fs.writeFile(path.join(EVIDENCE_DIR, `${digest}.json`), `${JSON.stringify(evidence, null, 2)}\n`, 'utf8')
@@ -139,23 +163,27 @@ if (mode === 'write') {
   for (const evidence of expected) {
     const digest = evidence.digest.canonical_payload_sha256
     const actual = JSON.parse(await fs.readFile(path.join(EVIDENCE_DIR, `${digest}.json`), 'utf8'))
-    if (!isDeepStrictEqual(actual, evidence)) errors.push(`${evidence.subject_id}: Evidence Object drifted; run npm run build:evidence`)
+    if (!isDeepStrictEqual(actual, evidence)) errors.push(`${evidence.subject_id}/${evidence.producer.id}: Evidence Object drifted; run npm run build:evidence`)
   }
 }
 
 const result = {
   ok: errors.length === 0,
-  schema_version: 'ocme-evidence-build-v0.1',
+  schema_version: 'ocme-evidence-build-v0.2',
   mode,
   object_count: expected.length,
+  producer_counts: expected.reduce((counts, evidence) => {
+    counts[evidence.producer.id] = (counts[evidence.producer.id] || 0) + 1
+    return counts
+  }, {}),
   evidence_ids: expected.map(evidence => evidence.id),
   errors,
 }
 await fs.mkdir(path.join(ROOT, 'artifacts'), { recursive: true })
-await fs.writeFile(path.join(ROOT, 'artifacts', 'evidence-verification-v0.4.json'), `${JSON.stringify(result, null, 2)}\n`, 'utf8')
+await fs.writeFile(path.join(ROOT, 'artifacts', 'evidence-verification-v0.5.json'), `${JSON.stringify(result, null, 2)}\n`, 'utf8')
 
 if (errors.length) {
   console.error(errors.join('\n'))
   process.exit(1)
 }
-console.log(`Evidence ${mode} passed: ${expected.length} content-addressed object(s).`)
+console.log(`Evidence ${mode} passed: ${expected.length} content-addressed object(s), ${felraEvidence.length} FELRA object(s).`)
