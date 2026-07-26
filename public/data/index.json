@@ -1,25 +1,34 @@
 {
-  "schema_version": "ocme-index-v0.3",
+  "schema_version": "ocme-index-v0.4",
   "objects": [
     {
       "id": "mko-right-triangle",
       "title": "直角三角形",
       "type": "definition",
+      "version": "0.5.0",
       "path": "/data/mko/right-triangle.json",
+      "evidence_ref_count": 1,
+      "producer_ids": ["ocme-python-suite"],
       "tags": ["幾何", "三角形", "定義"]
     },
     {
       "id": "mko-euclidean-length",
       "title": "歐幾里得長度",
       "type": "definition",
+      "version": "0.5.0",
       "path": "/data/mko/euclidean-length.json",
+      "evidence_ref_count": 1,
+      "producer_ids": ["ocme-python-suite"],
       "tags": ["幾何", "距離", "定義"]
     },
     {
       "id": "mko-euclid-pythagorean-theorem",
       "title": "畢達哥拉斯定理",
       "type": "theorem",
+      "version": "0.5.0",
       "path": "/data/mko/pythagorean-theorem.json",
+      "evidence_ref_count": 1,
+      "producer_ids": ["ocme-python-suite", "felra"],
       "tags": ["幾何", "三角形", "定理"]
     }
   ]
