@@ -1,36 +1,362 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://evemisslab.com/schemas/ocme/mko-v0.1.json",
-  "title": "OCME Mathematical Knowledge Object v0.1",
+  "$id": "https://evemisslab.com/schemas/ocme/mko-v0.2.json",
+  "title": "OCME Mathematical Knowledge Object v0.2",
   "type": "object",
   "required": [
-    "schema_version", "id", "semantic_family_id", "type", "version",
-    "titles", "statement", "formula", "assumptions", "symbols",
-    "computational_companions", "verification", "formalization", "provenance"
+    "schema_version", "id", "semantic_family_id", "type", "version", "language",
+    "titles", "summary", "statement", "formula", "assumptions", "symbols",
+    "dependencies", "explanation", "proofs", "computational_companions",
+    "verification", "formalization", "provenance"
   ],
   "properties": {
-    "schema_version": { "const": "mko-v0.1" },
-    "id": { "type": "string", "minLength": 1 },
-    "semantic_family_id": { "type": "string", "minLength": 1 },
-    "type": { "enum": ["concept", "definition", "axiom", "notation", "formula", "identity", "proposition", "lemma", "theorem", "corollary", "conjecture", "proof", "counterexample", "algorithm", "example", "exercise"] },
-    "version": { "type": "string" },
-    "titles": { "type": "object", "minProperties": 1 },
-    "statement": { "type": "object", "minProperties": 1 },
+    "$schema": { "type": "string" },
+    "schema_version": { "const": "mko-v0.2" },
+    "id": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" },
+    "semantic_family_id": { "type": "string", "pattern": "^sf-[a-z0-9-]+$" },
+    "type": {
+      "enum": [
+        "concept", "definition", "axiom", "notation", "formula", "identity",
+        "proposition", "lemma", "theorem", "corollary", "conjecture", "proof",
+        "counterexample", "algorithm", "example", "exercise"
+      ]
+    },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "language": { "type": "string", "minLength": 2 },
+    "titles": { "$ref": "#/$defs/localizedText" },
+    "summary": { "$ref": "#/$defs/localizedText" },
+    "statement": { "$ref": "#/$defs/localizedText" },
+    "formula": { "$ref": "#/$defs/formula" },
+    "assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/assumption" }
+    },
+    "symbols": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/symbolBinding" }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dependency" }
+    },
+    "explanation": { "$ref": "#/$defs/explanation" },
+    "proofs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/proof" }
+    },
+    "computational_companions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/computationalCompanion" }
+    },
+    "verification": { "$ref": "#/$defs/verification" },
+    "formalization": { "$ref": "#/$defs/formalization" },
+    "provenance": { "$ref": "#/$defs/provenance" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "localizedText": {
+      "type": "object",
+      "required": ["zh-Hant"],
+      "properties": {
+        "zh-Hant": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
     "formula": {
       "type": "object",
-      "required": ["tex", "mathml", "semantic_ast"],
+      "required": ["tex", "mathml", "semantic_ast", "compiler"],
       "properties": {
-        "tex": { "type": "string" },
-        "mathml": { "type": "string" },
-        "semantic_ast": { "type": "object" }
-      }
+        "tex": { "type": "string", "minLength": 1 },
+        "mathml": { "type": "string", "pattern": "^<math\\b" },
+        "semantic_ast": { "$ref": "#/$defs/astNode" },
+        "compiler": {
+          "type": "object",
+          "required": ["id", "version", "source_sha256"],
+          "properties": {
+            "id": { "const": "ocme-formula-core" },
+            "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+            "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     },
-    "assumptions": { "type": "array", "minItems": 1 },
-    "symbols": { "type": "array", "minItems": 1 },
-    "computational_companions": { "type": "array" },
-    "verification": { "type": "object" },
-    "formalization": { "type": "object" },
-    "provenance": { "type": "object" }
-  },
-  "additionalProperties": true
+    "astNode": {
+      "oneOf": [
+        { "$ref": "#/$defs/numberNode" },
+        { "$ref": "#/$defs/symbolNode" },
+        { "$ref": "#/$defs/constantNode" },
+        { "$ref": "#/$defs/equationNode" },
+        { "$ref": "#/$defs/additionNode" },
+        { "$ref": "#/$defs/subtractionNode" },
+        { "$ref": "#/$defs/powerNode" },
+        { "$ref": "#/$defs/subscriptNode" },
+        { "$ref": "#/$defs/fractionNode" },
+        { "$ref": "#/$defs/squareRootNode" },
+        { "$ref": "#/$defs/groupNode" },
+        { "$ref": "#/$defs/functionCallNode" }
+      ]
+    },
+    "numberNode": {
+      "type": "object",
+      "required": ["type", "value"],
+      "properties": {
+        "type": { "const": "number" },
+        "value": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "symbolNode": {
+      "type": "object",
+      "required": ["type", "name", "glyph"],
+      "properties": {
+        "type": { "const": "symbol" },
+        "name": { "type": "string", "minLength": 1 },
+        "glyph": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "constantNode": {
+      "type": "object",
+      "required": ["type", "name", "glyph"],
+      "properties": {
+        "type": { "const": "constant" },
+        "name": { "type": "string", "minLength": 1 },
+        "glyph": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "equationNode": {
+      "type": "object",
+      "required": ["type", "lhs", "rhs"],
+      "properties": {
+        "type": { "const": "equation" },
+        "lhs": { "$ref": "#/$defs/astNode" },
+        "rhs": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "additionNode": {
+      "type": "object",
+      "required": ["type", "operands"],
+      "properties": {
+        "type": { "const": "addition" },
+        "operands": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/astNode" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "subtractionNode": {
+      "type": "object",
+      "required": ["type", "left", "right"],
+      "properties": {
+        "type": { "const": "subtraction" },
+        "left": { "$ref": "#/$defs/astNode" },
+        "right": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "powerNode": {
+      "type": "object",
+      "required": ["type", "base", "exponent"],
+      "properties": {
+        "type": { "const": "power" },
+        "base": { "$ref": "#/$defs/astNode" },
+        "exponent": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "subscriptNode": {
+      "type": "object",
+      "required": ["type", "base", "subscript"],
+      "properties": {
+        "type": { "const": "subscript" },
+        "base": { "$ref": "#/$defs/astNode" },
+        "subscript": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "fractionNode": {
+      "type": "object",
+      "required": ["type", "numerator", "denominator"],
+      "properties": {
+        "type": { "const": "fraction" },
+        "numerator": { "$ref": "#/$defs/astNode" },
+        "denominator": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "squareRootNode": {
+      "type": "object",
+      "required": ["type", "radicand"],
+      "properties": {
+        "type": { "const": "square_root" },
+        "radicand": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "groupNode": {
+      "type": "object",
+      "required": ["type", "body"],
+      "properties": {
+        "type": { "const": "group" },
+        "body": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "functionCallNode": {
+      "type": "object",
+      "required": ["type", "callee", "arguments"],
+      "properties": {
+        "type": { "const": "function_call" },
+        "callee": { "$ref": "#/$defs/astNode" },
+        "arguments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/astNode" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "assumption": {
+      "type": "object",
+      "required": ["id", "zh-Hant"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "zh-Hant": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "symbolBinding": {
+      "type": "object",
+      "required": ["token", "role", "role_zh", "scope"],
+      "properties": {
+        "token": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "role_zh": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "dependency": {
+      "type": "object",
+      "required": ["id", "title_zh", "reason_zh"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" },
+        "title_zh": { "type": "string", "minLength": 1 },
+        "reason_zh": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "explanation": {
+      "type": "object",
+      "required": ["paragraphs_zh", "common_misconception_zh"],
+      "properties": {
+        "paragraphs_zh": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "common_misconception_zh": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "proof": {
+      "type": "object",
+      "required": ["id", "type", "status", "summary_zh"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "summary_zh": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "computationalCompanion": {
+      "type": "object",
+      "required": ["id", "language", "relation", "status", "path", "warning", "source", "non_identity"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "minLength": 1 },
+        "relation": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "warning": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "non_identity": {
+          "type": "object",
+          "required": ["preserved", "approximated", "omitted"],
+          "properties": {
+            "preserved": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "approximated": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "omitted": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["computational_status", "warning_zh", "evidence"],
+      "properties": {
+        "computational_status": { "type": "string", "minLength": 1 },
+        "warning_zh": { "type": "string", "minLength": 1 },
+        "felra_project": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "object",
+          "required": ["generated_at", "tests"],
+          "properties": {
+            "generated_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+            "tests": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name_zh", "method", "result"],
+                "properties": {
+                  "name_zh": { "type": "string", "minLength": 1 },
+                  "method": { "type": "string", "minLength": 1 },
+                  "result": { "type": "string", "minLength": 1 }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "formalization": {
+      "type": "object",
+      "required": ["status", "target_systems", "next_obligation_zh"],
+      "properties": {
+        "status": { "type": "string", "minLength": 1 },
+        "target_systems": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "next_obligation_zh": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["origin", "note_zh", "content_license", "code_license", "created_at"],
+      "properties": {
+        "origin": { "type": "string", "minLength": 1 },
+        "note_zh": { "type": "string", "minLength": 1 },
+        "content_license": { "type": "string", "minLength": 1 },
+        "code_license": { "type": "string", "minLength": 1 },
+        "created_at": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" }
+      },
+      "additionalProperties": false
+    }
+  }
 }
