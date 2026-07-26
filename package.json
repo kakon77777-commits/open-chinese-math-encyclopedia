@@ -16,7 +16,8 @@
     "export": "node scripts/export-jsonl.mjs",
     "verify:python": "python reference/python/verify_all.py",
     "verify:felra": "node scripts/run-felra.mjs",
-    "test": "node tests/smoke.mjs && node tests/formula-compiler.mjs && node tests/schema-negative.mjs",
+    "test:syntax": "node --check src/main.js && node --check mcp-server.js && node --check lib/formula-compiler.js",
+    "test": "npm run test:syntax && node tests/smoke.mjs && node tests/formula-compiler.mjs && node tests/schema-negative.mjs",
     "check": "npm run verify:formulas && npm run validate && npm test && npm run verify:python && npm run export"
   },
   "dependencies": {
