@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
+import { compileFormula } from './lib/formula-compiler.js'
 import {
   buildDependencyGraph,
   compactObject,
@@ -11,7 +12,7 @@ import {
 
 const jsonResult = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] })
 const errorResult = error => ({ content: [{ type: 'text', text: `Error: ${error?.message || error}` }], isError: true })
-const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.2.0' })
+const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.3.0' })
 
 server.registerTool('search_math_objects', {
   title: '搜尋數學知識物件',
@@ -58,12 +59,27 @@ server.registerTool('get_dependencies', {
 
 server.registerTool('get_formula_ast', {
   title: '取得公式語義 AST',
-  description: '取得公式的 TeX、MathML 與 Semantic AST，不需解析網頁或公式圖片。',
+  description: '取得公式的 TeX、MathML、編譯器資訊與 Semantic AST，不需解析網頁或公式圖片。',
   inputSchema: { id: z.string().describe('數學知識物件 ID') },
 }, async ({ id }) => {
   try {
     const object = await loadObject(id)
     return jsonResult({ object_id: id, formula: object.formula, symbols: object.symbols })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('compile_formula', {
+  title: '編譯 OCME 核心公式',
+  description: '將支援子集中的 TeX 編譯為原生 MathML、通用語義 AST 與來源雜湊。遇到未支援命令會直接失敗，不做猜測。',
+  inputSchema: {
+    tex: z.string().min(1).describe('例如 a^2+b^2=c^2、\\gamma=\\frac{\\pi}{2}'),
+  },
+}, async ({ tex }) => {
+  try {
+    return jsonResult({
+      supported_subset: ['equation', 'addition', 'subtraction', 'power', 'subscript', 'function_call', 'fraction', 'square_root', 'group', 'selected_greek_symbols'],
+      result: compileFormula(tex),
+    })
   } catch (error) { return errorResult(error) }
 })
 
