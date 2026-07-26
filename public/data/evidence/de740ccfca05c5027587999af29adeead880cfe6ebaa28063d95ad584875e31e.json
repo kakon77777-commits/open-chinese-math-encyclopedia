@@ -1,0 +1,51 @@
+{
+  "id": "evidence-sha256-de740ccfca05c5027587999af29adeead880cfe6ebaa28063d95ad584875e31e",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-euclidean-length",
+  "evidence_type": "finite_computational_check",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "finite_declared_cases",
+    "universal_proof": false,
+    "statement_zh": "在指定座標案例中，參考程式正確計算 3-4-5 距離、同一點距離、對稱性與非負性。"
+  },
+  "producer": {
+    "id": "ocme-python-suite",
+    "version": "0.4.0",
+    "runtime": "python",
+    "command": "python reference/python/verify_all.py"
+  },
+  "sources": [
+    {
+      "role": "computational_companion",
+      "path": "reference/python/euclidean_length.py",
+      "sha256": "438d8ab08ed319dc416603c68d413861e50e3241db091d254b79da9ad86c0356"
+    },
+    {
+      "role": "suite_orchestrator",
+      "path": "reference/python/verify_all.py",
+      "sha256": "1b3596374e90739504e59c4cc9c90412bed6b314c935d8e35d49a30e9bf0a520"
+    }
+  ],
+  "formula_source_sha256": "1e1c9f11e53bf6639ab84fb44c67d06df41db6672cd37e61aba68e70e35c42ac",
+  "checks": [
+    { "id": "3-4-5", "status": "passed" },
+    { "id": "identity", "status": "passed" },
+    { "id": "nonnegative", "status": "passed" },
+    { "id": "symmetry", "status": "passed" }
+  ],
+  "limitations": [
+    "只涵蓋有限座標案例。",
+    "實數運算由有限精度浮點數近似。",
+    "不證明所有點上的度量公理。"
+  ],
+  "replay": {
+    "command": "npm run verify:python",
+    "expected_exit_code": 0,
+    "source_artifact": "artifacts/python-evidence-v0.2.json"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "de740ccfca05c5027587999af29adeead880cfe6ebaa28063d95ad584875e31e"
+  }
+}
