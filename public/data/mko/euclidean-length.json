@@ -1,21 +1,14 @@
 {
-  "$schema": "../../../schemas/mko.schema.json",
-  "schema_version": "mko-v0.2",
+  "$schema": "../../../schemas/mko-v0.3.schema.json",
+  "schema_version": "mko-v0.3",
   "id": "mko-euclidean-length",
   "semantic_family_id": "sf-euclidean-length",
   "type": "definition",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "language": "zh-Hant",
-  "titles": {
-    "zh-Hant": "歐幾里得長度",
-    "en": "Euclidean length"
-  },
-  "summary": {
-    "zh-Hant": "平面上兩點之間由座標差平方和的正平方根所定義的距離。"
-  },
-  "statement": {
-    "zh-Hant": "在歐幾里得平面中，若 P=(x₁,y₁)、Q=(x₂,y₂)，則兩點距離定義為座標差平方和的正平方根。"
-  },
+  "titles": { "zh-Hant": "歐幾里得長度", "en": "Euclidean length" },
+  "summary": { "zh-Hant": "平面上兩點之間由座標差平方和的正平方根所定義的距離。" },
+  "statement": { "zh-Hant": "在歐幾里得平面中，若 P=(x₁,y₁)、Q=(x₂,y₂)，則兩點距離定義為座標差平方和的正平方根。" },
   "formula": {
     "tex": "d(P,Q)=\\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}",
     "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mrow><mi>d</mi><mo>(</mo><mi>P</mi><mo>,</mo><mi>Q</mi><mo>)</mo></mrow><mo>=</mo><msqrt><mrow><msup><mrow><mo>(</mo><mrow><msub><mi>x</mi><mn>2</mn></msub><mo>−</mo><msub><mi>x</mi><mn>1</mn></msub></mrow><mo>)</mo></mrow><mn>2</mn></msup><mo>+</mo><msup><mrow><mo>(</mo><mrow><msub><mi>y</mi><mn>2</mn></msub><mo>−</mo><msub><mi>y</mi><mn>1</mn></msub></mrow><mo>)</mo></mrow><mn>2</mn></msup></mrow></msqrt></mrow></math>",
@@ -40,16 +33,8 @@
                 "type": "group",
                 "body": {
                   "type": "subtraction",
-                  "left": {
-                    "type": "subscript",
-                    "base": { "type": "symbol", "name": "x", "glyph": "x" },
-                    "subscript": { "type": "number", "value": 2 }
-                  },
-                  "right": {
-                    "type": "subscript",
-                    "base": { "type": "symbol", "name": "x", "glyph": "x" },
-                    "subscript": { "type": "number", "value": 1 }
-                  }
+                  "left": { "type": "subscript", "base": { "type": "symbol", "name": "x", "glyph": "x" }, "subscript": { "type": "number", "value": 2 } },
+                  "right": { "type": "subscript", "base": { "type": "symbol", "name": "x", "glyph": "x" }, "subscript": { "type": "number", "value": 1 } }
                 }
               },
               "exponent": { "type": "number", "value": 2 }
@@ -60,16 +45,8 @@
                 "type": "group",
                 "body": {
                   "type": "subtraction",
-                  "left": {
-                    "type": "subscript",
-                    "base": { "type": "symbol", "name": "y", "glyph": "y" },
-                    "subscript": { "type": "number", "value": 2 }
-                  },
-                  "right": {
-                    "type": "subscript",
-                    "base": { "type": "symbol", "name": "y", "glyph": "y" },
-                    "subscript": { "type": "number", "value": 1 }
-                  }
+                  "left": { "type": "subscript", "base": { "type": "symbol", "name": "y", "glyph": "y" }, "subscript": { "type": "number", "value": 2 } },
+                  "right": { "type": "subscript", "base": { "type": "symbol", "name": "y", "glyph": "y" }, "subscript": { "type": "number", "value": 1 } }
                 }
               },
               "exponent": { "type": "number", "value": 2 }
@@ -125,14 +102,21 @@
   "verification": {
     "computational_status": "finite_cases_passed",
     "warning_zh": "具體座標測試只驗證參考實作，不等於證明距離函數對所有實數點滿足全部度量公理。",
-    "evidence": {
-      "generated_at": "2026-07-25",
-      "tests": [
-        { "name_zh": "(0,0) 到 (3,4)", "method": "floating-point hypot", "result": "5.0" },
-        { "name_zh": "同一點距離", "method": "floating-point hypot", "result": "0.0" },
-        { "name_zh": "交換兩點的對稱性", "method": "finite example comparison", "result": "passed" }
-      ]
-    }
+    "evidence_refs": [
+      {
+        "id": "evidence-sha256-de740ccfca05c5027587999af29adeead880cfe6ebaa28063d95ad584875e31e",
+        "role": "finite_computational_check",
+        "producer_id": "ocme-python-suite"
+      }
+    ],
+    "producers": [
+      {
+        "id": "ocme-python-suite",
+        "adapter": "native_python",
+        "config_path": "reference/python/verify_all.py",
+        "status": "active"
+      }
+    ]
   },
   "formalization": {
     "status": "not_formalized",
