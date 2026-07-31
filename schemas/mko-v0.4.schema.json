@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evemisslab.com/schemas/ocme/mko-v0.4.json",
+  "title": "OCME Mathematical Knowledge Object v0.4",
+  "type": "object",
+  "required": [
+    "schema_version", "id", "semantic_family_id", "type", "version", "language",
+    "titles", "summary", "statement", "formula", "assumptions", "symbols",
+    "dependencies", "explanation", "proofs", "computational_companions",
+    "verification", "formalization", "provenance"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": "mko-v0.4" },
+    "id": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" },
+    "semantic_family_id": { "type": "string", "pattern": "^sf-[a-z0-9-]+$" },
+    "type": { "$ref": "#/$defs/objectType" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "language": { "type": "string", "minLength": 2 },
+    "titles": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/localizedText" },
+    "summary": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/localizedText" },
+    "statement": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/localizedText" },
+    "formula": { "$ref": "#/$defs/formula" },
+    "assumptions": {
+      "type": "array", "minItems": 1,
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/assumption" }
+    },
+    "symbols": {
+      "type": "array", "minItems": 1,
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/symbolBinding" }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/dependency" }
+    },
+    "explanation": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/explanation" },
+    "proofs": {
+      "type": "array",
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/proof" }
+    },
+    "computational_companions": {
+      "type": "array",
+      "items": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/computationalCompanion" }
+    },
+    "verification": { "$ref": "#/$defs/verification" },
+    "formalization": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/formalization" },
+    "provenance": { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/provenance" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "objectType": {
+      "enum": [
+        "concept", "definition", "axiom", "notation", "formula", "identity",
+        "proposition", "lemma", "theorem", "corollary", "conjecture", "proof",
+        "counterexample", "algorithm", "example", "exercise"
+      ]
+    },
+    "formula": {
+      "type": "object",
+      "required": ["tex", "mathml", "semantic_ast", "compiler"],
+      "properties": {
+        "tex": { "type": "string", "minLength": 1 },
+        "mathml": { "type": "string", "pattern": "^<math\\b" },
+        "semantic_ast": { "$ref": "#/$defs/astNode" },
+        "compiler": {
+          "type": "object",
+          "required": ["id", "version", "source_sha256"],
+          "properties": {
+            "id": { "const": "ocme-formula-core" },
+            "version": { "const": "0.4.0" },
+            "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "astNode": {
+      "oneOf": [
+        { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/numberNode" },
+        { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/symbolNode" },
+        { "$ref": "https://evemisslab.com/schemas/ocme/mko-v0.2.json#/$defs/constantNode" },
+        { "$ref": "#/$defs/equationNode" },
+        { "$ref": "#/$defs/additionNode" },
+        { "$ref": "#/$defs/subtractionNode" },
+        { "$ref": "#/$defs/powerNode" },
+        { "$ref": "#/$defs/subscriptNode" },
+        { "$ref": "#/$defs/fractionNode" },
+        { "$ref": "#/$defs/squareRootNode" },
+        { "$ref": "#/$defs/groupNode" },
+        { "$ref": "#/$defs/functionCallNode" },
+        { "$ref": "#/$defs/membershipNode" },
+        { "$ref": "#/$defs/mappingNode" },
+        { "$ref": "#/$defs/tendsToNode" }
+      ]
+    },
+    "equationNode": {
+      "type": "object", "required": ["type", "lhs", "rhs"],
+      "properties": { "type": { "const": "equation" }, "lhs": { "$ref": "#/$defs/astNode" }, "rhs": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "additionNode": {
+      "type": "object", "required": ["type", "operands"],
+      "properties": { "type": { "const": "addition" }, "operands": { "type": "array", "minItems": 2, "items": { "$ref": "#/$defs/astNode" } } },
+      "additionalProperties": false
+    },
+    "subtractionNode": {
+      "type": "object", "required": ["type", "left", "right"],
+      "properties": { "type": { "const": "subtraction" }, "left": { "$ref": "#/$defs/astNode" }, "right": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "powerNode": {
+      "type": "object", "required": ["type", "base", "exponent"],
+      "properties": { "type": { "const": "power" }, "base": { "$ref": "#/$defs/astNode" }, "exponent": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "subscriptNode": {
+      "type": "object", "required": ["type", "base", "subscript"],
+      "properties": { "type": { "const": "subscript" }, "base": { "$ref": "#/$defs/astNode" }, "subscript": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "fractionNode": {
+      "type": "object", "required": ["type", "numerator", "denominator"],
+      "properties": { "type": { "const": "fraction" }, "numerator": { "$ref": "#/$defs/astNode" }, "denominator": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "squareRootNode": {
+      "type": "object", "required": ["type", "radicand"],
+      "properties": { "type": { "const": "square_root" }, "radicand": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "groupNode": {
+      "type": "object", "required": ["type", "body"],
+      "properties": { "type": { "const": "group" }, "body": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "functionCallNode": {
+      "type": "object", "required": ["type", "callee", "arguments"],
+      "properties": { "type": { "const": "function_call" }, "callee": { "$ref": "#/$defs/astNode" }, "arguments": { "type": "array", "items": { "$ref": "#/$defs/astNode" } } },
+      "additionalProperties": false
+    },
+    "membershipNode": {
+      "type": "object", "required": ["type", "element", "set"],
+      "properties": { "type": { "const": "membership" }, "element": { "$ref": "#/$defs/astNode" }, "set": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "mappingNode": {
+      "type": "object", "required": ["type", "function", "domain", "codomain"],
+      "properties": {
+        "type": { "const": "mapping" },
+        "function": { "$ref": "#/$defs/astNode" },
+        "domain": { "$ref": "#/$defs/astNode" },
+        "codomain": { "$ref": "#/$defs/astNode" }
+      },
+      "additionalProperties": false
+    },
+    "tendsToNode": {
+      "type": "object", "required": ["type", "expression", "target"],
+      "properties": { "type": { "const": "tends_to" }, "expression": { "$ref": "#/$defs/astNode" }, "target": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "required": ["computational_status", "warning_zh", "evidence_refs", "producers"],
+      "properties": {
+        "computational_status": { "type": "string", "minLength": 1 },
+        "warning_zh": { "type": "string", "minLength": 1 },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "role", "producer_id"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^evidence-sha256-[a-f0-9]{64}$" },
+              "role": { "enum": ["finite_computational_check", "counterexample_search", "symbolic_check", "property_check", "formal_proof"] },
+              "producer_id": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "producers": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "adapter", "config_path", "status"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "adapter": { "enum": ["native_python", "felra", "formal_system"] },
+              "config_path": { "type": "string", "minLength": 1 },
+              "status": { "enum": ["active", "configured", "unavailable"] }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
