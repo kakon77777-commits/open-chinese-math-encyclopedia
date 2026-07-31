@@ -1,0 +1,69 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-set-membership",
+  "semantic_family_id": "sf-set-membership",
+  "type": "definition",
+  "version": "0.7.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "集合隸屬", "en": "Set membership" },
+  "summary": { "zh-Hant": "符號 x∈A 表示元素 x 屬於集合 A。" },
+  "statement": { "zh-Hant": "給定集合 A 與對象 x，x∈A 是一個命題，表示 x 是 A 的元素。" },
+  "formula": {
+    "tex": "x\\in A",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>x</mi><mo>∈</mo><mi>A</mi></mrow></math>",
+    "semantic_ast": {
+      "type": "membership",
+      "element": { "type": "symbol", "name": "x", "glyph": "x" },
+      "set": { "type": "symbol", "name": "A", "glyph": "A" }
+    },
+    "compiler": {
+      "id": "ocme-formula-core",
+      "version": "0.4.0",
+      "source_sha256": "fac41f5df7e2995de6d6b48a0cce188696ab53b3a4ebdbcc87c451009145c802"
+    }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "A 已被指定為一個集合。" }
+  ],
+  "symbols": [
+    { "token": "x", "role": "element_candidate", "role_zh": "候選元素", "scope": "definition" },
+    { "token": "A", "role": "set", "role_zh": "集合", "scope": "definition" },
+    { "token": "∈", "role": "membership_relation", "role_zh": "隸屬關係", "scope": "definition" }
+  ],
+  "dependencies": [],
+  "explanation": {
+    "paragraphs_zh": [
+      "集合像是一個由若干對象構成的數學容器，但集合本身不必依靠實際盒子或空間來存在。",
+      "x∈A 只表示隸屬關係；它不表示 x 等於 A，也不表示 x 是 A 的子集合。"
+    ],
+    "common_misconception_zh": "混淆元素隸屬 x∈A 與子集合關係 B⊆A。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_applicable",
+    "warning_zh": "這是基礎關係定義；程式中的容器成員測試只是某種實作，不等同於一般集合論語義。",
+    "evidence_refs": [],
+    "producers": [
+      {
+        "id": "lean-mathlib",
+        "adapter": "formal_system",
+        "config_path": "formal/lean/lakefile.toml",
+        "status": "configured"
+      }
+    ]
+  },
+  "formalization": {
+    "status": "mapped_not_evidenced",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "建立此百科物件與 Lean 的 Membership／Set.mem 語義對應證據。"
+  },
+  "provenance": {
+    "origin": "evemisslab_original_mvp",
+    "note_zh": "OCME 基礎數學知識物件；敘述為原創整理。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-07-31"
+  }
+}
