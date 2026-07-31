@@ -1,0 +1,35 @@
+{
+  "schema_version": "lean-run-manifest-v0.1",
+  "subject_id": "mko-set-membership",
+  "producer_version": "4.30.0",
+  "mathlib_version": "v4.30.0",
+  "toolchain": "Lean 4.30.0",
+  "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+  "theorem_name": "OCMEFormal.set_membership_semantics",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "對任意型別 α、元素 x:α 與集合 A:Set α，命題 x∈A 與謂詞求值 A x 等價。"
+  },
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_set_membership_semantics", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據形式化 Lean Set 作為 α→Prop 的集合語義，不宣稱涵蓋所有集合論基礎系統。",
+    "程式容器的成員測試仍不會因此自動等同於一般數學集合隸屬。",
+    "本證據依賴 Lean 4.30.0 與 Mathlib v4.30.0。"
+  ],
+  "source_paths": [
+    "formal/lean/lean-toolchain",
+    "formal/lean/lakefile.toml",
+    "formal/lean/OCMEFormal/Foundations.lean"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Foundations.lean"
+  }
+}
