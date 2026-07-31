@@ -2,6 +2,14 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod'
 import {
+  browseDomain,
+  getArchitectureSummary,
+  getLearningPathsForObject,
+  getMethod,
+  loadArchitectureProfile,
+  loadArchitectureRegistries,
+} from './lib/architecture-store.js'
+import {
   listEvidence,
   loadEvidence,
   verifyEvidenceAddress,
@@ -18,7 +26,7 @@ import {
 
 const jsonResult = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] })
 const errorResult = error => ({ content: [{ type: 'text', text: `Error: ${error?.message || error}` }], isError: true })
-const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.8.0' })
+const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.9.0' })
 
 async function referencedEvidence(object) {
   return Promise.all((object.verification?.evidence_refs || []).map(ref => loadEvidence(ref.id)))
@@ -48,13 +56,98 @@ server.registerTool('get_math_object', {
 
 server.registerTool('get_math_context_bundle', {
   title: '取得 AI 最小數學上下文包',
-  description: '取得精簡 MKO 與其明確引用的 Evidence Object，不掃描未被 MKO 承認的證據。',
+  description: '取得精簡 MKO、其明確引用的 Evidence，以及分類、難度、路徑與方法 Architecture Profile。',
   inputSchema: { id: z.string().describe('數學知識物件 ID') },
 }, async ({ id }) => {
   try {
     const object = await loadObject(id)
-    return jsonResult({ object: compactObject(object), evidence: await referencedEvidence(object) })
+    const [evidence, architecture] = await Promise.all([
+      referencedEvidence(object),
+      loadArchitectureProfile(id),
+    ])
+    return jsonResult({ object: compactObject(object), evidence, architecture })
   } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_architecture_summary', {
+  title: '取得 OCME 數學世界架構摘要',
+  description: '取得領域、方法、學習路徑、課綱對齊、Profile 與難度維度數量。',
+}, async () => {
+  try { return jsonResult(await getArchitectureSummary()) }
+  catch (error) { return errorResult(error) }
+})
+
+server.registerTool('list_architecture_terms', {
+  title: '列出數學領域、方法與課綱框架',
+  description: '列出 v0.9 Architecture Store 的領域、方法與課綱框架，不包含完整 MKO 內容。',
+}, async () => {
+  try {
+    const registries = await loadArchitectureRegistries()
+    return jsonResult({
+      domains: registries.domains,
+      methods: registries.methods.map(method => ({
+        id: method.id,
+        title_zh: method.title_zh,
+        category: method.category,
+      })),
+      curriculum_frameworks: registries.curricula.frameworks,
+      learning_paths: registries.learningPaths.map(pathObject => ({
+        id: pathObject.id,
+        title_zh: pathObject.title_zh,
+        audience: pathObject.audience,
+        goal_zh: pathObject.goal_zh,
+      })),
+    })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_classification', {
+  title: '取得數學物件多軸分類',
+  description: '取得 domain、object kind、method、representation 等帶理由的分類 assertion。',
+  inputSchema: { id: z.string().describe('數學知識物件 ID') },
+}, async ({ id }) => {
+  try {
+    const profile = await loadArchitectureProfile(id)
+    return jsonResult({ object_id: id, classification: profile.classification })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_difficulty_profile', {
+  title: '取得任務型數學難度向量',
+  description: '取得十二維難度輪廓；這不是單一總分，也不把課程位置當作固有難度。',
+  inputSchema: { id: z.string().describe('數學知識物件 ID') },
+}, async ({ id }) => {
+  try {
+    const profile = await loadArchitectureProfile(id)
+    return jsonResult({ object_id: id, difficulty: profile.difficulty })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_learning_paths', {
+  title: '取得包含此物件的學習路徑',
+  description: '取得通識、幾何、函數到極限、形式化或證據素養等可選路徑；不宣稱存在唯一學習順序。',
+  inputSchema: { id: z.string().describe('數學知識物件 ID') },
+}, async ({ id }) => {
+  try { return jsonResult({ object_id: id, paths: await getLearningPathsForObject(id) }) }
+  catch (error) { return errorResult(error) }
+})
+
+server.registerTool('browse_domain', {
+  title: '瀏覽數學領域',
+  description: '取得領域說明與目前被該領域 assertion 引用的 MKO。',
+  inputSchema: { domain_id: z.string().describe('例如 geometry、analysis、foundations_logic') },
+}, async ({ domain_id }) => {
+  try { return jsonResult(await browseDomain(domain_id)) }
+  catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_method', {
+  title: '取得數學方法物件',
+  description: '取得方法的適用訊號、步驟、失敗模式、相關方法與目前對應 MKO。',
+  inputSchema: { method_id: z.string().describe('例如 method-construction 或 method-formal-verification') },
+}, async ({ method_id }) => {
+  try { return jsonResult(await getMethod(method_id)) }
+  catch (error) { return errorResult(error) }
 })
 
 server.registerTool('get_dependencies', {
