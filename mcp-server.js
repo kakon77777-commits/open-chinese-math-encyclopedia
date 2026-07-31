@@ -18,7 +18,7 @@ import {
 
 const jsonResult = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] })
 const errorResult = error => ({ content: [{ type: 'text', text: `Error: ${error?.message || error}` }], isError: true })
-const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.6.0' })
+const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.7.0' })
 
 async function referencedEvidence(object) {
   return Promise.all((object.verification?.evidence_refs || []).map(ref => loadEvidence(ref.id)))
@@ -83,11 +83,15 @@ server.registerTool('get_formula_ast', {
 server.registerTool('compile_formula', {
   title: '編譯 OCME 核心公式',
   description: '將支援子集中的 TeX 編譯為原生 MathML、語義 AST 與來源雜湊；未支援命令直接失敗。',
-  inputSchema: { tex: z.string().min(1).describe('例如 a^2+b^2=c^2、\\gamma=\\frac{\\pi}{2}') },
+  inputSchema: { tex: z.string().min(1).describe('例如 a^2+b^2=c^2、x\\in A、f:X\\to Y、x\\to a') },
 }, async ({ tex }) => {
   try {
     return jsonResult({
-      supported_subset: ['equation', 'addition', 'subtraction', 'power', 'subscript', 'function_call', 'fraction', 'square_root', 'group', 'selected_greek_symbols'],
+      supported_subset: [
+        'equation', 'membership', 'mapping', 'tends_to', 'addition', 'subtraction',
+        'power', 'subscript', 'function_call', 'fraction', 'square_root', 'group',
+        'selected_greek_symbols'
+      ],
       result: compileFormula(tex),
     })
   } catch (error) { return errorResult(error) }
@@ -146,6 +150,23 @@ server.registerTool('get_evidence_producers', {
         ...producer,
         has_referenced_evidence: activeEvidenceProducers.has(producer.id),
       })),
+    })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_formal_proof', {
+  title: '取得精確形式證據',
+  description: '只回傳 MKO 明確引用的 formal_proof Evidence，包含精確全稱聲明、Lean／Mathlib 來源、限制與重播命令。',
+  inputSchema: { id: z.string().describe('數學知識物件 ID') },
+}, async ({ id }) => {
+  try {
+    const object = await loadObject(id)
+    const evidence = (await referencedEvidence(object)).filter(item => item.evidence_type === 'formal_proof')
+    return jsonResult({
+      object_id: id,
+      formalization: object.formalization,
+      exact_formal_evidence: evidence,
+      semantic_mapping_complete: object.formalization?.status === 'fully_formalized',
     })
   } catch (error) { return errorResult(error) }
 })
