@@ -25,11 +25,11 @@
       "id": "mko-euclid-pythagorean-theorem",
       "title": "畢達哥拉斯定理",
       "type": "theorem",
-      "version": "0.6.0",
+      "version": "0.7.0",
       "path": "/data/mko/pythagorean-theorem.json",
-      "evidence_ref_count": 2,
-      "producer_ids": ["ocme-python-suite", "felra"],
-      "tags": ["幾何", "三角形", "定理", "FELRA"]
+      "evidence_ref_count": 3,
+      "producer_ids": ["ocme-python-suite", "felra", "lean-mathlib"],
+      "tags": ["幾何", "三角形", "定理", "FELRA", "Lean", "Mathlib"]
     },
     {
       "id": "mko-set-membership",
