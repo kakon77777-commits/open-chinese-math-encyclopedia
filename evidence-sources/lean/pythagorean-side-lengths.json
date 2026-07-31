@@ -1,0 +1,35 @@
+{
+  "schema_version": "lean-run-manifest-v0.1",
+  "subject_id": "mko-euclid-pythagorean-theorem",
+  "producer_version": "4.30.0",
+  "mathlib_version": "v4.30.0",
+  "toolchain": "Lean 4.30.0",
+  "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+  "theorem_name": "OCMEFormal.pythagorean_side_lengths",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "對任意實內積空間、向量 x、y 與實數 a、b、c，若 x、y 夾角為 π/2，且 a=‖x‖、b=‖y‖、c=‖x+y‖，則 a·a+b·b=c·c。"
+  },
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_pythagorean_side_lengths", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據完成 OCME 宣告之向量邊長模型；它不自動等同於所有仿射平面、座標系或三角形建構方式。",
+    "模型中的斜邊長被定義為向量和的範數；其他頂點排列需另證與此模型等價。",
+    "本證據依賴 Lean 4.30.0、Mathlib v4.30.0 與 pythagorean_vector。"
+  ],
+  "source_paths": [
+    "formal/lean/lean-toolchain",
+    "formal/lean/lakefile.toml",
+    "formal/lean/OCMEFormal/Pythagorean.lean"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Pythagorean.lean"
+  }
+}
