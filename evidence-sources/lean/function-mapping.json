@@ -1,0 +1,35 @@
+{
+  "schema_version": "lean-run-manifest-v0.1",
+  "subject_id": "mko-function-mapping",
+  "producer_version": "4.30.0",
+  "mathlib_version": "v4.30.0",
+  "toolchain": "Lean 4.30.0",
+  "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+  "theorem_name": "OCMEFormal.function_total_unique",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "對任意型別 X、Y、函數 f:X→Y 與輸入 x:X，存在唯一 y:Y 滿足 f x=y。"
+  },
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_function_total_unique", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據形式化 Lean 總函數型別的存在唯一輸出語義，不涵蓋部分函數、隨機程序或有副作用程式。",
+    "陪域 Y 與函數實際值域仍是不同概念；本定理不聲稱 f 為滿射。",
+    "本證據依賴 Lean 4.30.0 與 Mathlib v4.30.0。"
+  ],
+  "source_paths": [
+    "formal/lean/lean-toolchain",
+    "formal/lean/lakefile.toml",
+    "formal/lean/OCMEFormal/Foundations.lean"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Foundations.lean"
+  }
+}
