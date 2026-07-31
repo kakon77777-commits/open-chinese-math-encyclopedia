@@ -1,0 +1,25 @@
+{
+  "schema_version": "ocme-domain-registry-v0.1",
+  "domains": [
+    {"id":"foundations_logic","title_zh":"基礎與邏輯","description_zh":"研究數學語言、公理、集合、型別、可證明性與形式推理的基礎結構。","status":"active","parent_id":null},
+    {"id":"arithmetic_number_systems","title_zh":"算術與數系","description_zh":"研究數、運算、數系擴張與基本數量結構。","status":"active","parent_id":null},
+    {"id":"algebra","title_zh":"代數","description_zh":"研究運算結構、方程、對稱與代數系統。","status":"active","parent_id":null},
+    {"id":"geometry","title_zh":"幾何","description_zh":"研究形狀、空間、距離、角度與幾何結構。","status":"active","parent_id":null},
+    {"id":"topology","title_zh":"拓撲","description_zh":"研究連續性、鄰域、收斂與在連續變形下保持的性質。","status":"active","parent_id":null},
+    {"id":"analysis","title_zh":"分析","description_zh":"研究極限、連續、微分、積分與無窮過程。","status":"active","parent_id":null},
+    {"id":"number_theory","title_zh":"數論","description_zh":"研究整數及其算術結構。","status":"active","parent_id":null},
+    {"id":"combinatorics_discrete","title_zh":"組合與離散數學","description_zh":"研究有限或可數結構、計數、圖與離散關係。","status":"active","parent_id":null},
+    {"id":"probability_statistics","title_zh":"機率與統計","description_zh":"研究隨機性、分布、推論與資料不確定性。","status":"active","parent_id":null},
+    {"id":"dynamical_systems","title_zh":"動力系統","description_zh":"研究狀態隨時間或迭代演化的系統。","status":"active","parent_id":null},
+    {"id":"differential_equations","title_zh":"微分方程","description_zh":"研究以導數描述的關係與演化。","status":"active","parent_id":null},
+    {"id":"numerical_computational","title_zh":"數值與計算數學","description_zh":"研究近似算法、誤差、穩定性與可計算實作。","status":"active","parent_id":null},
+    {"id":"optimization_operations_research","title_zh":"最佳化與作業研究","description_zh":"研究在限制條件下尋找最佳決策。","status":"active","parent_id":null},
+    {"id":"mathematical_physics","title_zh":"數理物理","description_zh":"研究物理理論中的數學結構與方法。","status":"active","parent_id":null},
+    {"id":"mathematical_biology","title_zh":"數學生物","description_zh":"研究生命系統的數學模型。","status":"active","parent_id":null},
+    {"id":"economics_finance","title_zh":"經濟與金融數學","description_zh":"研究經濟、風險與金融系統的數學模型。","status":"active","parent_id":null},
+    {"id":"computer_science_mathematics","title_zh":"計算機科學數學","description_zh":"研究演算法、計算、資訊與形式語言的數學基礎。","status":"active","parent_id":null},
+    {"id":"mathematics_education","title_zh":"數學教育","description_zh":"研究數學學習、教學、評量與課程。","status":"active","parent_id":null},
+    {"id":"history_philosophy_methodology","title_zh":"歷史、哲學與方法論","description_zh":"研究數學思想的歷史、合法性標準與問題解決方法。","status":"active","parent_id":null},
+    {"id":"formalized_mathematics","title_zh":"形式化數學","description_zh":"研究以證明助理與形式系統表達、檢查及重播數學。","status":"active","parent_id":null}
+  ]
+}

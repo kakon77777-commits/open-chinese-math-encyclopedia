@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/architecture-profile-v0.1.json",
+  "title": "OCME Architecture Profile v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "object_id", "classification", "difficulty", "learning", "methodology", "curriculum_alignment_ids", "review"],
+  "properties": {
+    "schema_version": { "const": "ocme-architecture-profile-v0.1" },
+    "object_id": { "type": "string", "pattern": "^mko-" },
+    "classification": { "$ref": "https://ocme.example/schemas/classification-v0.1.json" },
+    "difficulty": { "$ref": "https://ocme.example/schemas/difficulty-profile-v0.1.json" },
+    "learning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path_ids", "order_roles"],
+      "properties": {
+        "path_ids": { "type": "array", "items": { "type": "string", "pattern": "^path-" }, "uniqueItems": true },
+        "order_roles": {
+          "type": "array",
+          "items": { "enum": ["logical_order", "pedagogical_order", "computational_order", "historical_order", "formalization_order", "curriculum_order"] },
+          "uniqueItems": true
+        }
+      }
+    },
+    "methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method_ids"],
+      "properties": {
+        "method_ids": { "type": "array", "items": { "type": "string", "pattern": "^method-" }, "uniqueItems": true }
+      }
+    },
+    "curriculum_alignment_ids": { "type": "array", "items": { "type": "string", "minLength": 2 }, "uniqueItems": true },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "version", "rationale_zh"],
+      "properties": {
+        "status": { "enum": ["candidate", "reviewed", "deprecated"] },
+        "reviewer": { "type": "string" },
+        "version": { "type": "integer", "minimum": 1 },
+        "rationale_zh": { "type": "string", "minLength": 10 }
+      }
+    }
+  }
+}
