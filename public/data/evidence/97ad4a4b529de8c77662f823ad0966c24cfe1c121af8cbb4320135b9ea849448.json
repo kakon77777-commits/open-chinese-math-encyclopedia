@@ -1,0 +1,55 @@
+{
+  "id": "evidence-sha256-97ad4a4b529de8c77662f823ad0966c24cfe1c121af8cbb4320135b9ea849448",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-euclid-pythagorean-theorem",
+  "evidence_type": "finite_computational_check",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "finite_declared_domain",
+    "universal_proof": false,
+    "statement_zh": "在 FELRA 宣告的有限整數域與固定種子反例搜尋中，任何滿足 a²+b²=c² 的三元組，其 c 不小於 a 與 b。"
+  },
+  "producer": {
+    "id": "felra",
+    "version": "1.0.0",
+    "runtime": "python/felra",
+    "command": "felra run felra/pythagorean/project.yaml --output artifacts/felra/pythagorean"
+  },
+  "sources": [
+    {
+      "role": "felra_project",
+      "path": "felra/pythagorean/project.yaml",
+      "sha256": "5a5a067e1510bd25eb10a578b07ca9a98a81a59a93bdce09c16803e6beae1eb5"
+    },
+    {
+      "role": "felra_result_snapshot",
+      "path": "evidence-sources/felra/results/pythagorean-result.json",
+      "sha256": "faa9c2fcde694d416bf04a2e092bf43df900c18e2d4f14fd2a96b55f4123aa1a"
+    },
+    {
+      "role": "felra_runtime_lock",
+      "path": "felra/FELRA_LOCK.json",
+      "sha256": "bc23be3edfc485c296b134fce6b91a73f489fe855f378404f48041c1113c70ee"
+    }
+  ],
+  "formula_source_sha256": "586b9ebeb1716b0a613280de2bfdbd96b2cf47ff1239e1a9aa5001709e9cc4b2",
+  "checks": [
+    { "id": "boundaries", "status": "passed" },
+    { "id": "counterexample_search", "status": "passed" },
+    { "id": "numerical", "status": "passed" }
+  ],
+  "limitations": [
+    "宣告網格只涵蓋整數 a,b,c 介於 1 與 50。",
+    "隨機反例搜尋使用固定種子與有限樣本預算。",
+    "這項結果只支持宣告域內的計算性質，不構成畢達哥拉斯定理的普遍證明。"
+  ],
+  "replay": {
+    "command": "felra replay artifacts/felra/pythagorean --output artifacts/felra/pythagorean-replay",
+    "expected_exit_code": 0,
+    "source_artifact": "evidence-sources/felra/results/pythagorean-result.json"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "97ad4a4b529de8c77662f823ad0966c24cfe1c121af8cbb4320135b9ea849448"
+  }
+}
