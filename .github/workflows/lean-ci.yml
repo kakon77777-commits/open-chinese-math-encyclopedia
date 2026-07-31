@@ -11,13 +11,29 @@ permissions:
 jobs:
   formal-proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
-      - uses: leanprover/lean-action@v1.5.0
+
+      - name: Install pinned Lean toolchain
+        uses: leanprover/lean-action@v1.5.0
         with:
           lake-package-directory: formal/lean
-          build: true
+          auto-config: false
+          build: false
           test: false
           lint: false
-          use-mathlib-cache: true
+          use-github-cache: false
+          use-mathlib-cache: false
+
+      - name: Resolve pinned Mathlib dependency
+        working-directory: formal/lean
+        run: lake update
+
+      - name: Restore Mathlib build cache
+        working-directory: formal/lean
+        run: lake exe cache get
+
+      - name: Compile OCME formal proofs
+        working-directory: formal/lean
+        run: lake build
