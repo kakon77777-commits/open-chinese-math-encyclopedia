@@ -4,7 +4,7 @@
   "id": "mko-euclid-pythagorean-theorem",
   "semantic_family_id": "sf-pythagorean-theorem",
   "type": "theorem",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "language": "zh-Hant",
   "titles": { "zh-Hant": "畢達哥拉斯定理", "en": "Pythagorean theorem" },
   "summary": { "zh-Hant": "直角三角形兩股長度的平方和，等於斜邊長度的平方。" },
@@ -52,9 +52,10 @@
     "paragraphs_zh": [
       "這個定理不是對所有三角形成立，而是針對直角三角形。斜邊是直角所對的最長邊。",
       "平方和可以視為以三條邊為邊長所建立的正方形面積關係：兩個股上正方形的面積總和，等於斜邊上正方形的面積。",
-      "程式可以檢查具體的數值三元組，也可以搜尋整數畢氏三元組；但有限檢查不能取代定理的普遍證明。"
+      "程式可以檢查具體的數值三元組，也可以搜尋整數畢氏三元組；但有限檢查不能取代定理的普遍證明。",
+      "Lean／Mathlib 已通過向量夾角版本的全稱形式證明；中文三角形邊長敘述與該向量模型之間仍保留明確的語義映射義務。"
     ],
-    "common_misconception_zh": "把 a²+b²=c² 套用到任意三角形，或只因大量整數案例通過就宣稱完成證明。"
+    "common_misconception_zh": "把 a²+b²=c² 套用到任意三角形，或把某個形式化等價版本的通過誤認為所有敘述層已自動完全同構。"
   },
   "proofs": [
     {
@@ -81,8 +82,8 @@
     }
   ],
   "verification": {
-    "computational_status": "finite_cases_passed",
-    "warning_zh": "在宣告範圍內未發現反例，只代表有限計算證據；定理的成立仍依賴數學證明。",
+    "computational_status": "finite_cases_passed_and_formal_vector_proof_available",
+    "warning_zh": "Python 與 FELRA 提供有限計算證據；Lean／Mathlib 證明精確的向量夾角全稱命題。三角形邊長敘述與向量形式之間的語義映射仍需獨立審查。",
     "evidence_refs": [
       {
         "id": "evidence-sha256-49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466",
@@ -93,6 +94,11 @@
         "id": "evidence-sha256-97ad4a4b529de8c77662f823ad0966c24cfe1c121af8cbb4320135b9ea849448",
         "role": "finite_computational_check",
         "producer_id": "felra"
+      },
+      {
+        "id": "evidence-sha256-dd7d2bb464dd8f503fa5be9f4c68e01ce0947e506e137a064bdaa1b950c8628f",
+        "role": "formal_proof",
+        "producer_id": "lean-mathlib"
       }
     ],
     "producers": [
@@ -107,13 +113,19 @@
         "adapter": "felra",
         "config_path": "felra/pythagorean/project.yaml",
         "status": "active"
+      },
+      {
+        "id": "lean-mathlib",
+        "adapter": "formal_system",
+        "config_path": "formal/lean/lakefile.toml",
+        "status": "active"
       }
     ]
   },
   "formalization": {
-    "status": "not_formalized",
-    "target_systems": ["Lean 4", "SMT"],
-    "next_obligation_zh": "建立歐幾里得平面、直角與距離定義的機器可檢查映射，並連結現有 Mathlib 定理。"
+    "status": "formalized_equivalent_vector_form",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "形式化歐幾里得三角形頂點、邊長與直角條件到向量夾角模型的語義映射，並證明該映射保存 a²+b²=c²。"
   },
   "provenance": {
     "origin": "evemisslab_original_mvp",
