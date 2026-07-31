@@ -1,9 +1,9 @@
 {
   "name": "open-chinese-math-encyclopedia-mvp",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
-  "description": "開源中文數學百科 MVP：FELRA 證據適配器、MKO evidence_refs、內容定址證據、嚴格 Schema、可重建公式與 MCP。",
+  "description": "開源中文數學百科 MVP：真實 FELRA 執行證據、EveGlyph 審查橋接、MKO evidence_refs、內容定址證據與可重建公式。",
   "license": "MIT",
   "engines": { "node": ">=18" },
   "scripts": {
@@ -15,11 +15,12 @@
     "build:evidence": "node scripts/build-evidence.mjs --write",
     "verify:evidence": "node scripts/build-evidence.mjs --check",
     "adapt:felra": "node scripts/adapt-felra-manifest.mjs",
+    "normalize:felra": "node scripts/normalize-felra-run.mjs",
     "validate": "node scripts/validate.mjs",
     "export": "node scripts/export-jsonl.mjs",
     "verify:python": "python reference/python/verify_all.py",
     "verify:felra": "node scripts/run-felra.mjs",
-    "test:syntax": "node --check src/main.js && node --check mcp-server.js && node --check lib/formula-compiler.js && node --check lib/evidence-store.js && node --check lib/evidence-adapters/felra.js && node --check scripts/build-evidence.mjs && node --check scripts/adapt-felra-manifest.mjs",
+    "test:syntax": "node --check src/main.js && node --check mcp-server.js && node --check lib/formula-compiler.js && node --check lib/evidence-store.js && node --check lib/evidence-adapters/felra.js && node --check scripts/build-evidence.mjs && node --check scripts/adapt-felra-manifest.mjs && node --check scripts/normalize-felra-run.mjs",
     "test": "npm run test:syntax && node tests/smoke.mjs && node tests/formula-compiler.mjs && node tests/schema-negative.mjs && node tests/evidence-negative.mjs && node tests/felra-adapter.mjs",
     "check": "npm run verify:formulas && npm run verify:python && npm run verify:evidence && npm run validate && npm test && npm run export"
   },
