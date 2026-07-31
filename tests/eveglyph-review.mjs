@@ -12,15 +12,16 @@ import { createMkoValidator } from '../lib/schema-validation.js'
 const object = await loadObject('mko-euclid-pythagorean-theorem')
 const packet = createEveGlyphReviewPacket(object)
 assert.equal(packet.object_id, object.id)
-assert.equal(packet.object_version, '0.6.0')
+assert.equal(packet.object_version, '0.7.0')
 assert.equal(packet.base_object_sha256.length, 64)
-assert.equal(packet.read_only.verification.evidence_refs.length, 2)
+assert.equal(packet.read_only.verification.evidence_refs.length, 3)
+assert.equal(packet.read_only.verification.evidence_refs.some(ref => ref.role === 'formal_proof'), true)
 
 const validPatch = {
   schema_version: 'ocme-eveglyph-review-patch-v0.1',
   object_id: object.id,
   base_object_sha256: packet.base_object_sha256,
-  new_object_version: '0.6.1',
+  new_object_version: '0.7.1',
   rationale_zh: '改善繁體中文敘述，但不修改數學結構。',
   changes: {
     summary_zh: '直角三角形的兩股平方和等於斜邊平方。',
@@ -30,10 +31,11 @@ const validPatch = {
   },
 }
 const updated = applyEveGlyphReviewPatch(object, validPatch)
-assert.equal(updated.version, '0.6.1')
+assert.equal(updated.version, '0.7.1')
 assert.equal(updated.summary['zh-Hant'], validPatch.changes.summary_zh)
 assert.equal(isDeepStrictEqual(updated.formula, object.formula), true)
 assert.equal(isDeepStrictEqual(updated.verification, object.verification), true)
+assert.equal(isDeepStrictEqual(updated.formalization, object.formalization), true)
 assert.equal(isDeepStrictEqual(updated.provenance, object.provenance), true)
 
 const stalePatch = structuredClone(validPatch)
@@ -60,4 +62,8 @@ const evidenceInjection = structuredClone(validPatch)
 evidenceInjection.changes.verification = { computational_status: 'proved' }
 assert.equal(validate(evidenceInjection), false)
 
-console.log('EveGlyph review bridge tests passed.')
+const formalizationInjection = structuredClone(validPatch)
+formalizationInjection.changes.formalization = { status: 'fully_formalized' }
+assert.equal(validate(formalizationInjection), false)
+
+console.log('EveGlyph review bridge tests passed with three preserved evidence references.')

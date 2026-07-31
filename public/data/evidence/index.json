@@ -1,5 +1,5 @@
 {
-  "schema_version": "ocme-evidence-index-v0.2",
+  "schema_version": "ocme-evidence-index-v0.3",
   "objects": [
     {
       "id": "evidence-sha256-49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466",
@@ -24,6 +24,14 @@
       "status": "passed",
       "producer_id": "ocme-python-suite",
       "path": "/data/evidence/d2f7e95c5eb44099070a59498f1ad1b82c0818327df33683b6e82d8624544ea9.json"
+    },
+    {
+      "id": "evidence-sha256-dd7d2bb464dd8f503fa5be9f4c68e01ce0947e506e137a064bdaa1b950c8628f",
+      "subject_id": "mko-euclid-pythagorean-theorem",
+      "evidence_type": "formal_proof",
+      "status": "passed",
+      "producer_id": "lean-mathlib",
+      "path": "/data/evidence/dd7d2bb464dd8f503fa5be9f4c68e01ce0947e506e137a064bdaa1b950c8628f.json"
     },
     {
       "id": "evidence-sha256-de740ccfca05c5027587999af29adeead880cfe6ebaa28063d95ad584875e31e",

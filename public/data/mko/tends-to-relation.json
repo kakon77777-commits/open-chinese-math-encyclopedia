@@ -1,0 +1,71 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-tends-to-relation",
+  "semantic_family_id": "sf-tends-to-relation",
+  "type": "concept",
+  "version": "0.7.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "趨近關係", "en": "Tends-to relation" },
+  "summary": { "zh-Hant": "符號 x→a 表示變數或索引所描述的狀態朝目標 a 趨近。" },
+  "statement": { "zh-Hant": "x→a 是極限語言中的方向性關係；它本身尚未指定函數值是否收斂，也不等同於 x 最終必須等於 a。" },
+  "formula": {
+    "tex": "x\\to a",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>x</mi><mo>→</mo><mi>a</mi></mrow></math>",
+    "semantic_ast": {
+      "type": "tends_to",
+      "expression": { "type": "symbol", "name": "x", "glyph": "x" },
+      "target": { "type": "symbol", "name": "a", "glyph": "a" }
+    },
+    "compiler": {
+      "id": "ocme-formula-core",
+      "version": "0.4.0",
+      "source_sha256": "b02e34b2d9f06f10e61905032b56c36ef9eb448186055de79456ee841817c3cb"
+    }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "已指定可討論鄰近與趨近的數學結構，例如度量或拓撲。" }
+  ],
+  "symbols": [
+    { "token": "x", "role": "varying_expression", "role_zh": "變動表達式或變數", "scope": "concept" },
+    { "token": "a", "role": "target", "role_zh": "趨近目標", "scope": "concept" },
+    { "token": "→", "role": "tends_to_relation", "role_zh": "趨近關係", "scope": "concept" }
+  ],
+  "dependencies": [
+    { "id": "mko-function-mapping", "title_zh": "函數映射", "reason_zh": "函數極限會在輸入趨近時研究映射值的行為。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "趨近描述的是一個過程或關係，不是單次代入。x 可以任意接近 a，而不必在討論中的每一步都等於 a。",
+      "完整函數極限還需要另外描述 f(x) 的目標值、量詞順序與鄰域條件；本物件只提供其中的趨近語義。"
+    ],
+    "common_misconception_zh": "把 x→a 直接解讀成 x=a，或認為只要代入 a 就已完成極限論證。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_applicable",
+    "warning_zh": "有限數值序列只能示範趨近行為，不能單獨建立一般極限定義。",
+    "evidence_refs": [],
+    "producers": [
+      {
+        "id": "lean-mathlib",
+        "adapter": "formal_system",
+        "config_path": "formal/lean/lakefile.toml",
+        "status": "configured"
+      }
+    ]
+  },
+  "formalization": {
+    "status": "mapped_not_evidenced",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "建立此物件與 Mathlib Filter.Tendsto 語義的正式映射。"
+  },
+  "provenance": {
+    "origin": "evemisslab_original_mvp",
+    "note_zh": "OCME 極限基礎知識物件；敘述為原創整理。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-07-31"
+  }
+}

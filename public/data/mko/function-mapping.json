@@ -1,0 +1,74 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-function-mapping",
+  "semantic_family_id": "sf-function-mapping",
+  "type": "definition",
+  "version": "0.7.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "函數映射", "en": "Function mapping" },
+  "summary": { "zh-Hant": "符號 f:X→Y 表示函數 f 從定義域 X 映射到陪域 Y。" },
+  "statement": { "zh-Hant": "函數 f:X→Y 對 X 中每一個輸入指定 Y 中唯一一個輸出；陪域 Y 不必等於實際值域。" },
+  "formula": {
+    "tex": "f:X\\to Y",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>f</mi><mo>:</mo><mi>X</mi><mo>→</mo><mi>Y</mi></mrow></math>",
+    "semantic_ast": {
+      "type": "mapping",
+      "function": { "type": "symbol", "name": "f", "glyph": "f" },
+      "domain": { "type": "symbol", "name": "X", "glyph": "X" },
+      "codomain": { "type": "symbol", "name": "Y", "glyph": "Y" }
+    },
+    "compiler": {
+      "id": "ocme-formula-core",
+      "version": "0.4.0",
+      "source_sha256": "28c28a16d0b842cb3d3c986cead38d14c1fbddc06efeb3c29e6e3479896c8a21"
+    }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "X 與 Y 是已指定的集合或相容類型。" },
+    { "id": "a2", "zh-Hant": "X 中每個輸入在 f 下都有且只有一個輸出。" }
+  ],
+  "symbols": [
+    { "token": "f", "role": "function", "role_zh": "函數", "scope": "definition" },
+    { "token": "X", "role": "domain", "role_zh": "定義域", "scope": "definition" },
+    { "token": "Y", "role": "codomain", "role_zh": "陪域", "scope": "definition" },
+    { "token": "→", "role": "mapping_arrow", "role_zh": "映射箭頭", "scope": "definition" }
+  ],
+  "dependencies": [
+    { "id": "mko-set-membership", "title_zh": "集合隸屬", "reason_zh": "函數輸入與輸出分別屬於定義域與陪域。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "函數的核心不是一條畫出來的曲線，而是每個允許輸入都對應唯一輸出的規則。",
+      "f:X→Y 宣告了定義域與陪域；實際輸出形成的值域可能只是 Y 的一部分。"
+    ],
+    "common_misconception_zh": "把陪域、值域與函數圖形視為同一個數學對象。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_applicable",
+    "warning_zh": "程式語言中的函數可能具有副作用、部分定義或狀態依賴，不能自動等同於此數學函數定義。",
+    "evidence_refs": [],
+    "producers": [
+      {
+        "id": "lean-mathlib",
+        "adapter": "formal_system",
+        "config_path": "formal/lean/lakefile.toml",
+        "status": "configured"
+      }
+    ]
+  },
+  "formalization": {
+    "status": "mapped_not_evidenced",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "建立此物件與 Lean 函數型別 X → Y 的明確語義映射證據。"
+  },
+  "provenance": {
+    "origin": "evemisslab_original_mvp",
+    "note_zh": "OCME 基礎數學知識物件；敘述為原創整理。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-07-31"
+  }
+}

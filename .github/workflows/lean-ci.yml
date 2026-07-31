@@ -1,0 +1,51 @@
+name: OCME Lean CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  formal-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Elan
+        run: |
+          curl --fail --location --retry 3 \
+            https://github.com/leanprover/elan/releases/download/v4.2.1/elan-x86_64-unknown-linux-gnu.tar.gz \
+            --output /tmp/elan.tar.gz
+          tar -xzf /tmp/elan.tar.gz -C /tmp
+          /tmp/elan-init -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Verify pinned Lean toolchain
+        working-directory: formal/lean
+        run: |
+          lean --version
+          lake --version
+
+      - name: Resolve pinned Mathlib dependency
+        working-directory: formal/lean
+        run: lake update
+
+      - name: Restore Mathlib build cache
+        working-directory: formal/lean
+        run: lake exe cache get
+
+      - name: Compile OCME formal proofs
+        working-directory: formal/lean
+        run: lake build
+
+      - name: Reject proof placeholders
+        working-directory: formal/lean
+        run: |
+          if grep -R -nE '\b(sorry|admit)\b' OCMEFormal OCMEFormal.lean; then
+            echo 'Lean proof placeholder detected.'
+            exit 1
+          fi
