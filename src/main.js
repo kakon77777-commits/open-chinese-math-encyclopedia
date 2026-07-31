@@ -46,8 +46,16 @@ function statusLabel(value) {
     not_formalized: '尚未形式化',
     mapped_not_evidenced: '已映射、尚無形式證據',
     formalized_equivalent_vector_form: '等價向量形式已形式化',
+    formalized_declared_side_model: '宣告的邊長模型已形式化',
+    formalized_lean_set_semantics: 'Lean 集合語義已形式化',
+    formalized_total_function_core: '總函數核心已形式化',
+    formalized_filter_tendsto_core: 'Filter.Tendsto 核心已形式化',
     finite_cases_passed: '有限案例通過',
     finite_cases_passed_and_formal_vector_proof_available: '有限案例通過，向量形式證據可用',
+    finite_cases_and_declared_side_model_formalized: '有限案例與宣告邊長模型均有證據',
+    formal_lean_set_semantics_available: 'Lean 集合形式證據可用',
+    formal_total_function_core_available: '總函數形式證據可用',
+    formal_filter_tendsto_core_available: 'Filter.Tendsto 形式證據可用',
     not_run: '尚未執行',
     reference_only: '僅供參考',
     active: '已啟用',
@@ -178,7 +186,7 @@ function renderObject(mko, evidenceObjects = []) {
   document.title = `${mko.titles['zh-Hant']} · 開源中文數學百科`
   $('#app').innerHTML = `
     <header class="hero"><div class="hero-inner">
-      <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.7</p>
+      <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.8</p>
       <div class="type-chip">${escapeHtml(typeLabel(mko.type))}</div>
       <h1>${escapeHtml(mko.titles['zh-Hant'])}</h1>
       <p class="lead">${escapeHtml(mko.summary?.['zh-Hant'] || '')}</p>
@@ -186,6 +194,7 @@ function renderObject(mko, evidenceObjects = []) {
         <span>${statusLabel(proofStatus)}</span>
         <span>${statusLabel(mko.verification?.computational_status)}</span>
         <span>${statusLabel(mko.formalization?.status)}</span>
+        <span>形式聲明 ${formalEvidence.length}</span>
         <span>版本 ${escapeHtml(mko.version)}</span>
       </div>
     </div></header>
@@ -221,6 +230,7 @@ function renderObject(mko, evidenceObjects = []) {
           <h2>形式化狀態</h2><dl class="definition-list">
             <div><dt>狀態</dt><dd>${statusLabel(mko.formalization?.status)}</dd></div>
             <div><dt>目標系統</dt><dd>${escapeHtml(formalTargets.join('、') || '尚未指定')}</dd></div>
+            <div><dt>精確形式聲明數</dt><dd>${formalEvidence.length}</dd></div>
             <div><dt>下一個語義義務</dt><dd>${escapeHtml(mko.formalization?.next_obligation_zh || '尚未指定')}</dd></div>
           </dl>
           <p>形式證據只證明其精確機器聲明；百科中文敘述與形式模型之間的映射仍是獨立可審查層。</p>
@@ -232,7 +242,7 @@ function renderObject(mko, evidenceObjects = []) {
         </section>
       </article>
     </main>
-    <footer>數學、程式、有限證據與精確形式證明彼此分離。開源中文數學百科 MVP v0.7。</footer>`
+    <footer>數學、程式、有限證據與精確形式證明彼此分離。開源中文數學百科 MVP v0.8。</footer>`
 
   document.querySelectorAll('.tab').forEach(button => {
     button.addEventListener('click', () => {
