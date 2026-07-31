@@ -172,7 +172,7 @@ function renderObject(mko, evidenceObjects = []) {
   document.title = `${mko.titles['zh-Hant']} · 開源中文數學百科`
   $('#app').innerHTML = `
     <header class="hero"><div class="hero-inner">
-      <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.5</p>
+      <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.6</p>
       <div class="type-chip">${escapeHtml(typeLabel(mko.type))}</div>
       <h1>${escapeHtml(mko.titles['zh-Hant'])}</h1>
       <p class="lead">${escapeHtml(mko.summary?.['zh-Hant'] || '')}</p>
@@ -224,7 +224,7 @@ function renderObject(mko, evidenceObjects = []) {
         </section>
       </article>
     </main>
-    <footer>數學、程式、證據與證明彼此分離。開源中文數學百科 MVP v0.5。</footer>`
+    <footer>數學、程式、證據與證明彼此分離。開源中文數學百科 MVP v0.6。</footer>`
 
   document.querySelectorAll('.tab').forEach(button => {
     button.addEventListener('click', () => {
