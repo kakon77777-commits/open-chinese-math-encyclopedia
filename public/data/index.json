@@ -1,5 +1,5 @@
 {
-  "schema_version": "ocme-index-v0.4",
+  "schema_version": "ocme-index-v0.5",
   "objects": [
     {
       "id": "mko-right-triangle",
@@ -25,11 +25,41 @@
       "id": "mko-euclid-pythagorean-theorem",
       "title": "畢達哥拉斯定理",
       "type": "theorem",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "path": "/data/mko/pythagorean-theorem.json",
-      "evidence_ref_count": 1,
+      "evidence_ref_count": 2,
       "producer_ids": ["ocme-python-suite", "felra"],
-      "tags": ["幾何", "三角形", "定理"]
+      "tags": ["幾何", "三角形", "定理", "FELRA"]
+    },
+    {
+      "id": "mko-set-membership",
+      "title": "集合隸屬",
+      "type": "definition",
+      "version": "0.7.0",
+      "path": "/data/mko/set-membership.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["集合", "基礎", "關係"]
+    },
+    {
+      "id": "mko-function-mapping",
+      "title": "函數映射",
+      "type": "definition",
+      "version": "0.7.0",
+      "path": "/data/mko/function-mapping.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["函數", "映射", "基礎"]
+    },
+    {
+      "id": "mko-tends-to-relation",
+      "title": "趨近關係",
+      "type": "concept",
+      "version": "0.7.0",
+      "path": "/data/mko/tends-to-relation.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["極限", "分析", "趨近"]
     }
   ]
 }
