@@ -6,6 +6,7 @@ import {
   loadEvidence,
   verifyEvidenceAddress,
 } from './lib/evidence-store.js'
+import { createEveGlyphReviewPacket } from './lib/eveglyph-review.js'
 import { compileFormula } from './lib/formula-compiler.js'
 import {
   buildDependencyGraph,
@@ -17,7 +18,7 @@ import {
 
 const jsonResult = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] })
 const errorResult = error => ({ content: [{ type: 'text', text: `Error: ${error?.message || error}` }], isError: true })
-const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.5.0' })
+const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.6.0' })
 
 async function referencedEvidence(object) {
   return Promise.all((object.verification?.evidence_refs || []).map(ref => loadEvidence(ref.id)))
@@ -145,6 +146,22 @@ server.registerTool('get_evidence_producers', {
         ...producer,
         has_referenced_evidence: activeEvidenceProducers.has(producer.id),
       })),
+    })
+  } catch (error) { return errorResult(error) }
+})
+
+server.registerTool('get_eveglyph_review_packet', {
+  title: '取得 EveGlyph 文字審查封包',
+  description: '產生唯讀審查封包：中文文字欄位可提案修改，公式、AST、Evidence、producer、形式化與來源血統不可由此工具修改。',
+  inputSchema: { id: z.string().describe('數學知識物件 ID') },
+}, async ({ id }) => {
+  try {
+    const object = await loadObject(id)
+    return jsonResult({
+      mode: 'read_only_review_packet',
+      patch_schema: 'schemas/eveglyph-review-patch.schema.json',
+      direct_publish_available: false,
+      packet: createEveGlyphReviewPacket(object),
     })
   } catch (error) { return errorResult(error) }
 })

@@ -1,0 +1,7 @@
+{
+  "schema_version": "ocme-felra-lock-v0.1",
+  "repository": "kakon77777-commits/FELRA",
+  "commit": "1005228db4bda832f98069f80879ec2ba1dd8440",
+  "version": "1.0.0",
+  "purpose": "Pinned FELRA runtime used to produce OCME canonical FELRA evidence."
+}

@@ -10,6 +10,14 @@
       "path": "/data/evidence/49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466.json"
     },
     {
+      "id": "evidence-sha256-97ad4a4b529de8c77662f823ad0966c24cfe1c121af8cbb4320135b9ea849448",
+      "subject_id": "mko-euclid-pythagorean-theorem",
+      "evidence_type": "finite_computational_check",
+      "status": "passed",
+      "producer_id": "felra",
+      "path": "/data/evidence/97ad4a4b529de8c77662f823ad0966c24cfe1c121af8cbb4320135b9ea849448.json"
+    },
+    {
       "id": "evidence-sha256-d2f7e95c5eb44099070a59498f1ad1b82c0818327df33683b6e82d8624544ea9",
       "subject_id": "mko-right-triangle",
       "evidence_type": "finite_computational_check",
