@@ -4,7 +4,7 @@
   "id": "mko-tends-to-relation",
   "semantic_family_id": "sf-tends-to-relation",
   "type": "concept",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "language": "zh-Hant",
   "titles": { "zh-Hant": "趨近關係", "en": "Tends-to relation" },
   "summary": { "zh-Hant": "符號 x→a 表示變數或索引所描述的狀態朝目標 a 趨近。" },
@@ -37,29 +37,36 @@
   "explanation": {
     "paragraphs_zh": [
       "趨近描述的是一個過程或關係，不是單次代入。x 可以任意接近 a，而不必在討論中的每一步都等於 a。",
-      "完整函數極限還需要另外描述 f(x) 的目標值、量詞順序與鄰域條件；本物件只提供其中的趨近語義。"
+      "完整函數極限還需要另外描述 f(x) 的目標值、量詞順序與鄰域條件；本物件只提供其中的趨近語義。",
+      "Mathlib 使用 Filter.Tendsto f l₁ l₂ 表達函數相對於來源與目標濾子的趨近，並在定義上等價於 Filter.map f l₁≤l₂。"
     ],
-    "common_misconception_zh": "把 x→a 直接解讀成 x=a，或認為只要代入 a 就已完成極限論證。"
+    "common_misconception_zh": "把 x→a 直接解讀成 x=a，或在尚未指定來源與目標濾子時，宣稱裸箭頭已等同於完整 Filter.Tendsto 或 ε–δ 定義。"
   },
   "proofs": [],
   "computational_companions": [],
   "verification": {
-    "computational_status": "not_applicable",
-    "warning_zh": "有限數值序列只能示範趨近行為，不能單獨建立一般極限定義。",
-    "evidence_refs": [],
+    "computational_status": "formal_filter_tendsto_core_available",
+    "warning_zh": "Lean 已形式化 Filter.Tendsto 的核心濾子語義；裸符號 x→a 仍必須補上函數與來源、目標濾子，且本證據不是特定函數極限。",
+    "evidence_refs": [
+      {
+        "id": "evidence-sha256-38b848281997cbb1a2c1ea5559c6937dbb67ee03ac0be338756320a99e0f8b1d",
+        "role": "formal_proof",
+        "producer_id": "lean-mathlib"
+      }
+    ],
     "producers": [
       {
         "id": "lean-mathlib",
         "adapter": "formal_system",
         "config_path": "formal/lean/lakefile.toml",
-        "status": "configured"
+        "status": "active"
       }
     ]
   },
   "formalization": {
-    "status": "mapped_not_evidenced",
+    "status": "formalized_filter_tendsto_core",
     "target_systems": ["Lean 4", "Mathlib"],
-    "next_obligation_zh": "建立此物件與 Mathlib Filter.Tendsto 語義的正式映射。"
+    "next_obligation_zh": "建立 atTop、nhds、nhdsWithin 等常用來源與目標濾子物件，再分別連接數列極限與函數點極限。"
   },
   "provenance": {
     "origin": "evemisslab_original_mvp",
