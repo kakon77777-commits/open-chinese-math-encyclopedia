@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/curriculum-alignment-v0.1.json",
+  "title": "OCME Curriculum Alignment v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "frameworks", "alignments"],
+  "properties": {
+    "schema_version": { "const": "ocme-curriculum-v0.1" },
+    "frameworks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title_zh", "scope", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^curriculum-" },
+          "title_zh": { "type": "string", "minLength": 3 },
+          "scope": { "enum": ["ocme_internal", "national", "international", "institutional"] },
+          "status": { "enum": ["active", "candidate", "deprecated"] },
+          "source_url": { "type": "string" }
+        }
+      }
+    },
+    "alignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["object_id", "framework_id", "item_id", "relation", "status", "rationale_zh"],
+        "properties": {
+          "object_id": { "type": "string", "pattern": "^mko-" },
+          "framework_id": { "type": "string", "pattern": "^curriculum-" },
+          "item_id": { "type": "string", "minLength": 1 },
+          "relation": { "enum": ["introduced_in", "practiced_in", "assessed_in", "prerequisite_for", "extends"] },
+          "status": { "enum": ["candidate", "reviewed", "rejected"] },
+          "rationale_zh": { "type": "string", "minLength": 8 }
+        }
+      }
+    }
+  }
+}
