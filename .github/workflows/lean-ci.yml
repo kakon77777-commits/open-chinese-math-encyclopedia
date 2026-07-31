@@ -1,0 +1,23 @@
+name: OCME Lean CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  formal-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1.5.0
+        with:
+          lake-package-directory: formal/lean
+          build: true
+          test: false
+          lint: false
+          use-mathlib-cache: true
