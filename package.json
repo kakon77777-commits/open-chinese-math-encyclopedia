@@ -23,9 +23,10 @@
     "verify:python": "python reference/python/verify_all.py",
     "verify:felra": "node scripts/run-felra.mjs",
     "verify:lean-sources": "node scripts/verify-lean-sources.mjs",
-    "test:syntax": "node --check src/main.js && node --check mcp-server.js && node --check lib/formula-compiler.js && node --check lib/evidence-store.js && node --check lib/eveglyph-review.js && node --check lib/evidence-adapters/felra.js && node --check lib/evidence-adapters/lean.js && node --check scripts/build-evidence-v0.7.mjs && node --check scripts/adapt-felra-manifest.mjs && node --check scripts/normalize-felra-run.mjs && node --check scripts/export-eveglyph-review.mjs && node --check scripts/apply-eveglyph-review.mjs && node --check scripts/validate-v0.7.mjs",
+    "preview:lean-evidence": "node scripts/preview-lean-evidence.mjs",
+    "test:syntax": "node --check src/main.js && node --check mcp-server.js && node --check lib/formula-compiler.js && node --check lib/evidence-store.js && node --check lib/eveglyph-review.js && node --check lib/evidence-adapters/felra.js && node --check lib/evidence-adapters/lean.js && node --check scripts/build-evidence-v0.7.mjs && node --check scripts/adapt-felra-manifest.mjs && node --check scripts/normalize-felra-run.mjs && node --check scripts/export-eveglyph-review.mjs && node --check scripts/apply-eveglyph-review.mjs && node --check scripts/validate-v0.7.mjs && node --check scripts/verify-lean-sources.mjs && node --check scripts/preview-lean-evidence.mjs",
     "test": "npm run test:syntax && node tests/smoke.mjs && node tests/formula-compiler.mjs && node tests/schema-negative.mjs && node tests/evidence-negative.mjs && node tests/felra-adapter.mjs && node tests/lean-adapter.mjs && node tests/eveglyph-review.mjs",
-    "check": "npm run verify:formulas && npm run verify:python && npm run verify:lean-sources && npm run verify:evidence && npm run validate && npm test && npm run export && npm run export:eveglyph"
+    "check": "npm run verify:formulas && npm run verify:python && npm run verify:lean-sources && npm run preview:lean-evidence && npm run verify:evidence && npm run validate && npm test && npm run export && npm run export:eveglyph"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
