@@ -1,9 +1,9 @@
 {
   "name": "open-chinese-math-encyclopedia-mvp",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
-  "description": "開源中文數學百科 MVP：Lean／Mathlib 形式證據、關係型公式 AST、基礎數學物件、FELRA 與內容定址證據。",
+  "description": "開源中文數學百科 MVP：Lean／Mathlib 語義橋、五份形式證據、關係型公式 AST、FELRA 與內容定址證據。",
   "license": "MIT",
   "engines": { "node": ">=18" },
   "scripts": {
