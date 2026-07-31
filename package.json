@@ -16,13 +16,15 @@
     "verify:evidence": "node scripts/build-evidence.mjs --check",
     "adapt:felra": "node scripts/adapt-felra-manifest.mjs",
     "normalize:felra": "node scripts/normalize-felra-run.mjs",
+    "export:eveglyph": "node scripts/export-eveglyph-review.mjs",
+    "apply:eveglyph": "node scripts/apply-eveglyph-review.mjs",
     "validate": "node scripts/validate.mjs",
     "export": "node scripts/export-jsonl.mjs",
     "verify:python": "python reference/python/verify_all.py",
     "verify:felra": "node scripts/run-felra.mjs",
-    "test:syntax": "node --check src/main.js && node --check mcp-server.js && node --check lib/formula-compiler.js && node --check lib/evidence-store.js && node --check lib/evidence-adapters/felra.js && node --check scripts/build-evidence.mjs && node --check scripts/adapt-felra-manifest.mjs && node --check scripts/normalize-felra-run.mjs",
-    "test": "npm run test:syntax && node tests/smoke.mjs && node tests/formula-compiler.mjs && node tests/schema-negative.mjs && node tests/evidence-negative.mjs && node tests/felra-adapter.mjs",
-    "check": "npm run verify:formulas && npm run verify:python && npm run verify:evidence && npm run validate && npm test && npm run export"
+    "test:syntax": "node --check src/main.js && node --check mcp-server.js && node --check lib/formula-compiler.js && node --check lib/evidence-store.js && node --check lib/eveglyph-review.js && node --check lib/evidence-adapters/felra.js && node --check scripts/build-evidence.mjs && node --check scripts/adapt-felra-manifest.mjs && node --check scripts/normalize-felra-run.mjs && node --check scripts/export-eveglyph-review.mjs && node --check scripts/apply-eveglyph-review.mjs",
+    "test": "npm run test:syntax && node tests/smoke.mjs && node tests/formula-compiler.mjs && node tests/schema-negative.mjs && node tests/evidence-negative.mjs && node tests/felra-adapter.mjs && node tests/eveglyph-review.mjs",
+    "check": "npm run verify:formulas && npm run verify:python && npm run verify:evidence && npm run validate && npm test && npm run export && npm run export:eveglyph"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
