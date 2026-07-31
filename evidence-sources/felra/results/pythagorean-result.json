@@ -1,0 +1,78 @@
+{
+  "schema_version": "ocme-felra-result-snapshot-v0.1",
+  "subject_id": "mko-euclid-pythagorean-theorem",
+  "felra": {
+    "repository": "kakon77777-commits/FELRA",
+    "commit": "1005228db4bda832f98069f80879ec2ba1dd8440",
+    "version": "1.0.0"
+  },
+  "project": {
+    "id": "ocme-pythagorean-finite-check",
+    "title": "畢達哥拉斯整數三元組的有限域機器檢驗",
+    "config_sha256": "f97c311f700e307060de6baf76ecc39484d354b7694aff72dac174e4941c4072",
+    "result_sha256": "d0efaa650153939ec8492933a667db36d3373d38d765b6ff4acd9a0f58b749ce",
+    "passed": true,
+    "claims_passed": true,
+    "analyses_succeeded": true
+  },
+  "claim": {
+    "id": "generated_hypotenuse_dominance",
+    "statement": "在宣告整數域中，任何滿足 a²+b²=c² 的三元組，其 c 不小於 a 與 b",
+    "status": "hypothesis",
+    "domain_description": "a in [1, 50] with 50 declared samples; b in [1, 50] with 50 declared samples; c in [1, 50] with 50 declared samples",
+    "passed": true,
+    "metadata": {
+      "expression": "a ** 2 + b ** 2 != c ** 2 or (c >= a and c >= b)",
+      "project_id": "ocme-pythagorean-finite-check",
+      "config_sha256": "f97c311f700e307060de6baf76ecc39484d354b7694aff72dac174e4941c4072",
+      "seed": 42
+    },
+    "checks": [
+      {
+        "id": "boundaries",
+        "status": "passed",
+        "summary": "Claim held for all 8 evaluated points.",
+        "metrics": {
+          "tested_count": 8,
+          "passed_count": 8,
+          "failed_count": 0,
+          "pass_rate": 1.0,
+          "strategy": "domain_corners",
+          "exhaustive_declared_grid": true,
+          "finite_domain": true
+        },
+        "counterexamples": []
+      },
+      {
+        "id": "counterexample_search",
+        "status": "passed",
+        "summary": "Claim held for all 20000 evaluated points.",
+        "metrics": {
+          "tested_count": 20000,
+          "passed_count": 20000,
+          "failed_count": 0,
+          "pass_rate": 1.0,
+          "strategy": "counterexample_uniform_random",
+          "exhaustive_declared_grid": false,
+          "finite_domain": true
+        },
+        "counterexamples": []
+      },
+      {
+        "id": "numerical",
+        "status": "passed",
+        "summary": "Claim held for all 125000 evaluated points.",
+        "metrics": {
+          "tested_count": 125000,
+          "passed_count": 125000,
+          "failed_count": 0,
+          "pass_rate": 1.0,
+          "strategy": "declared_cartesian_grid",
+          "exhaustive_declared_grid": true,
+          "finite_domain": true
+        },
+        "counterexamples": []
+      }
+    ]
+  }
+}
