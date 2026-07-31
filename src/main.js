@@ -44,7 +44,10 @@ function statusLabel(value) {
     human_proof_available: '人工證明可用',
     not_applicable: '不適用',
     not_formalized: '尚未形式化',
+    mapped_not_evidenced: '已映射、尚無形式證據',
+    formalized_equivalent_vector_form: '等價向量形式已形式化',
     finite_cases_passed: '有限案例通過',
+    finite_cases_passed_and_formal_vector_proof_available: '有限案例通過，向量形式證據可用',
     not_run: '尚未執行',
     reference_only: '僅供參考',
     active: '已啟用',
@@ -106,13 +109,15 @@ function renderEvidenceObjects(evidenceObjects = []) {
     return `<section class="evidence-card">
       <div class="evidence-header">
         <span class="evidence-status ${evidence.status === 'passed' ? 'passed' : ''}">${escapeHtml(evidence.status)}</span>
+        <span class="type-chip">${escapeHtml(evidence.evidence_type)}</span>
         <code class="evidence-id">${escapeHtml(evidence.id)}</code>
       </div>
       <p><strong>聲明範圍：</strong>${escapeHtml(evidence.claim_scope.statement_zh)}</p>
       <dl class="definition-list">
         <div><dt>量化範圍</dt><dd>${escapeHtml(evidence.claim_scope.quantification)}</dd></div>
-        <div><dt>普遍證明</dt><dd>${evidence.claim_scope.universal_proof ? '是' : '否'}</dd></div>
+        <div><dt>普遍證明</dt><dd>${evidence.claim_scope.universal_proof ? '是，僅限上述精確形式聲明' : '否'}</dd></div>
         <div><dt>產生器</dt><dd>${escapeHtml(evidence.producer.id)} v${escapeHtml(evidence.producer.version)}</dd></div>
+        <div><dt>執行環境</dt><dd>${escapeHtml(evidence.producer.runtime)}</dd></div>
         <div><dt>重播</dt><dd><code>${escapeHtml(evidence.replay.command)}</code></dd></div>
       </dl>
       <h3>檢查項目</h3>
@@ -155,7 +160,7 @@ function bindObjectNavigation() {
 function renderObject(mko, evidenceObjects = []) {
   const tabs = [
     ['math', '數學'], ['explain', '解釋'], ['code', '程式碼'],
-    ['evidence', '計算證據'], ['formal', '形式化'], ['ai', 'AI 結構'],
+    ['evidence', '證據'], ['formal', '形式化'], ['ai', 'AI 結構'],
   ]
   const symbols = (mko.symbols || []).map(symbol => `<tr><td><code>${escapeHtml(symbol.token)}</code></td><td>${escapeHtml(symbol.role_zh)}</td><td>${escapeHtml(symbol.scope)}</td></tr>`).join('')
   const deps = (mko.dependencies || []).length
@@ -167,12 +172,13 @@ function renderObject(mko, evidenceObjects = []) {
     ? `<h3>人工證明摘要</h3>${proofs.map(proof => `<p>${escapeHtml(proof.summary_zh)}</p>`).join('')}`
     : `<div class="notice">此物件類型為「${escapeHtml(typeLabel(mko.type))}」，目前沒有獨立證明物件。</div>`
   const formalTargets = mko.formalization?.target_systems || []
+  const formalEvidence = evidenceObjects.filter(evidence => evidence.evidence_type === 'formal_proof')
   const statementHeading = mko.type === 'definition' ? '定義敘述' : mko.type === 'theorem' ? '定理敘述' : '數學敘述'
 
   document.title = `${mko.titles['zh-Hant']} · 開源中文數學百科`
   $('#app').innerHTML = `
     <header class="hero"><div class="hero-inner">
-      <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.6</p>
+      <p class="eyebrow">OPEN CHINESE MATHEMATICAL ENCYCLOPEDIA · MVP 0.7</p>
       <div class="type-chip">${escapeHtml(typeLabel(mko.type))}</div>
       <h1>${escapeHtml(mko.titles['zh-Hant'])}</h1>
       <p class="lead">${escapeHtml(mko.summary?.['zh-Hant'] || '')}</p>
@@ -215,8 +221,10 @@ function renderObject(mko, evidenceObjects = []) {
           <h2>形式化狀態</h2><dl class="definition-list">
             <div><dt>狀態</dt><dd>${statusLabel(mko.formalization?.status)}</dd></div>
             <div><dt>目標系統</dt><dd>${escapeHtml(formalTargets.join('、') || '尚未指定')}</dd></div>
-            <div><dt>待辦</dt><dd>${escapeHtml(mko.formalization?.next_obligation_zh || '尚未指定')}</dd></div>
-          </dl><p>人工說明、有限計算與形式證明是不同狀態，介面不將它們合併成單一「已驗證」。</p>
+            <div><dt>下一個語義義務</dt><dd>${escapeHtml(mko.formalization?.next_obligation_zh || '尚未指定')}</dd></div>
+          </dl>
+          <p>形式證據只證明其精確機器聲明；百科中文敘述與形式模型之間的映射仍是獨立可審查層。</p>
+          <h2>精確形式 Evidence</h2>${renderEvidenceObjects(formalEvidence)}
         </section>
         <section class="panel" data-panel="ai">
           <h2>AI 原始結構</h2><p>MKO 透過 evidence_refs 明確引用內容定址證據。</p>
@@ -224,7 +232,7 @@ function renderObject(mko, evidenceObjects = []) {
         </section>
       </article>
     </main>
-    <footer>數學、程式、證據與證明彼此分離。開源中文數學百科 MVP v0.6。</footer>`
+    <footer>數學、程式、有限證據與精確形式證明彼此分離。開源中文數學百科 MVP v0.7。</footer>`
 
   document.querySelectorAll('.tab').forEach(button => {
     button.addEventListener('click', () => {
