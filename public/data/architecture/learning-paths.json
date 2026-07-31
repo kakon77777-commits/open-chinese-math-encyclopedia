@@ -1,0 +1,96 @@
+{
+  "schema_version":"ocme-learning-path-registry-v0.1",
+  "paths":[
+    {
+      "schema_version":"ocme-learning-path-v0.1",
+      "id":"path-geometry-foundations",
+      "title_zh":"幾何基礎到畢達哥拉斯定理",
+      "audience":["general_learner","upper_secondary"],
+      "goal_zh":"由長度與直角三角形概念進入畢達哥拉斯定理。",
+      "nodes":[
+        {"object_id":"mko-euclidean-length","position":1,"requirement":"required","rationale_zh":"先建立邊長與距離的意義。"},
+        {"object_id":"mko-right-triangle","position":2,"requirement":"required","rationale_zh":"再確定定理適用的幾何對象。"},
+        {"object_id":"mko-euclid-pythagorean-theorem","position":3,"requirement":"required","rationale_zh":"最後理解平方關係與證明。"}
+      ],
+      "edges":[
+        {"from":"mko-euclidean-length","to":"mko-right-triangle","relation":"recommended_before"},
+        {"from":"mko-right-triangle","to":"mko-euclid-pythagorean-theorem","relation":"required_before"}
+      ],
+      "review":{"status":"reviewed","reviewer":"Neo.K / Aletheia","version":1}
+    },
+    {
+      "schema_version":"ocme-learning-path-v0.1",
+      "id":"path-function-to-limits",
+      "title_zh":"集合、函數到趨近關係",
+      "audience":["upper_secondary","undergraduate"],
+      "goal_zh":"建立集合隸屬、總函數與趨近語義的基礎鏈。",
+      "nodes":[
+        {"object_id":"mko-set-membership","position":1,"requirement":"required","rationale_zh":"建立元素與集合之間的基本關係。"},
+        {"object_id":"mko-function-mapping","position":2,"requirement":"required","rationale_zh":"理解定義域到陪域的總函數。"},
+        {"object_id":"mko-tends-to-relation","position":3,"requirement":"required","rationale_zh":"在函數關係上引入趨近與濾子核心。"}
+      ],
+      "edges":[
+        {"from":"mko-set-membership","to":"mko-function-mapping","relation":"recommended_before"},
+        {"from":"mko-function-mapping","to":"mko-tends-to-relation","relation":"required_before"}
+      ],
+      "review":{"status":"reviewed","reviewer":"Neo.K / Aletheia","version":1}
+    },
+    {
+      "schema_version":"ocme-learning-path-v0.1",
+      "id":"path-modern-general-literacy",
+      "title_zh":"現代通識數學樣本路徑",
+      "audience":["general_learner"],
+      "goal_zh":"以六個現有物件示範通識入口的多分支學習方式。",
+      "nodes":[
+        {"object_id":"mko-set-membership","position":1,"requirement":"required","rationale_zh":"先接觸現代數學常用的集合語言。"},
+        {"object_id":"mko-function-mapping","position":2,"requirement":"required","rationale_zh":"建立函數作為映射的基本概念。"},
+        {"object_id":"mko-euclidean-length","position":2,"requirement":"optional","rationale_zh":"平行進入幾何量與距離。"},
+        {"object_id":"mko-right-triangle","position":3,"requirement":"optional","rationale_zh":"由長度進入直角幾何。"},
+        {"object_id":"mko-euclid-pythagorean-theorem","position":4,"requirement":"optional","rationale_zh":"觀察幾何、代數與證明的連接。"},
+        {"object_id":"mko-tends-to-relation","position":4,"requirement":"optional","rationale_zh":"由函數進入分析中的趨近語義。"}
+      ],
+      "edges":[
+        {"from":"mko-set-membership","to":"mko-function-mapping","relation":"recommended_before"},
+        {"from":"mko-euclidean-length","to":"mko-right-triangle","relation":"recommended_before"},
+        {"from":"mko-right-triangle","to":"mko-euclid-pythagorean-theorem","relation":"recommended_before"},
+        {"from":"mko-function-mapping","to":"mko-tends-to-relation","relation":"recommended_before"}
+      ],
+      "review":{"status":"reviewed","reviewer":"Neo.K / Aletheia","version":1}
+    },
+    {
+      "schema_version":"ocme-learning-path-v0.1",
+      "id":"path-formalized-mathematics-entry",
+      "title_zh":"形式化數學入門樣本",
+      "audience":["undergraduate","formalizer"],
+      "goal_zh":"從集合與函數語義進入 Lean／Mathlib 的精確聲明與證據物件。",
+      "nodes":[
+        {"object_id":"mko-set-membership","position":1,"requirement":"required","rationale_zh":"對齊 Set 作為謂詞的形式語義。"},
+        {"object_id":"mko-function-mapping","position":2,"requirement":"required","rationale_zh":"對齊總函數型別與唯一輸出。"},
+        {"object_id":"mko-tends-to-relation","position":3,"requirement":"required","rationale_zh":"理解 Filter.Tendsto 的形式核心。"},
+        {"object_id":"mko-euclid-pythagorean-theorem","position":4,"requirement":"optional","rationale_zh":"觀察百科語義到向量及邊長模型的形式橋。"}
+      ],
+      "edges":[
+        {"from":"mko-set-membership","to":"mko-function-mapping","relation":"required_before"},
+        {"from":"mko-function-mapping","to":"mko-tends-to-relation","relation":"required_before"}
+      ],
+      "review":{"status":"reviewed","reviewer":"Neo.K / Aletheia","version":1}
+    },
+    {
+      "schema_version":"ocme-learning-path-v0.1",
+      "id":"path-proof-and-evidence-literacy",
+      "title_zh":"證明與證據素養",
+      "audience":["general_learner","undergraduate"],
+      "goal_zh":"區分人工證明、有限計算證據與精確形式證明。",
+      "nodes":[
+        {"object_id":"mko-euclid-pythagorean-theorem","position":1,"requirement":"required","rationale_zh":"同一物件同時具有人工、Python、FELRA 與 Lean 證據。"},
+        {"object_id":"mko-right-triangle","position":2,"requirement":"optional","rationale_zh":"比較定義物件與定理物件的證據需求。"},
+        {"object_id":"mko-tends-to-relation","position":2,"requirement":"optional","rationale_zh":"比較形式核心與完整分析語義的邊界。"}
+      ],
+      "edges":[
+        {"from":"mko-euclid-pythagorean-theorem","to":"mko-right-triangle","relation":"extends"},
+        {"from":"mko-euclid-pythagorean-theorem","to":"mko-tends-to-relation","relation":"alternative_entry"}
+      ],
+      "review":{"status":"reviewed","reviewer":"Neo.K / Aletheia","version":1}
+    }
+  ]
+}
