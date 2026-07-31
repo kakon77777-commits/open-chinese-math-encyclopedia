@@ -12,7 +12,9 @@ for (const entry of await listObjects()) {
   const object = await loadObject(entry.id)
   let compiled
   try {
-    compiled = compileFormula(object.formula.tex)
+    compiled = compileFormula(object.formula.tex, {
+      compilerVersion: object.formula.compiler?.version || '0.4.0',
+    })
   } catch (error) {
     errors.push(`${entry.id}: ${error.message}`)
     continue
@@ -28,8 +30,6 @@ for (const entry of await listObjects()) {
   })
 
   if (mode === 'write') {
-    object.schema_version = 'mko-v0.2'
-    object.version = '0.3.0'
     object.formula = compiled
     const relative = entry.path.replace(/^\/data\//, '')
     await fs.writeFile(path.join(DATA_DIR, relative), `${JSON.stringify(object, null, 2)}\n`, 'utf8')
@@ -41,7 +41,7 @@ for (const entry of await listObjects()) {
 await fs.mkdir('artifacts', { recursive: true })
 await fs.writeFile('artifacts/formula-compilation.json', `${JSON.stringify({
   ok: errors.length === 0,
-  schema_version: 'ocme-formula-compilation-v0.1',
+  schema_version: 'ocme-formula-compilation-v0.2',
   mode,
   object_count: results.length,
   results,
