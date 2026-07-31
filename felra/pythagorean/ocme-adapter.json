@@ -8,9 +8,9 @@
   "result_snapshot_path": "evidence-sources/felra/results/pythagorean-result.json",
   "evidence_type": "finite_computational_check",
   "quantification": "finite_declared_domain",
-  "statement_zh": "在 FELRA 宣告的有限整數域與固定種子反例搜尋中，若 a²+b² 是完全平方數，則其正平方根不小於 a 與 b。",
+  "statement_zh": "在 FELRA 宣告的有限整數域與固定種子反例搜尋中，任何滿足 a²+b²=c² 的三元組，其 c 不小於 a 與 b。",
   "limitations": [
-    "宣告網格只涵蓋整數 a,b 介於 1 與 200。",
+    "宣告網格只涵蓋整數 a,b,c 介於 1 與 50。",
     "隨機反例搜尋使用固定種子與有限樣本預算。",
     "這項結果只支持宣告域內的計算性質，不構成畢達哥拉斯定理的普遍證明。"
   ]
