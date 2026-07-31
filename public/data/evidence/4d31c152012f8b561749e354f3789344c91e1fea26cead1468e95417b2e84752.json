@@ -1,0 +1,55 @@
+{
+  "id": "evidence-sha256-4d31c152012f8b561749e354f3789344c91e1fea26cead1468e95417b2e84752",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-euclid-pythagorean-theorem",
+  "evidence_type": "formal_proof",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "在任意實內積空間中，若向量 x 與 y 的夾角為 π/2，則向量和的範數平方等於兩向量範數平方之和。"
+  },
+  "producer": {
+    "id": "lean-mathlib",
+    "version": "4.30.0",
+    "runtime": "Lean 4.30.0 + Mathlib v4.30.0",
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build"
+  },
+  "sources": [
+    {
+      "role": "lean_source",
+      "path": "formal/lean/OCMEFormal/Pythagorean.lean",
+      "sha256": "ec28d1ddd85305728ad7c37f8a8b990d4ff8bb05e08d9589b08af8f71d34649b"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lakefile.toml",
+      "sha256": "89ae53ef3d5df34980fa2e5512001c1952b4aa5db27f37d059a3b1e873e2de6b"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lean-toolchain",
+      "sha256": "54727eec5cba149c18842e6deb5c41b369d66455c93ce135d7d5347c782b2325"
+    }
+  ],
+  "formula_source_sha256": "586b9ebeb1716b0a613280de2bfdbd96b2cf47ff1239e1a9aa5001709e9cc4b2",
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_pythagorean_vector", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據證明向量核心定理；邊長角色的明示綁定由獨立的 pythagorean_side_lengths 證據承擔。",
+    "本證據依賴 Lean 4.30.0 核心、Mathlib v4.30.0 與指定匯入模組。",
+    "形式證明不取代中文敘述、符號角色與幾何模型的人工審查。"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Pythagorean.lean"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "4d31c152012f8b561749e354f3789344c91e1fea26cead1468e95417b2e84752"
+  }
+}
