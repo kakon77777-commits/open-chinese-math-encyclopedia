@@ -1,5 +1,5 @@
 {
-  "id": "evidence-sha256-dd7d2bb464dd8f503fa5be9f4c68e01ce0947e506e137a064bdaa1b950c8628f",
+  "id": "evidence-sha256-4d31c152012f8b561749e354f3789344c91e1fea26cead1468e95417b2e84752",
   "schema_version": "evidence-v0.1",
   "subject_id": "mko-euclid-pythagorean-theorem",
   "evidence_type": "formal_proof",
@@ -18,13 +18,8 @@
   "sources": [
     {
       "role": "lean_source",
-      "path": "formal/lean/OCMEFormal.lean",
-      "sha256": "de4955ae4e5e5086eaa3e8d9ff6775a58536dd069c66fcc06c5d437328fd9d92"
-    },
-    {
-      "role": "lean_source",
       "path": "formal/lean/OCMEFormal/Pythagorean.lean",
-      "sha256": "bfbb424f4c1a662d6b80a3edee016975936a85826df2a963877f29ee0672ea9f"
+      "sha256": "ec28d1ddd85305728ad7c37f8a8b990d4ff8bb05e08d9589b08af8f71d34649b"
     },
     {
       "role": "lean_source",
@@ -41,10 +36,10 @@
   "checks": [
     { "id": "lake_build", "status": "passed" },
     { "id": "no_proof_placeholders", "status": "passed" },
-    { "id": "theorem_typecheck", "status": "passed" }
+    { "id": "theorem_OCMEFormal_pythagorean_vector", "status": "passed" }
   ],
   "limitations": [
-    "形式證據直接證明向量夾角版本；百科條目的三角形邊長語句與向量模型之間仍需語義映射。",
+    "此證據證明向量核心定理；邊長角色的明示綁定由獨立的 pythagorean_side_lengths 證據承擔。",
     "本證據依賴 Lean 4.30.0 核心、Mathlib v4.30.0 與指定匯入模組。",
     "形式證明不取代中文敘述、符號角色與幾何模型的人工審查。"
   ],
@@ -55,6 +50,6 @@
   },
   "digest": {
     "algorithm": "sha256",
-    "canonical_payload_sha256": "dd7d2bb464dd8f503fa5be9f4c68e01ce0947e506e137a064bdaa1b950c8628f"
+    "canonical_payload_sha256": "4d31c152012f8b561749e354f3789344c91e1fea26cead1468e95417b2e84752"
   }
 }

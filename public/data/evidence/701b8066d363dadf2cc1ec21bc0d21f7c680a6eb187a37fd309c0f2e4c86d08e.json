@@ -1,0 +1,55 @@
+{
+  "id": "evidence-sha256-701b8066d363dadf2cc1ec21bc0d21f7c680a6eb187a37fd309c0f2e4c86d08e",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-euclid-pythagorean-theorem",
+  "evidence_type": "formal_proof",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "對任意實內積空間、向量 x、y 與實數 a、b、c，若 x、y 夾角為 π/2，且 a=‖x‖、b=‖y‖、c=‖x+y‖，則 a·a+b·b=c·c。"
+  },
+  "producer": {
+    "id": "lean-mathlib",
+    "version": "4.30.0",
+    "runtime": "Lean 4.30.0 + Mathlib v4.30.0",
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build"
+  },
+  "sources": [
+    {
+      "role": "lean_source",
+      "path": "formal/lean/OCMEFormal/Pythagorean.lean",
+      "sha256": "ec28d1ddd85305728ad7c37f8a8b990d4ff8bb05e08d9589b08af8f71d34649b"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lakefile.toml",
+      "sha256": "89ae53ef3d5df34980fa2e5512001c1952b4aa5db27f37d059a3b1e873e2de6b"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lean-toolchain",
+      "sha256": "54727eec5cba149c18842e6deb5c41b369d66455c93ce135d7d5347c782b2325"
+    }
+  ],
+  "formula_source_sha256": "586b9ebeb1716b0a613280de2bfdbd96b2cf47ff1239e1a9aa5001709e9cc4b2",
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_pythagorean_side_lengths", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據完成 OCME 宣告之向量邊長模型；它不自動等同於所有仿射平面、座標系或三角形建構方式。",
+    "模型中的斜邊長被定義為向量和的範數；其他頂點排列需另證與此模型等價。",
+    "本證據依賴 Lean 4.30.0、Mathlib v4.30.0 與 pythagorean_vector。"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Pythagorean.lean"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "701b8066d363dadf2cc1ec21bc0d21f7c680a6eb187a37fd309c0f2e4c86d08e"
+  }
+}

@@ -18,7 +18,7 @@ import {
 
 const jsonResult = value => ({ content: [{ type: 'text', text: JSON.stringify(value, null, 2) }] })
 const errorResult = error => ({ content: [{ type: 'text', text: `Error: ${error?.message || error}` }], isError: true })
-const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.7.0' })
+const server = new McpServer({ name: 'open-chinese-math-encyclopedia', version: '0.8.0' })
 
 async function referencedEvidence(object) {
   return Promise.all((object.verification?.evidence_refs || []).map(ref => loadEvidence(ref.id)))
@@ -155,8 +155,8 @@ server.registerTool('get_evidence_producers', {
 })
 
 server.registerTool('get_formal_proof', {
-  title: '取得精確形式證據',
-  description: '只回傳 MKO 明確引用的 formal_proof Evidence，包含精確全稱聲明、Lean／Mathlib 來源、限制與重播命令。',
+  title: '取得精確形式證據與語義橋狀態',
+  description: '只回傳 MKO 明確引用的 formal_proof Evidence；多個形式聲明保持分離，並顯示各自範圍、限制與目前語義橋狀態。',
   inputSchema: { id: z.string().describe('數學知識物件 ID') },
 }, async ({ id }) => {
   try {
@@ -165,8 +165,17 @@ server.registerTool('get_formal_proof', {
     return jsonResult({
       object_id: id,
       formalization: object.formalization,
-      exact_formal_evidence: evidence,
+      semantic_mapping_status: object.formalization?.status || 'not_formalized',
       semantic_mapping_complete: object.formalization?.status === 'fully_formalized',
+      formal_evidence_count: evidence.length,
+      exact_claims: evidence.map(item => ({
+        evidence_id: item.id,
+        statement_zh: item.claim_scope.statement_zh,
+        quantification: item.claim_scope.quantification,
+        universal_proof: item.claim_scope.universal_proof,
+        limitations: item.limitations,
+      })),
+      exact_formal_evidence: evidence,
     })
   } catch (error) { return errorResult(error) }
 })

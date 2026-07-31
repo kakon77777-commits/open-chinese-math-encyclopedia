@@ -4,7 +4,7 @@
   "id": "mko-set-membership",
   "semantic_family_id": "sf-set-membership",
   "type": "definition",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "language": "zh-Hant",
   "titles": { "zh-Hant": "集合隸屬", "en": "Set membership" },
   "summary": { "zh-Hant": "符號 x∈A 表示元素 x 屬於集合 A。" },
@@ -35,29 +35,36 @@
   "explanation": {
     "paragraphs_zh": [
       "集合像是一個由若干對象構成的數學容器，但集合本身不必依靠實際盒子或空間來存在。",
-      "x∈A 只表示隸屬關係；它不表示 x 等於 A，也不表示 x 是 A 的子集合。"
+      "x∈A 只表示隸屬關係；它不表示 x 等於 A，也不表示 x 是 A 的子集合。",
+      "在目前的 Lean 映射中，Set α 被表示為 α→Prop，因此 x∈A 與 A x 在定義上等價。"
     ],
-    "common_misconception_zh": "混淆元素隸屬 x∈A 與子集合關係 B⊆A。"
+    "common_misconception_zh": "混淆元素隸屬 x∈A 與子集合關係 B⊆A，或把程式容器成員測試視為所有集合論語義。"
   },
   "proofs": [],
   "computational_companions": [],
   "verification": {
-    "computational_status": "not_applicable",
-    "warning_zh": "這是基礎關係定義；程式中的容器成員測試只是某種實作，不等同於一般集合論語義。",
-    "evidence_refs": [],
+    "computational_status": "formal_lean_set_semantics_available",
+    "warning_zh": "Lean 已形式化 Set α 作為 α→Prop 時的隸屬語義；此結果不宣稱涵蓋所有集合論基礎，也不讓程式容器自動成為數學集合。",
+    "evidence_refs": [
+      {
+        "id": "evidence-sha256-702de77019f352eb431eb67bd7b266491b7c36c922d952e44be2b11ba95bcb5d",
+        "role": "formal_proof",
+        "producer_id": "lean-mathlib"
+      }
+    ],
     "producers": [
       {
         "id": "lean-mathlib",
         "adapter": "formal_system",
         "config_path": "formal/lean/lakefile.toml",
-        "status": "configured"
+        "status": "active"
       }
     ]
   },
   "formalization": {
-    "status": "mapped_not_evidenced",
+    "status": "formalized_lean_set_semantics",
     "target_systems": ["Lean 4", "Mathlib"],
-    "next_obligation_zh": "建立此百科物件與 Lean 的 Membership／Set.mem 語義對應證據。"
+    "next_obligation_zh": "擴充子集合、集合相等與基本集合運算物件，並保持隸屬、包含與等號三種關係分離。"
   },
   "provenance": {
     "origin": "evemisslab_original_mvp",

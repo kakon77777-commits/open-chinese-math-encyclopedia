@@ -4,7 +4,7 @@
   "id": "mko-euclid-pythagorean-theorem",
   "semantic_family_id": "sf-pythagorean-theorem",
   "type": "theorem",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "language": "zh-Hant",
   "titles": { "zh-Hant": "畢達哥拉斯定理", "en": "Pythagorean theorem" },
   "summary": { "zh-Hant": "直角三角形兩股長度的平方和，等於斜邊長度的平方。" },
@@ -53,9 +53,9 @@
       "這個定理不是對所有三角形成立，而是針對直角三角形。斜邊是直角所對的最長邊。",
       "平方和可以視為以三條邊為邊長所建立的正方形面積關係：兩個股上正方形的面積總和，等於斜邊上正方形的面積。",
       "程式可以檢查具體的數值三元組，也可以搜尋整數畢氏三元組；但有限檢查不能取代定理的普遍證明。",
-      "Lean／Mathlib 已通過向量夾角版本的全稱形式證明；中文三角形邊長敘述與該向量模型之間仍保留明確的語義映射義務。"
+      "Lean／Mathlib 先證明向量夾角版本，再由 IsRightTriangleSideModel 明示綁定 a=‖x‖、b=‖y‖、c=‖x+y‖，推出中文條目使用的 a²+b²=c²。"
     ],
-    "common_misconception_zh": "把 a²+b²=c² 套用到任意三角形，或把某個形式化等價版本的通過誤認為所有敘述層已自動完全同構。"
+    "common_misconception_zh": "把 a²+b²=c² 套用到任意三角形，或把已形式化的指定向量邊長模型誤認為所有仿射表示法都已自動完成等價證明。"
   },
   "proofs": [
     {
@@ -82,8 +82,8 @@
     }
   ],
   "verification": {
-    "computational_status": "finite_cases_passed_and_formal_vector_proof_available",
-    "warning_zh": "Python 與 FELRA 提供有限計算證據；Lean／Mathlib 證明精確的向量夾角全稱命題。三角形邊長敘述與向量形式之間的語義映射仍需獨立審查。",
+    "computational_status": "finite_cases_and_declared_side_model_formalized",
+    "warning_zh": "Python 與 FELRA 提供有限計算證據；Lean／Mathlib 分別證明向量核心及 OCME 宣告的邊長綁定模型。任意仿射三角形表示到此模型的等價仍需另外證明。",
     "evidence_refs": [
       {
         "id": "evidence-sha256-49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466",
@@ -96,7 +96,12 @@
         "producer_id": "felra"
       },
       {
-        "id": "evidence-sha256-dd7d2bb464dd8f503fa5be9f4c68e01ce0947e506e137a064bdaa1b950c8628f",
+        "id": "evidence-sha256-4d31c152012f8b561749e354f3789344c91e1fea26cead1468e95417b2e84752",
+        "role": "formal_proof",
+        "producer_id": "lean-mathlib"
+      },
+      {
+        "id": "evidence-sha256-701b8066d363dadf2cc1ec21bc0d21f7c680a6eb187a37fd309c0f2e4c86d08e",
         "role": "formal_proof",
         "producer_id": "lean-mathlib"
       }
@@ -123,9 +128,9 @@
     ]
   },
   "formalization": {
-    "status": "formalized_equivalent_vector_form",
+    "status": "formalized_declared_side_model",
     "target_systems": ["Lean 4", "Mathlib"],
-    "next_obligation_zh": "形式化歐幾里得三角形頂點、邊長與直角條件到向量夾角模型的語義映射，並證明該映射保存 a²+b²=c²。"
+    "next_obligation_zh": "建立任意歐幾里得仿射三角形頂點表示與 IsRightTriangleSideModel 的等價定理，包含頂點排列、邊向量方向與距離保存。"
   },
   "provenance": {
     "origin": "evemisslab_original_mvp",

@@ -1,0 +1,55 @@
+{
+  "id": "evidence-sha256-d999133c1ae711b73752af8ee4b1b3ce74ca135ff7c06aabbe9fc8a3186f434b",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-function-mapping",
+  "evidence_type": "formal_proof",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "對任意型別 X、Y、函數 f:X→Y 與輸入 x:X，存在唯一 y:Y 滿足 f x=y。"
+  },
+  "producer": {
+    "id": "lean-mathlib",
+    "version": "4.30.0",
+    "runtime": "Lean 4.30.0 + Mathlib v4.30.0",
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build"
+  },
+  "sources": [
+    {
+      "role": "lean_source",
+      "path": "formal/lean/OCMEFormal/Foundations.lean",
+      "sha256": "079955e4a582ced4d802f49874e357931b689bc9740dacd5e69fb83c8cec6ac5"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lakefile.toml",
+      "sha256": "89ae53ef3d5df34980fa2e5512001c1952b4aa5db27f37d059a3b1e873e2de6b"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lean-toolchain",
+      "sha256": "54727eec5cba149c18842e6deb5c41b369d66455c93ce135d7d5347c782b2325"
+    }
+  ],
+  "formula_source_sha256": "28c28a16d0b842cb3d3c986cead38d14c1fbddc06efeb3c29e6e3479896c8a21",
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_function_total_unique", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據形式化 Lean 總函數型別的存在唯一輸出語義，不涵蓋部分函數、隨機程序或有副作用程式。",
+    "陪域 Y 與函數實際值域仍是不同概念；本定理不聲稱 f 為滿射。",
+    "本證據依賴 Lean 4.30.0 與 Mathlib v4.30.0。"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Foundations.lean"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "d999133c1ae711b73752af8ee4b1b3ce74ca135ff7c06aabbe9fc8a3186f434b"
+  }
+}

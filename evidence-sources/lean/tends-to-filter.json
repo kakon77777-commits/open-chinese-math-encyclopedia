@@ -1,0 +1,35 @@
+{
+  "schema_version": "lean-run-manifest-v0.1",
+  "subject_id": "mko-tends-to-relation",
+  "producer_version": "4.30.0",
+  "mathlib_version": "v4.30.0",
+  "toolchain": "Lean 4.30.0",
+  "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+  "theorem_name": "OCMEFormal.tendsTo_filter_semantics",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "對任意函數 f:α→β 與濾子 l₁、l₂，Filter.Tendsto f l₁ l₂ 與 Filter.map f l₁≤l₂ 等價。"
+  },
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_tendsTo_filter_semantics", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據形式化 Mathlib 的濾子趨近語義；裸符號 x→a 必須先指定來源與目標濾子才能連到此聲明。",
+    "它不是單獨的 ε–δ 極限定義，也不直接證明任何特定函數極限。",
+    "本證據依賴 Lean 4.30.0 與 Mathlib v4.30.0。"
+  ],
+  "source_paths": [
+    "formal/lean/lean-toolchain",
+    "formal/lean/lakefile.toml",
+    "formal/lean/OCMEFormal/Foundations.lean"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Foundations.lean"
+  }
+}

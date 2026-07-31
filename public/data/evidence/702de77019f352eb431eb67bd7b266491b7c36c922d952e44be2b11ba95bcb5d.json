@@ -1,0 +1,55 @@
+{
+  "id": "evidence-sha256-702de77019f352eb431eb67bd7b266491b7c36c922d952e44be2b11ba95bcb5d",
+  "schema_version": "evidence-v0.1",
+  "subject_id": "mko-set-membership",
+  "evidence_type": "formal_proof",
+  "status": "passed",
+  "claim_scope": {
+    "quantification": "formal_universal",
+    "universal_proof": true,
+    "statement_zh": "對任意型別 α、元素 x:α 與集合 A:Set α，命題 x∈A 與謂詞求值 A x 等價。"
+  },
+  "producer": {
+    "id": "lean-mathlib",
+    "version": "4.30.0",
+    "runtime": "Lean 4.30.0 + Mathlib v4.30.0",
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build"
+  },
+  "sources": [
+    {
+      "role": "lean_source",
+      "path": "formal/lean/OCMEFormal/Foundations.lean",
+      "sha256": "079955e4a582ced4d802f49874e357931b689bc9740dacd5e69fb83c8cec6ac5"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lakefile.toml",
+      "sha256": "89ae53ef3d5df34980fa2e5512001c1952b4aa5db27f37d059a3b1e873e2de6b"
+    },
+    {
+      "role": "lean_source",
+      "path": "formal/lean/lean-toolchain",
+      "sha256": "54727eec5cba149c18842e6deb5c41b369d66455c93ce135d7d5347c782b2325"
+    }
+  ],
+  "formula_source_sha256": "fac41f5df7e2995de6d6b48a0cce188696ab53b3a4ebdbcc87c451009145c802",
+  "checks": [
+    { "id": "lake_build", "status": "passed" },
+    { "id": "no_proof_placeholders", "status": "passed" },
+    { "id": "theorem_OCMEFormal_set_membership_semantics", "status": "passed" }
+  ],
+  "limitations": [
+    "此證據形式化 Lean Set 作為 α→Prop 的集合語義，不宣稱涵蓋所有集合論基礎系統。",
+    "程式容器的成員測試仍不會因此自動等同於一般數學集合隸屬。",
+    "本證據依賴 Lean 4.30.0 與 Mathlib v4.30.0。"
+  ],
+  "replay": {
+    "command": "cd formal/lean && lake update && lake exe cache get && lake build",
+    "expected_exit_code": 0,
+    "source_artifact": "formal/lean/OCMEFormal/Foundations.lean"
+  },
+  "digest": {
+    "algorithm": "sha256",
+    "canonical_payload_sha256": "702de77019f352eb431eb67bd7b266491b7c36c922d952e44be2b11ba95bcb5d"
+  }
+}

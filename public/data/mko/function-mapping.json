@@ -4,7 +4,7 @@
   "id": "mko-function-mapping",
   "semantic_family_id": "sf-function-mapping",
   "type": "definition",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "language": "zh-Hant",
   "titles": { "zh-Hant": "函數映射", "en": "Function mapping" },
   "summary": { "zh-Hant": "符號 f:X→Y 表示函數 f 從定義域 X 映射到陪域 Y。" },
@@ -40,29 +40,36 @@
   "explanation": {
     "paragraphs_zh": [
       "函數的核心不是一條畫出來的曲線，而是每個允許輸入都對應唯一輸出的規則。",
-      "f:X→Y 宣告了定義域與陪域；實際輸出形成的值域可能只是 Y 的一部分。"
+      "f:X→Y 宣告了定義域與陪域；實際輸出形成的值域可能只是 Y 的一部分。",
+      "Lean 定理 function_total_unique 已對任意 f:X→Y 與 x:X 證明存在唯一 y:Y 使 f x=y。"
     ],
-    "common_misconception_zh": "把陪域、值域與函數圖形視為同一個數學對象。"
+    "common_misconception_zh": "把陪域、值域與函數圖形視為同一個數學對象，或把具有副作用與失敗狀態的程式函數直接等同於純數學總函數。"
   },
   "proofs": [],
   "computational_companions": [],
   "verification": {
-    "computational_status": "not_applicable",
-    "warning_zh": "程式語言中的函數可能具有副作用、部分定義或狀態依賴，不能自動等同於此數學函數定義。",
-    "evidence_refs": [],
+    "computational_status": "formal_total_function_core_available",
+    "warning_zh": "Lean 已形式化總函數對每個輸入存在唯一輸出的核心語義；部分函數、副作用、隨機性與執行失敗不在此聲明內。",
+    "evidence_refs": [
+      {
+        "id": "evidence-sha256-d999133c1ae711b73752af8ee4b1b3ce74ca135ff7c06aabbe9fc8a3186f434b",
+        "role": "formal_proof",
+        "producer_id": "lean-mathlib"
+      }
+    ],
     "producers": [
       {
         "id": "lean-mathlib",
         "adapter": "formal_system",
         "config_path": "formal/lean/lakefile.toml",
-        "status": "configured"
+        "status": "active"
       }
     ]
   },
   "formalization": {
-    "status": "mapped_not_evidenced",
+    "status": "formalized_total_function_core",
     "target_systems": ["Lean 4", "Mathlib"],
-    "next_obligation_zh": "建立此物件與 Lean 函數型別 X → Y 的明確語義映射證據。"
+    "next_obligation_zh": "新增值域、單射、滿射、雙射與部分函數物件，明確區分型別陪域與實際輸出集合。"
   },
   "provenance": {
     "origin": "evemisslab_original_mvp",
