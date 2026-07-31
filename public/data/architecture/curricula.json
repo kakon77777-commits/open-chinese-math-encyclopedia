@@ -1,0 +1,21 @@
+{
+  "schema_version":"ocme-curriculum-v0.1",
+  "frameworks":[
+    {"id":"curriculum-ocme-general","title_zh":"OCME 現代通識數學","scope":"ocme_internal","status":"active"},
+    {"id":"curriculum-ocme-university-core","title_zh":"OCME 大學核心數學","scope":"ocme_internal","status":"active"},
+    {"id":"curriculum-ocme-formalized","title_zh":"OCME 形式化數學入門","scope":"ocme_internal","status":"active"},
+    {"id":"curriculum-pisa-2022","title_zh":"PISA 2022 數學素養框架","scope":"international","status":"candidate","source_url":"https://pisa2022-maths.oecd.org/"}
+  ],
+  "alignments":[
+    {"object_id":"mko-euclidean-length","framework_id":"curriculum-ocme-general","item_id":"geometry.measurement.length","relation":"introduced_in","status":"reviewed","rationale_zh":"長度是通識幾何與測量的核心概念。"},
+    {"object_id":"mko-right-triangle","framework_id":"curriculum-ocme-general","item_id":"geometry.right-triangle","relation":"introduced_in","status":"reviewed","rationale_zh":"直角三角形連接角度、邊長與常用幾何。"},
+    {"object_id":"mko-euclid-pythagorean-theorem","framework_id":"curriculum-ocme-general","item_id":"geometry.pythagorean","relation":"assessed_in","status":"reviewed","rationale_zh":"畢達哥拉斯定理是中學與通識幾何常用結果。"},
+    {"object_id":"mko-set-membership","framework_id":"curriculum-ocme-university-core","item_id":"foundations.set-membership","relation":"introduced_in","status":"reviewed","rationale_zh":"集合隸屬是大學數學語言的基本構件。"},
+    {"object_id":"mko-function-mapping","framework_id":"curriculum-ocme-university-core","item_id":"foundations.function-mapping","relation":"introduced_in","status":"reviewed","rationale_zh":"函數映射是代數、分析與離散數學共同前置。"},
+    {"object_id":"mko-tends-to-relation","framework_id":"curriculum-ocme-university-core","item_id":"analysis.tends-to","relation":"introduced_in","status":"reviewed","rationale_zh":"趨近關係是極限、連續與分析的核心語義。"},
+    {"object_id":"mko-set-membership","framework_id":"curriculum-ocme-formalized","item_id":"lean.set-semantics","relation":"introduced_in","status":"reviewed","rationale_zh":"對齊 Lean Set 作為謂詞的表示。"},
+    {"object_id":"mko-function-mapping","framework_id":"curriculum-ocme-formalized","item_id":"lean.total-function","relation":"introduced_in","status":"reviewed","rationale_zh":"對齊 Lean 總函數型別的形式語義。"},
+    {"object_id":"mko-tends-to-relation","framework_id":"curriculum-ocme-formalized","item_id":"mathlib.filter-tendsto","relation":"introduced_in","status":"reviewed","rationale_zh":"對齊 Mathlib Filter.Tendsto 核心。"},
+    {"object_id":"mko-euclid-pythagorean-theorem","framework_id":"curriculum-ocme-formalized","item_id":"mathlib.pythagorean-bridge","relation":"extends","status":"reviewed","rationale_zh":"展示向量核心與邊長模型的形式語義橋。"}
+  ]
+}
