@@ -9,29 +9,34 @@ import {
 import { ROOT } from '../lib/store.js'
 import { createMkoValidator } from '../lib/schema-validation.js'
 
-const evidence = await loadEvidence('evidence-sha256-49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466')
-assert.equal(verifyEvidenceAddress(evidence).ok, true)
-assert.equal(evidence.claim_scope.universal_proof, false)
+const pythonEvidence = await loadEvidence('evidence-sha256-49083d0529f2b530b946fd6f30a313b0341a8989bf0f6de9adcdeb398a2b4466')
+const felraEvidence = await loadEvidence('evidence-sha256-97ad4a4b529de8c77662f823ad0966c24cfe1c121af8cbb4320135b9ea849448')
+for (const evidence of [pythonEvidence, felraEvidence]) {
+  assert.equal(verifyEvidenceAddress(evidence).ok, true)
+  assert.equal(evidence.claim_scope.universal_proof, false)
+}
+assert.equal(felraEvidence.producer.id, 'felra')
+assert.equal(felraEvidence.claim_scope.quantification, 'finite_declared_domain')
 
 const forTheorem = await evidenceForSubject('mko-euclid-pythagorean-theorem')
-assert.equal(forTheorem.length, 1)
-assert.equal(forTheorem[0].id, evidence.id)
+assert.equal(forTheorem.length, 2)
+assert.deepEqual(new Set(forTheorem.map(item => item.id)), new Set([pythonEvidence.id, felraEvidence.id]))
 
-const tampered = structuredClone(evidence)
+const tampered = structuredClone(felraEvidence)
 tampered.checks[0].status = 'failed'
 assert.equal(verifyEvidenceAddress(tampered).ok, false)
 
 const schema = JSON.parse(await fs.readFile(path.join(ROOT, 'schemas', 'evidence.schema.json'), 'utf8'))
 const validate = createMkoValidator(schema)
-assert.equal(validate(structuredClone(evidence)), true)
+assert.equal(validate(structuredClone(felraEvidence)), true)
 
-const missingLimitations = structuredClone(evidence)
+const missingLimitations = structuredClone(felraEvidence)
 delete missingLimitations.limitations
 assert.equal(validate(missingLimitations), false)
 
-const falseUniversalClaim = structuredClone(evidence)
+const falseUniversalClaim = structuredClone(felraEvidence)
 falseUniversalClaim.claim_scope.universal_proof = true
 assert.equal(validate(falseUniversalClaim), true)
 assert.equal(verifyEvidenceAddress(falseUniversalClaim).ok, false)
 
-console.log('Evidence Object negative tests passed.')
+console.log('Evidence Object negative tests passed for Python and FELRA producers.')
