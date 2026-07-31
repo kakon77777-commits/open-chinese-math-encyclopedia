@@ -15,17 +15,16 @@
   "checks": [
     { "id": "lake_build", "status": "passed" },
     { "id": "no_proof_placeholders", "status": "passed" },
-    { "id": "theorem_typecheck", "status": "passed" }
+    { "id": "theorem_OCMEFormal_pythagorean_vector", "status": "passed" }
   ],
   "limitations": [
-    "形式證據直接證明向量夾角版本；百科條目的三角形邊長語句與向量模型之間仍需語義映射。",
+    "此證據證明向量核心定理；邊長角色的明示綁定由獨立的 pythagorean_side_lengths 證據承擔。",
     "本證據依賴 Lean 4.30.0 核心、Mathlib v4.30.0 與指定匯入模組。",
     "形式證明不取代中文敘述、符號角色與幾何模型的人工審查。"
   ],
   "source_paths": [
     "formal/lean/lean-toolchain",
     "formal/lean/lakefile.toml",
-    "formal/lean/OCMEFormal.lean",
     "formal/lean/OCMEFormal/Pythagorean.lean"
   ],
   "replay": {
