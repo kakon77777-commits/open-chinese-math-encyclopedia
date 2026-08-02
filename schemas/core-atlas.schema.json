@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/core-atlas-v0.1.json",
+  "title": "OCME Core Mathematical Atlas v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "atlas_version", "title_zh", "design_note_zh", "groups", "entries"],
+  "properties": {
+    "schema_version": {"const": "ocme-core-atlas-v0.1"},
+    "atlas_version": {"const": "0.10.0"},
+    "title_zh": {"type": "string", "minLength": 3},
+    "design_note_zh": {"type": "string", "minLength": 20},
+    "groups": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "title_zh", "expected_count"],
+        "properties": {
+          "id": {"enum": ["numbers", "sets_logic", "algebra", "geometry", "functions", "calculus", "probability", "discrete"]},
+          "title_zh": {"type": "string", "minLength": 2},
+          "expected_count": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "entries": {"type": "array", "minItems": 80, "maxItems": 80, "items": {"$ref": "#/$defs/entry"}}
+  },
+  "$defs": {
+    "difficulty": {
+      "type": "object", "additionalProperties": false,
+      "required": ["prerequisite_depth", "prerequisite_breadth", "abstraction_level", "conceptual_discontinuity", "notation_density", "proof_burden", "computational_burden", "search_construction_burden", "representation_switching", "exception_boundary_density", "intuition_accessibility", "formalization_burden"],
+      "properties": {
+        "prerequisite_depth": {"type": "integer", "minimum": 0, "maximum": 5},
+        "prerequisite_breadth": {"type": "integer", "minimum": 0, "maximum": 5},
+        "abstraction_level": {"type": "integer", "minimum": 0, "maximum": 5},
+        "conceptual_discontinuity": {"type": "integer", "minimum": 0, "maximum": 5},
+        "notation_density": {"type": "integer", "minimum": 0, "maximum": 5},
+        "proof_burden": {"type": "integer", "minimum": 0, "maximum": 5},
+        "computational_burden": {"type": "integer", "minimum": 0, "maximum": 5},
+        "search_construction_burden": {"type": "integer", "minimum": 0, "maximum": 5},
+        "representation_switching": {"type": "integer", "minimum": 0, "maximum": 5},
+        "exception_boundary_density": {"type": "integer", "minimum": 0, "maximum": 5},
+        "intuition_accessibility": {"type": "integer", "minimum": 0, "maximum": 5},
+        "formalization_burden": {"type": "integer", "minimum": 0, "maximum": 5}
+      }
+    },
+    "entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title_zh", "group", "primary_domain", "object_kind", "summary_zh", "prerequisites", "methods", "curriculum_band", "difficulty", "maturity", "target_mko_id", "materialization_priority"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^atlas-"},
+        "title_zh": {"type": "string", "minLength": 1},
+        "group": {"enum": ["numbers", "sets_logic", "algebra", "geometry", "functions", "calculus", "probability", "discrete"]},
+        "primary_domain": {"type": "string", "minLength": 2},
+        "object_kind": {"type": "string", "minLength": 2},
+        "summary_zh": {"type": "string", "minLength": 8},
+        "prerequisites": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^atlas-"}},
+        "methods": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^method-"}},
+        "curriculum_band": {"enum": ["general_literacy", "primary_foundation", "lower_secondary", "upper_secondary", "undergraduate_core", "undergraduate_advanced", "graduate_core", "research_specialized"]},
+        "difficulty": {"$ref": "#/$defs/difficulty"},
+        "maturity": {"enum": ["atlas_seed", "canonical_mko"]},
+        "canonical_mko_id": {"type": "string", "pattern": "^mko-"},
+        "target_mko_id": {"type": "string", "pattern": "^mko-"},
+        "materialization_priority": {"enum": ["canonical", "P1", "P2", "P3"]}
+      }
+    }
+  }
+}
