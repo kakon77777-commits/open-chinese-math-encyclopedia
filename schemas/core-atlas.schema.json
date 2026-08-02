@@ -61,11 +61,7 @@
         "canonical_mko_id": {"type": "string", "pattern": "^mko-"},
         "target_mko_id": {"type": "string", "pattern": "^mko-"},
         "materialization_priority": {"enum": ["canonical", "P1", "P2", "P3"]}
-      },
-      "allOf": [
-        {"if": {"properties": {"maturity": {"const": "canonical_mko"}}}, "then": {"required": ["canonical_mko_id"], "properties": {"materialization_priority": {"const": "canonical"}}}},
-        {"if": {"properties": {"maturity": {"const": "atlas_seed"}}}, "then": {"not": {"required": ["canonical_mko_id"]}, "properties": {"materialization_priority": {"enum": ["P1", "P2", "P3"]}}}}
-      ]
+      }
     }
   }
 }
