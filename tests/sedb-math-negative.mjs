@@ -119,4 +119,26 @@ fakeCanonical.objectStates[0].latest_event_id = 'evt:object-verified'
 fakeCanonical.events = fakeCanonical.events.filter(event => event.event_id !== 'evt:object-canonical')
 assert.equal((await validate(fakeCanonical)).ok, false)
 
+const orphanEventWithoutAuthority = {
+  objectStates: [],
+  claimStates: [],
+  events: [
+    {
+      schema_version: 'ocme-sedb-math-event-v0.1',
+      event_id: 'evt:orphan',
+      object_id: 'mko-orphan',
+      event_type: 'state_transition',
+      from_state: 'planned',
+      to_state: 'proposed',
+      reason: 'This event must not establish its own object authority.',
+      actor: 'test:orphan',
+      policy_version: 'ocme-sedb-math-policy-v0.1',
+      evidence_refs: [],
+      created_at: '2026-09-02T16:03:00Z',
+    },
+  ],
+}
+const orphanResult = await validateSedbMathBundle(orphanEventWithoutAuthority)
+assert.equal(orphanResult.ok, false, 'orphan events must be rejected when no object authority exists')
+
 console.log('SEDB-Math negative validation tests passed.')
