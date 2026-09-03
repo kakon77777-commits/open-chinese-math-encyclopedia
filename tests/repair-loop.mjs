@@ -109,6 +109,26 @@ const outsideRoot = validPatch()
 outsideRoot.operations = [{ op: 'replace', path: '/schema_version', value: 'other' }]
 assert.equal((await validateRepairPatch(outsideRoot, { task, candidate, ledger: ledger2 })).ok, false)
 
+const hiddenCanonicalState = validPatch()
+hiddenCanonicalState.operations = [
+  {
+    op: 'add',
+    path: '/candidate_artifact/metadata',
+    value: { canonical_state: 'canonical' },
+  },
+]
+assert.equal((await validateRepairPatch(hiddenCanonicalState, { task, candidate, ledger: ledger2 })).ok, false)
+
+const hiddenReasoningTrace = validPatch()
+hiddenReasoningTrace.operations = [
+  {
+    op: 'add',
+    path: '/candidate_artifact/analysis',
+    value: { nested: { reasoning_trace: 'must not cross the protocol boundary' } },
+  },
+]
+assert.equal((await validateRepairPatch(hiddenReasoningTrace, { task, candidate, ledger: ledger2 })).ok, false)
+
 const sameRevision = validPatch()
 sameRevision.next_candidate_revision_id = candidate.candidate_revision_id
 assert.equal((await validateRepairPatch(sameRevision, { task, candidate, ledger: ledger2 })).ok, false)
