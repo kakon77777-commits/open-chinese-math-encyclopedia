@@ -58,6 +58,20 @@ await assert.rejects(
 )
 assert.equal(runtime.getRunRecords().length, 1)
 
+for (const context of [
+  { api_key: 'test-credential-marker' },
+  { nested: { Authorization: 'Bearer test-credential-marker' } },
+  { nested: [{ access_token: 'test-credential-marker' }] },
+  { credentials: { client_secret: 'test-credential-marker' } },
+  { bearer_token: 'test-credential-marker' },
+]) {
+  await assert.rejects(
+    () => runtime.run({ ...request, context }),
+    /credential field/i,
+  )
+}
+assert.equal(runtime.getRunRecords().length, 1)
+
 const failingRegistry = new ProviderRegistry()
 failingRegistry.register('broken', { async run() { throw new Error('provider exploded') } })
 failingRegistry.register('fake', fake)
