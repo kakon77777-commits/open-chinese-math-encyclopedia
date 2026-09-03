@@ -22,6 +22,26 @@ function internalCandidateGate(validation) {
   }
 }
 
+function sameStringArray(left, right) {
+  return Array.isArray(left)
+    && Array.isArray(right)
+    && left.length === right.length
+    && left.every((item, index) => item === right[index])
+}
+
+function assertExecutorResultBound(gate, result) {
+  const matches = result
+    && typeof result === 'object'
+    && !Array.isArray(result)
+    && result.gate_id === gate.gate_id
+    && sameStringArray(result.scope, gate.scope)
+    && result.executable === gate.executable
+    && sameStringArray(result.args, gate.args)
+    && result.tool?.name === gate.tool_name
+
+  if (!matches) throw new Error(`executor result does not match gate definition: ${gate.gate_id}`)
+}
+
 export async function runMechanicalTrust({
   candidate,
   task,
@@ -47,6 +67,7 @@ export async function runMechanicalTrust({
   if (candidateValidation.ok) {
     for (const gate of gates) {
       const result = await executor(structuredClone(gate))
+      assertExecutorResultBound(gate, result)
       gateResults.push(structuredClone(result))
     }
   }
