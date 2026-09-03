@@ -1,0 +1,188 @@
+{
+  "schema_version": "ocme-r5-risk-diversity-validation-v0.1",
+  "phase": "R5",
+  "title": "Deterministic Risk / Epistemic Diversity / Escalation Routing",
+  "status": "implementation_validated_pending_artifact_head_verification",
+  "base_commit": "edaf8e4938a176478a87a18c894a27a9358fbd4f",
+  "implementation_commit": "1a3d38f2f2de1a4fec8a7c79f3fc33ab7f300c4b",
+  "branch": "feature/ocme-r5-risk-diversity-routing",
+  "pull_request": 15,
+  "scope": {
+    "risk_semantics": "routing_burden_only",
+    "diversity_semantics": "review_topology_only",
+    "disagreement_semantics": "preserve_open_conflict_without_majority_truth_rule",
+    "escalation_semantics": "provider_neutral_route_marker_only",
+    "live_ai_provider_dependencies": false,
+    "frontier_adjudication_execution": false,
+    "canonicalization_authority": false,
+    "mathematical_truth_probability": false,
+    "canonical_data_modified": false,
+    "protected_paths_with_zero_diff": [
+      "public/data/mko/",
+      "public/data/evidence/",
+      "public/data/architecture/",
+      "public/data/atlas/",
+      "data/sedb-math/",
+      "formal/"
+    ]
+  },
+  "implemented_contracts": [
+    "deterministic L0-L4 routing-risk classification with explainable integer factors and policy versioning",
+    "mechanical failure and critical/counterexample objections impose L4 hard floors",
+    "major and formalization-mismatch objections impose at least L3 routing burden",
+    "Atlas difficulty and direct downstream centrality are computed from canonical Atlas structure",
+    "materialization priority is recorded but not treated as correctness probability",
+    "six-axis epistemic-diversity topology over model family, prompt, context, source set, tool set and verification goal",
+    "model-version string changes alone do not increase effective review topology diversity",
+    "three-or-more same-family/context/source/tool reviews emit pseudo_independent_consensus warning",
+    "disagreements are grouped by issue and remain open regardless of support/oppose vote counts",
+    "escalation decisions follow deterministic priority rules and never execute providers",
+    "cross-artifact candidate revision identities are checked before routing",
+    "escalation validators rederive route, blocking, reasons and open disagreement IDs from the same deterministic policy",
+    "pre-cap risk-factor contributions may exceed 100 while final risk_score remains capped to 0-100"
+  ],
+  "policy_versions": {
+    "risk": "ocme-risk-policy-v0.1",
+    "diversity": "ocme-diversity-policy-v0.1",
+    "escalation": "ocme-escalation-policy-v0.1"
+  },
+  "live_integration": {
+    "network_required": false,
+    "baseline": {
+      "risk_class": "L1",
+      "risk_score": 25,
+      "route": "continue_local"
+    },
+    "critical": {
+      "risk_class": "L4",
+      "route": "high_assurance_review_required"
+    },
+    "pseudo_consensus": {
+      "diversity_level": "low",
+      "warning": "pseudo_independent_consensus"
+    },
+    "disagreement": {
+      "status": "open",
+      "route": "independent_verification_required"
+    },
+    "epistemic_boundary": "routing risk and review topology only; no truth probability, provider execution, or canonical verdict"
+  },
+  "tdd_regression_evidence": [
+    {
+      "case": "initial deterministic risk profile implementation",
+      "red_commit": "2e247ed35db458706f402ea42c1868daa1a61e0e",
+      "red_ci_run_number": 219,
+      "red_ci_run_id": 33736710182,
+      "red_result": "FAIL as expected before risk classifier/validator existed",
+      "green_commit": "3867b10f94863c824a29de79d31ba3b3d6d6a93b",
+      "green_ci_run_number": 222,
+      "green_ci_run_id": 33737184092,
+      "green_result": "PASS"
+    },
+    {
+      "case": "epistemic diversity profile and pseudo-independent consensus detection",
+      "red_commit": "3b2071c38fcb0736d6fa04f1837546fee79d00ae",
+      "red_ci_run_number": 225,
+      "red_ci_run_id": 33737443218,
+      "red_result": "FAIL as expected before diversity evaluator existed",
+      "green_commit": "6cb18abaf96e90c8b37a020c196efed304a4cae9",
+      "green_ci_run_number": 228,
+      "green_ci_run_id": 33737610220,
+      "green_result": "PASS"
+    },
+    {
+      "case": "disagreement preservation without majority-vote winner",
+      "red_commit": "aa0f7c0d04eb4f551a73110ecef3521b2a3f7a43",
+      "red_ci_run_number": 230,
+      "red_ci_run_id": 33737736350,
+      "red_result": "FAIL as expected before disagreement runtime existed",
+      "green_commit": "7ebcb63f0d971148f930fe7a1397a222651162cf",
+      "green_ci_run_number": 233,
+      "green_ci_run_id": 33737900394,
+      "green_result": "PASS"
+    },
+    {
+      "case": "provider-neutral escalation priority and cross-artifact identity binding",
+      "red_commit": "99cd1e7e6e056462a75b9ae3632489c643d8368d",
+      "red_ci_run_number": 235,
+      "red_ci_run_id": 33738041753,
+      "red_result": "FAIL as expected before escalation router existed",
+      "green_commit": "882955922e733e35b50087ad5c28f631c02522f3",
+      "green_ci_run_number": 238,
+      "green_ci_run_id": 33738180291,
+      "green_result": "PASS"
+    },
+    {
+      "case": "repository integration entrypoint",
+      "red_commit": "64f6f75ca51d2271e171da695f9b3cb3355e6416",
+      "red_ci_run_number": 239,
+      "red_ci_run_id": 33738286894,
+      "red_result": "FAIL as expected because validate-risk-routing.mjs did not exist",
+      "green_commit": "fbb37c0f59c869bf167d1a345d03a794e02de1dc",
+      "green_ci_run_number": 241,
+      "green_ci_run_id": 33738438455,
+      "green_result": "PASS"
+    },
+    {
+      "case": "multiple critical objections may create a pre-cap factor contribution above 100",
+      "red_commit": "2cbf87b1e659dfdbc15377043e742b9dafb4d8ab",
+      "red_ci_run_number": 242,
+      "red_ci_run_id": 33738618613,
+      "red_result": "FAIL as expected through repository_tests because the risk-factor schema incorrectly capped a pre-cap contribution at 100",
+      "green_commit": "ef46f3a3ae4d0f28d81526fe6c888c324c1fcc05",
+      "green_ci_run_number": 243,
+      "green_ci_run_id": 33738850574,
+      "green_result": "PASS"
+    },
+    {
+      "case": "tampered escalation route must be rejected even when blocking is edited consistently",
+      "red_commit": "d4467dee92d2d6797390eddccd1ec14a704af4f8",
+      "red_ci_run_number": 244,
+      "red_ci_run_id": 33738968791,
+      "red_result": "FAIL as expected because validator accepted a route not derivable from policy inputs",
+      "green_commit": "1a3d38f2f2de1a4fec8a7c79f3fc33ab7f300c4b",
+      "green_ci_run_number": 245,
+      "green_ci_run_id": 33739076785,
+      "green_result": "PASS"
+    }
+  ],
+  "implementation_head_verification": {
+    "commit": "1a3d38f2f2de1a4fec8a7c79f3fc33ab7f300c4b",
+    "ocme_ci": {
+      "run_number": 245,
+      "run_id": 33739076785,
+      "conclusion": "success",
+      "observed_r5_summary": "baseline=L1/continue_local; critical=L4/high_assurance_review_required; pseudo-consensus=low; disagreement=independent_verification_required"
+    },
+    "lean_ci": {
+      "run_number": 213,
+      "run_id": 33739076769,
+      "conclusion": "success",
+      "gates": [
+        "pinned Lean toolchain",
+        "pinned Mathlib dependency",
+        "formal proof compilation",
+        "proof-placeholder rejection"
+      ]
+    }
+  },
+  "scope_audit": {
+    "base": "edaf8e4938a176478a87a18c894a27a9358fbd4f",
+    "implementation_head": "1a3d38f2f2de1a4fec8a7c79f3fc33ab7f300c4b",
+    "changed_files_before_validation_artifact": 21,
+    "result": "R5-only docs/schema/lib/runtime/script/tests plus package integration; protected canonical/formal paths unchanged"
+  },
+  "known_boundaries": {
+    "risk": "routing burden is not a probability of mathematical error",
+    "diversity": "review topology independence is not confidence or truth",
+    "disagreement": "open disagreement records conflict and does not select a winner",
+    "escalation": "high_assurance_review_required is a provider-neutral marker; R5 does not call frontier or human adjudicators",
+    "mechanical_trust": "R5 consumes R4 status but does not replace the candidate/source-bound R4 Mechanical Trust Report"
+  },
+  "final_head_verification": {
+    "required": true,
+    "status": "pending",
+    "reason": "committing this validation artifact creates a new branch HEAD that must independently pass OCME CI and Lean CI"
+  },
+  "acceptance_rule": "R5 is FINAL_ACCEPTED only after the validation-artifact HEAD passes both OCME CI and Lean CI."
+}
