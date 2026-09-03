@@ -70,4 +70,36 @@ const failingRuntime = new ProviderRuntime({
 await assert.rejects(() => failingRuntime.run(request), /provider exploded/)
 assert.equal(failingRuntime.getRunRecords().length, 0)
 
+const resolvedRegistry = new ProviderRegistry().register('versioned', {
+  async run() {
+    return {
+      structured_output: structuredClone(fixture),
+      usage: { input_units: 3, output_units: 2, total_units: 5, cached_input_units: 0 },
+      provider_metadata: {
+        provider: 'versioned',
+        model: 'glm-alias',
+        model_version: 'glm-resolved-2026-09-03',
+        network_used: true,
+      },
+    }
+  },
+})
+const resolvedPolicy = createModelPolicy({ provider: 'versioned', model: 'glm-alias' })
+const resolvedRuntime = new ProviderRuntime({
+  registry: resolvedRegistry,
+  modelPolicy: resolvedPolicy,
+  clock: () => 2000,
+  idFactory: () => 'ai-run-versioned-000001',
+})
+const resolvedResponse = await resolvedRuntime.run(request)
+const resolvedRecord = resolvedRuntime.getRunRecords()[0]
+assert.equal(resolvedRecord.model, 'glm-alias', 'model records the requested policy model')
+assert.equal(resolvedRecord.model_version, 'glm-resolved-2026-09-03', 'model_version records provider-resolved provenance')
+const resolvedValidation = await validateAiRunRecord(resolvedRecord, {
+  request,
+  policy: resolvedPolicy.resolve(request),
+  response: resolvedResponse,
+})
+assert.equal(resolvedValidation.ok, true, resolvedValidation.errors.join('\n'))
+
 console.log('R6 ProviderRuntime RED/GREEN tests passed.')
