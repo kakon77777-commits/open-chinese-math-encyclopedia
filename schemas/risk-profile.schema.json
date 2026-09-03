@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/risk-profile-v0.1.json",
+  "title": "OCME Routing Risk Profile v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "policy_version",
+    "epistemic_scope",
+    "task_id",
+    "atlas_id",
+    "candidate_revision_id",
+    "mechanical_report_id",
+    "materialization_priority",
+    "risk_score",
+    "risk_class",
+    "hard_floor",
+    "factors",
+    "downstream_dependency_count"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-risk-profile-v0.1"},
+    "profile_id": {"type": "string", "pattern": "^risk-candidate-task-atlas-.+", "minLength": 25},
+    "policy_version": {"const": "ocme-risk-policy-v0.1"},
+    "epistemic_scope": {"const": "routing_risk_only"},
+    "task_id": {"type": "string", "pattern": "^task-atlas-", "minLength": 12},
+    "atlas_id": {"type": "string", "pattern": "^atlas-", "minLength": 7},
+    "candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+    "mechanical_report_id": {"type": "string", "pattern": "^mechanical-candidate-task-atlas-.+", "minLength": 34},
+    "materialization_priority": {"enum": ["P1", "P2", "P3"]},
+    "risk_score": {"type": "integer", "minimum": 0, "maximum": 100},
+    "risk_class": {"enum": ["L0", "L1", "L2", "L3", "L4"]},
+    "hard_floor": {
+      "anyOf": [
+        {"type": "null"},
+        {"enum": ["L0", "L1", "L2", "L3", "L4"]}
+      ]
+    },
+    "factors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["factor_id", "score_delta", "observed", "reason"],
+        "properties": {
+          "factor_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$", "minLength": 1},
+          "score_delta": {"type": "integer", "minimum": 0, "maximum": 100},
+          "observed": {"type": "string", "minLength": 1},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "downstream_dependency_count": {"type": "integer", "minimum": 0}
+  }
+}
