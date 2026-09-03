@@ -1,0 +1,95 @@
+{
+  "schema_version": "ocme-r3-dbv-validation-v0.1",
+  "phase": "R3",
+  "title": "Designer / Builder / Verifier Protocol Runtime",
+  "status": "implementation_validated_pending_artifact_head_verification",
+  "base_commit": "2892484bba1c858b3034399e4ad4358905b1de72",
+  "implementation_commit": "5df922eee49f1e72421242e93ed44078819e0c94",
+  "branch": "feature/ocme-r3-dbv-protocol-runtime",
+  "pull_request": 13,
+  "scope": {
+    "provider_mode": "deterministic_fake_provider_only",
+    "live_provider_dependencies": false,
+    "canonicalization_authority": false,
+    "trust_plane_r4_included": false,
+    "canonical_data_modified": false,
+    "changed_file_count_before_validation_artifact": 30,
+    "protected_paths_with_zero_diff": [
+      "public/data/mko/",
+      "public/data/evidence/",
+      "public/data/architecture/",
+      "public/data/atlas/",
+      "data/sedb-math/",
+      "formal/"
+    ]
+  },
+  "implemented_contracts": [
+    "strict design contract bound to R2 materialization task identity and prerequisites",
+    "protocol-level candidate envelope bound to task and target MKO identity",
+    "strict verifier report and open-objection contract",
+    "append-only objection ledger semantics across verification rounds",
+    "explicit repair patch with objection-resolution evidence and immutable candidate identity",
+    "recursive authority-boundary rejection for canonical_state, canonical_verdict and reasoning_trace",
+    "post-repair candidate-envelope revalidation before the next verifier round",
+    "deterministic convergence / escalation policy with no canonical state",
+    "provider-neutral adapter contract",
+    "deterministic offline Fake Provider",
+    "offline end-to-end Designer -> Builder -> Verifier -> Builder-repair loop"
+  ],
+  "runtime_acceptance": {
+    "validate_dbv": "PASS",
+    "converged_fixture_attempts": 2,
+    "escalation_fixture_attempts": 1,
+    "input_materialization_task_mutation": false,
+    "unresolved_critical_objection_can_converge": false,
+    "max_attempt_exhaustion_result": "escalation_required"
+  },
+  "tdd_regression_evidence": [
+    {
+      "case": "nested authority fields inside opaque candidate and repair payloads",
+      "red_commit": "6b14610070467ded646ba4d4265be47aa6fc36c8",
+      "red_ci_run_number": 184,
+      "red_ci_run_id": 33723973257,
+      "red_result": "FAIL as expected: nested candidate_artifact canonical_state was accepted",
+      "green_commit": "7a3cbc60358ee32c610ad213d006b9ccf3d3136b",
+      "green_ci_run_number": 187,
+      "green_ci_run_id": 33728030287,
+      "green_result": "PASS"
+    },
+    {
+      "case": "repair patch can otherwise produce a schema-invalid candidate envelope",
+      "red_commit": "7263af6a37f2aa8f92c6780676a8ab7ac9c58fa9",
+      "red_ci_run_number": 189,
+      "red_ci_run_id": 33728400103,
+      "red_result": "FAIL as expected: applyRepairPatch did not reject malformed repaired candidate",
+      "green_commit": "5df922eee49f1e72421242e93ed44078819e0c94",
+      "green_ci_run_number": 191,
+      "green_ci_run_id": 33728527321,
+      "green_result": "PASS"
+    }
+  ],
+  "implementation_head_verification": {
+    "ocme_ci": {
+      "run_number": 191,
+      "run_id": 33728527321,
+      "conclusion": "success"
+    },
+    "lean_ci": {
+      "run_number": 159,
+      "run_id": 33728527366,
+      "conclusion": "success",
+      "gates": [
+        "pinned Lean toolchain",
+        "pinned Mathlib dependency",
+        "formal proof compilation",
+        "proof-placeholder rejection"
+      ]
+    }
+  },
+  "final_head_verification": {
+    "required": true,
+    "status": "pending",
+    "reason": "the validation artifact itself creates a new branch HEAD and must be verified independently"
+  },
+  "acceptance_rule": "R3 is FINAL_ACCEPTED only after the validation-artifact HEAD passes both OCME CI and Lean CI."
+}
