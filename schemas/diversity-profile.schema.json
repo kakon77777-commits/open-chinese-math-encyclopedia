@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/diversity-profile-v0.1.json",
+  "title": "OCME Epistemic Diversity Profile v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "policy_version",
+    "epistemic_scope",
+    "candidate_revision_id",
+    "review_count",
+    "effective_review_groups",
+    "diversified_axes",
+    "unique_counts",
+    "diversity_level",
+    "warnings",
+    "reviews"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-diversity-profile-v0.1"},
+    "profile_id": {"type": "string", "pattern": "^diversity-candidate-task-atlas-.+", "minLength": 30},
+    "policy_version": {"const": "ocme-diversity-policy-v0.1"},
+    "epistemic_scope": {"const": "review_topology_only"},
+    "candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+    "review_count": {"type": "integer", "minimum": 1},
+    "effective_review_groups": {"type": "integer", "minimum": 1},
+    "diversified_axes": {"type": "integer", "minimum": 0, "maximum": 6},
+    "unique_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_family", "prompt_class", "context_class", "source_set_id", "tool_set_id", "verification_goal"],
+      "properties": {
+        "model_family": {"type": "integer", "minimum": 1},
+        "prompt_class": {"type": "integer", "minimum": 1},
+        "context_class": {"type": "integer", "minimum": 1},
+        "source_set_id": {"type": "integer", "minimum": 1},
+        "tool_set_id": {"type": "integer", "minimum": 1},
+        "verification_goal": {"type": "integer", "minimum": 1}
+      }
+    },
+    "diversity_level": {"enum": ["low", "medium", "high"]},
+    "warnings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["pseudo_independent_consensus"]}
+    },
+    "reviews": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "review_id",
+          "candidate_revision_id",
+          "issue_key",
+          "position",
+          "model_family",
+          "model_version",
+          "role",
+          "prompt_class",
+          "context_class",
+          "source_set_id",
+          "tool_set_id",
+          "verification_goal"
+        ],
+        "properties": {
+          "review_id": {"type": "string", "minLength": 1},
+          "candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+          "issue_key": {"type": "string", "minLength": 1},
+          "position": {"enum": ["support", "oppose", "uncertain"]},
+          "model_family": {"type": "string", "minLength": 1},
+          "model_version": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "prompt_class": {"type": "string", "minLength": 1},
+          "context_class": {"type": "string", "minLength": 1},
+          "source_set_id": {"type": "string", "minLength": 1},
+          "tool_set_id": {"type": "string", "minLength": 1},
+          "verification_goal": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
