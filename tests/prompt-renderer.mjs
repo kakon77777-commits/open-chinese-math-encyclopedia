@@ -30,7 +30,6 @@ assert.match(messages[0].content, /hidden reasoning/i)
 assert.match(messages[1].content, /ocme-design-contract-v0\.1/)
 assert.match(messages[1].content, /task-atlas-natural-number/)
 assert.match(messages[1].content, /required_claims/)
-assert.equal(messages.some(message => message.content.includes('super-secret-api-key')), false)
 
 const parsedUser = JSON.parse(messages[1].content)
 assert.equal(parsedUser.output_schema_id, 'ocme-design-contract-v0.1')
@@ -48,5 +47,18 @@ for (const schemaId of [
 }
 
 await assert.rejects(() => resolveOutputSchema('ocme-unknown-v0.1'), /unsupported output schema/)
+
+for (const context of [
+  { api_key: 'test-credential-marker' },
+  { nested: { Authorization: 'Bearer test-credential-marker' } },
+  { nested: [{ access_token: 'test-credential-marker' }] },
+  { credentials: { client_secret: 'test-credential-marker' } },
+  { bearer_token: 'test-credential-marker' },
+]) {
+  assert.throws(
+    () => buildProviderMessages({ request: { ...request, context }, policy, outputSchema: schema }),
+    /credential field/i,
+  )
+}
 
 console.log('R6 prompt and output-schema registry RED/GREEN tests passed.')
