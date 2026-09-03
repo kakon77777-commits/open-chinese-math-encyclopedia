@@ -5,6 +5,20 @@ import { validateRepairPatch } from '../lib/repair-patch-validation.js'
 import { applyRepairPatch } from '../runtime/production/repair.js'
 
 const [task] = await loadMaterializationTasks()
+const contract = {
+  schema_version: 'ocme-design-contract-v0.1',
+  contract_id: `contract-${task.task_id}`,
+  task_id: task.task_id,
+  target_mko_id: task.target_mko_id,
+  required_claims: ['Define the target object precisely.'],
+  required_prerequisites: [...task.prerequisite_atlas_ids],
+  evidence_requirements: [],
+  counterexample_classes: [],
+  formalization_requirements: [],
+  failure_tests: ['Reject unsupported generalization.'],
+  completion_criteria: ['All required claims are explicit and reviewable.'],
+  risk_notes: [],
+}
 const candidate = {
   schema_version: 'ocme-candidate-envelope-v0.1',
   candidate_revision_id: `candidate-${task.task_id}-r0`,
@@ -133,9 +147,23 @@ const sameRevision = validPatch()
 sameRevision.next_candidate_revision_id = candidate.candidate_revision_id
 assert.equal((await validateRepairPatch(sameRevision, { task, candidate, ledger: ledger2 })).ok, false)
 
+const malformedResultPatch = validPatch()
+malformedResultPatch.operations = [
+  {
+    op: 'replace',
+    path: '/uncertainties',
+    value: { invalid: true },
+  },
+]
+assert.equal((await validateRepairPatch(malformedResultPatch, { task, candidate, ledger: ledger2 })).ok, true)
+await assert.rejects(
+  () => applyRepairPatch(candidate, ledger2, malformedResultPatch, { task, contract }),
+  /Repaired candidate invalid/,
+)
+
 const originalCandidate = structuredClone(candidate)
 const originalLedger = structuredClone(ledger2)
-const applied = await applyRepairPatch(candidate, ledger2, validPatch(), { task })
+const applied = await applyRepairPatch(candidate, ledger2, validPatch(), { task, contract })
 assert.deepEqual(candidate, originalCandidate)
 assert.deepEqual(ledger2, originalLedger)
 assert.equal(applied.candidate.candidate_revision_id, `candidate-${task.task_id}-r1`)
