@@ -76,6 +76,17 @@ function normalizeRequestOptions(raw = {}) {
   return out
 }
 
+function normalizeModelOverrides(models) {
+  if (!isRecord(models)) throw new TypeError('models must be an object')
+  const snapshot = {}
+  for (const [role, value] of Object.entries(models)) {
+    if (!['designer', 'builder', 'verifier'].includes(role)) throw new Error(`unsupported model override ${role}`)
+    if (typeof value !== 'string' || value.length === 0) throw new TypeError(`models.${role} must be a non-empty string`)
+    snapshot[role] = value
+  }
+  return Object.freeze(snapshot)
+}
+
 export function createModelPolicy({
   provider = 'glm',
   model = 'glm-5.3-flash',
@@ -84,11 +95,7 @@ export function createModelPolicy({
 } = {}) {
   if (typeof provider !== 'string' || provider.length === 0) throw new TypeError('provider must be a non-empty string')
   if (typeof model !== 'string' || model.length === 0) throw new TypeError('model must be a non-empty string')
-  if (!isRecord(models)) throw new TypeError('models must be an object')
-  for (const [role, value] of Object.entries(models)) {
-    if (!['designer', 'builder', 'verifier'].includes(role)) throw new Error(`unsupported model override ${role}`)
-    if (typeof value !== 'string' || value.length === 0) throw new TypeError(`models.${role} must be a non-empty string`)
-  }
+  const modelOverrides = normalizeModelOverrides(models)
   const optionOverrides = normalizeRequestOptions(requestOptions)
 
   return Object.freeze({
@@ -98,7 +105,7 @@ export function createModelPolicy({
       const definition = POLICY_BY_REQUEST[key]
       if (!definition) throw new Error(`unsupported role/prompt combination ${key}`)
 
-      const selectedModel = models[definition.role_key] ?? model
+      const selectedModel = modelOverrides[definition.role_key] ?? model
       const optionKey = request.prompt_class === 'builder_repair' ? 'repair' : definition.role_key
       const requestOptionsForRole = optionOverrides[optionKey] ?? DEFAULT_OPTIONS[optionKey]
 
