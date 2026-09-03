@@ -1,0 +1,69 @@
+{
+  "schema_version": "ocme-r1-sedb-math-validation-v0.1",
+  "phase": "R1",
+  "feature": "SEDB-Math Minimal State Layer",
+  "baseline": "OCME v0.10",
+  "base_commit": "c88a61860ba094ffba381895055f53b338ee3ed9",
+  "branch": "feature/ocme-r1-sedb-math",
+  "validated_implementation_commit": "d0351c54c4ac0f0a62489a4574f3d305eba2241a",
+  "verification": {
+    "ocme_ci": {
+      "run_id": 33658531879,
+      "run_number": 121,
+      "conclusion": "success",
+      "full_check": "pass"
+    },
+    "lean_ci": {
+      "run_id": 33658531838,
+      "run_number": 89,
+      "conclusion": "success",
+      "formal_proof_build": "pass",
+      "proof_placeholder_gate": "pass"
+    },
+    "r1_tests": {
+      "sedb_math_state": "pass",
+      "sedb_math_negative": "pass",
+      "sedb_math_events": "pass"
+    },
+    "sedb_math_validation": "pass",
+    "canonical_data_drift": false,
+    "ai_provider_dependency": false
+  },
+  "tdd_regression_evidence": {
+    "issue": "orphan events were accepted when both knownObjectIds and object-state authority were empty",
+    "red_commit": "af883845363a14b1c0c15d62077aa0996cc3716f",
+    "red_ci_run_id": 33658395759,
+    "red_ci_conclusion": "failure",
+    "red_failure": "AssertionError: orphan events must be rejected when no object authority exists; actual true, expected false",
+    "green_commit": "d0351c54c4ac0f0a62489a4574f3d305eba2241a",
+    "green_ci_run_id": 33658531879,
+    "green_ci_conclusion": "success"
+  },
+  "canonical_data_unchanged": [
+    "public/data/mko/",
+    "public/data/evidence/",
+    "public/data/architecture/",
+    "public/data/atlas/",
+    "formal/"
+  ],
+  "r1_scope": [
+    "epistemic state vocabulary",
+    "legal transition policy",
+    "object state schema",
+    "claim state schema",
+    "state transition event schema",
+    "semantic bundle validation",
+    "empty runtime-state collections",
+    "event indexing",
+    "repository validation command",
+    "positive and negative tests"
+  ],
+  "explicit_non_goals": [
+    "materialization scheduler",
+    "Designer/Builder/Verifier orchestration",
+    "live AI provider",
+    "frontier adjudication",
+    "generative UI",
+    "AMRAL bridge"
+  ]
+}

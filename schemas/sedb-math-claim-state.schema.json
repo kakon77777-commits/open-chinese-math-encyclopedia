@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evemisslab.com/schemas/ocme/sedb-math-claim-state-v0.1.json",
+  "title": "OCME SEDB-Math Claim State v0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "claim_id",
+    "object_id",
+    "statement",
+    "assumptions",
+    "scope",
+    "state",
+    "evidence_refs",
+    "verification_refs",
+    "latest_event_id"
+  ],
+  "properties": {
+    "schema_version": { "const": "ocme-sedb-math-claim-state-v0.1" },
+    "id": { "type": "string", "minLength": 1 },
+    "claim_id": { "type": "string", "minLength": 1 },
+    "object_id": { "type": "string", "minLength": 1 },
+    "statement": { "type": "string", "minLength": 1 },
+    "assumptions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "scope": { "type": "object" },
+    "state": {
+      "enum": [
+        "planned",
+        "proposed",
+        "draft",
+        "under_review",
+        "verified",
+        "canonical",
+        "contested",
+        "revision_required",
+        "deprecated",
+        "superseded"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "verification_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "latest_event_id": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}
