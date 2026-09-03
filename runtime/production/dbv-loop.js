@@ -71,7 +71,7 @@ export async function runDbvLoop({
       context: contexts.repair ?? {},
     })
     repairPatches.push(patch)
-    const repaired = await applyRepairPatch(candidate, ledger, patch, { task })
+    const repaired = await applyRepairPatch(candidate, ledger, patch, { task, contract })
     candidate = repaired.candidate
     ledger = repaired.ledger
   }
