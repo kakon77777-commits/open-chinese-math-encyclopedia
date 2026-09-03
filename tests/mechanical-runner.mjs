@@ -105,4 +105,21 @@ await assert.rejects(
   /candidate mutated during mechanical verification/,
 )
 
+const amplifiedScopeCandidate = makeCandidate()
+await assert.rejects(
+  () => runMechanicalTrust({
+    candidate: amplifiedScopeCandidate,
+    task,
+    contract,
+    sourceRevision: 'source-fixture',
+    gates,
+    executor: async gate => {
+      const result = gateResult(gate, 'pass')
+      result.scope = [...result.scope, 'mathematical truth']
+      return result
+    },
+  }),
+  /executor result does not match gate definition/,
+)
+
 console.log('Per-candidate mechanical trust runner tests passed.')
