@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/verification-report-v0.1.json",
+  "title": "OCME Verification Report v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "task_id",
+    "target_candidate_revision_id",
+    "objections",
+    "verification_passes",
+    "counterexample_attempts",
+    "recomputed_results",
+    "unresolved_risks"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-verification-report-v0.1"},
+    "report_id": {"type": "string", "pattern": "^verification-candidate-task-atlas-", "minLength": 31},
+    "task_id": {"type": "string", "pattern": "^task-atlas-", "minLength": 12},
+    "target_candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+    "objections": {
+      "type": "array",
+      "items": {"$ref": "https://ocme.example/schemas/verification-objection-v0.1.json"}
+    },
+    "verification_passes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "counterexample_attempts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "recomputed_results": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "unresolved_risks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}
