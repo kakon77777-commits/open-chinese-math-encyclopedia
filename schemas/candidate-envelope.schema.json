@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/candidate-envelope-v0.1.json",
+  "title": "OCME Candidate Envelope v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "candidate_revision_id",
+    "task_id",
+    "target_mko_id",
+    "candidate_id",
+    "candidate_artifact",
+    "uncertainties",
+    "evidence_refs",
+    "proposed_relations"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-candidate-envelope-v0.1"},
+    "candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$", "minLength": 25},
+    "task_id": {"type": "string", "pattern": "^task-atlas-", "minLength": 12},
+    "target_mko_id": {"type": "string", "pattern": "^mko-", "minLength": 5},
+    "candidate_id": {"type": "string", "pattern": "^mko-", "minLength": 5},
+    "candidate_artifact": {"type": "object"},
+    "uncertainties": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "proposed_relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "target_id"],
+        "properties": {
+          "type": {"type": "string", "minLength": 1},
+          "target_id": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

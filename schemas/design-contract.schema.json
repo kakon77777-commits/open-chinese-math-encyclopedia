@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/design-contract-v0.1.json",
+  "title": "OCME Design Contract v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_id",
+    "task_id",
+    "target_mko_id",
+    "required_claims",
+    "required_prerequisites",
+    "evidence_requirements",
+    "counterexample_classes",
+    "formalization_requirements",
+    "failure_tests",
+    "completion_criteria",
+    "risk_notes"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-design-contract-v0.1"},
+    "contract_id": {"type": "string", "pattern": "^contract-task-atlas-", "minLength": 21},
+    "task_id": {"type": "string", "pattern": "^task-atlas-", "minLength": 12},
+    "target_mko_id": {"type": "string", "pattern": "^mko-", "minLength": 5},
+    "required_claims": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "required_prerequisites": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^atlas-", "minLength": 7}
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "counterexample_classes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "formalization_requirements": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "failure_tests": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "completion_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "risk_notes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

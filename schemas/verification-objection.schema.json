@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/verification-objection-v0.1.json",
+  "title": "OCME Verification Objection v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "objection_id",
+    "target_candidate_revision_id",
+    "target_candidate_id",
+    "type",
+    "severity",
+    "reason",
+    "evidence_refs",
+    "status"
+  ],
+  "properties": {
+    "objection_id": {"type": "string", "pattern": "^objection-", "minLength": 12},
+    "target_candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+    "target_candidate_id": {"type": "string", "pattern": "^mko-", "minLength": 5},
+    "type": {
+      "enum": [
+        "false_claim",
+        "missing_assumption",
+        "proof_gap",
+        "undefined_symbol",
+        "dependency_error",
+        "citation_mismatch",
+        "counterexample_found",
+        "formalization_mismatch",
+        "pedagogical_misclassification",
+        "ambiguity",
+        "unsupported_generalization",
+        "other"
+      ]
+    },
+    "severity": {"enum": ["info", "minor", "major", "critical"]},
+    "reason": {"type": "string", "minLength": 1},
+    "evidence_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "status": {"enum": ["open", "resolved", "rejected", "deferred"]}
+  }
+}
