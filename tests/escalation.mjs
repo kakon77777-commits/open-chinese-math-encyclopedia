@@ -79,13 +79,22 @@ assert.equal(Object.hasOwn(local, 'canonical_verdict'), false)
 assert.equal(Object.hasOwn(local, 'mathematically_true'), false)
 assert.equal(Object.hasOwn(local, 'accept'), false)
 
-const validation = await validateEscalationDecision(local, {
+const validationInputs = {
   mechanicalReport: mechanical(),
   riskProfile: risk('L1'),
   diversityProfile: diversity('high'),
   disagreements: [],
-})
+}
+const validation = await validateEscalationDecision(local, validationInputs)
 assert.equal(validation.ok, true, validation.errors.join('\n'))
+
+const tamperedRoute = structuredClone(local)
+tamperedRoute.route = 'high_assurance_review_required'
+tamperedRoute.blocking = true
+tamperedRoute.reasons = ['Tampered route that does not follow the R5 policy inputs.']
+const tamperedValidation = await validateEscalationDecision(tamperedRoute, validationInputs)
+assert.equal(tamperedValidation.ok, false, 'validator must recompute and reject a tampered escalation route')
+assert.ok(tamperedValidation.errors.some(error => error.includes('route must equal continue_local')))
 
 assert.throws(
   () => routeEscalation({
