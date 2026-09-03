@@ -63,6 +63,8 @@ function parseStructuredOutput(content) {
 }
 
 export class GlmAdapter {
+  #apiKey
+
   constructor({
     apiKey,
     baseUrl = 'https://open.bigmodel.cn/api/paas/v4',
@@ -77,7 +79,7 @@ export class GlmAdapter {
     if (typeof schemaResolver !== 'function') throw new TypeError('GLM schemaResolver must be a function')
     if (typeof messageBuilder !== 'function') throw new TypeError('GLM messageBuilder must be a function')
 
-    this.apiKey = apiKey
+    this.#apiKey = apiKey
     this.baseUrl = normalizeBaseUrl(baseUrl)
     this.fetchImpl = fetchImpl
     this.timeoutMs = timeoutMs
@@ -109,7 +111,7 @@ export class GlmAdapter {
       httpResponse = await this.fetchImpl(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.#apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),
