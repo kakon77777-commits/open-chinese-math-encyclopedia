@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/escalation-decision-v0.1.json",
+  "title": "OCME Escalation Decision v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision_id",
+    "policy_version",
+    "candidate_revision_id",
+    "risk_profile_id",
+    "diversity_profile_id",
+    "mechanical_report_id",
+    "route",
+    "blocking",
+    "reasons",
+    "open_disagreement_ids"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-escalation-decision-v0.1"},
+    "decision_id": {"type": "string", "pattern": "^escalation-candidate-task-atlas-.+", "minLength": 30},
+    "policy_version": {"const": "ocme-escalation-policy-v0.1"},
+    "candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+    "risk_profile_id": {"type": "string", "pattern": "^risk-candidate-task-atlas-.+"},
+    "diversity_profile_id": {"type": "string", "pattern": "^diversity-candidate-task-atlas-.+"},
+    "mechanical_report_id": {"type": "string", "pattern": "^mechanical-candidate-task-atlas-.+"},
+    "route": {
+      "enum": [
+        "repair_required",
+        "independent_verification_required",
+        "high_assurance_review_required",
+        "continue_local"
+      ]
+    },
+    "blocking": {"type": "boolean"},
+    "reasons": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "open_disagreement_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^disagreement-"}
+    }
+  }
+}
