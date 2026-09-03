@@ -1,0 +1,116 @@
+{
+  "schema_version": "ocme-r4-mechanical-trust-validation-v0.1",
+  "phase": "R4",
+  "title": "Candidate-Bound Mechanical Trust Integration",
+  "status": "implementation_validated_pending_artifact_head_verification",
+  "base_commit": "41c80cec6e6bd6c0a3c7dfe3af62ce996fdbc978",
+  "implementation_commit": "92a95b94cfb29f24ccae14f0060a74e28e617775",
+  "branch": "feature/ocme-r4-mechanical-trust",
+  "pull_request": 14,
+  "scope": {
+    "epistemic_scope": "mechanical_only",
+    "live_ai_provider_dependencies": false,
+    "risk_diversity_r5_included": false,
+    "frontier_adjudication_included": false,
+    "canonicalization_authority": false,
+    "canonical_data_modified": false,
+    "changed_file_count_before_validation_artifact": 14,
+    "protected_paths_with_zero_diff": [
+      "public/data/mko/",
+      "public/data/evidence/",
+      "public/data/architecture/",
+      "public/data/atlas/",
+      "data/sedb-math/",
+      "formal/"
+    ]
+  },
+  "implemented_contracts": [
+    "stable canonical JSON hashing independent of object key insertion order",
+    "candidate revision SHA-256 and candidate artifact SHA-256 binding",
+    "explicit Git source_revision binding with caller-supplied expected revision validation",
+    "strict Mechanical Trust Report schema with epistemic_scope=mechanical_only",
+    "mechanical PASS derived only from all scoped gate results passing",
+    "report schema forbids mathematical truth and canonical authority fields",
+    "gate results retain only output hashes, exit code, duration, command identity and tool provenance",
+    "shell-free command execution for deterministic leaf gates",
+    "12-gate repository mechanical registry plus one internal Candidate Envelope gate",
+    "Lean source gate explicitly scoped as not formal compilation",
+    "candidate mutation during verification invalidates the whole report",
+    "executor result gate_id/scope/executable/args/tool name must remain bound to the declared gate definition",
+    "live integration validator runs the current deterministic repository checks and emits a candidate/source-bound report"
+  ],
+  "live_integration": {
+    "scoped_gate_count": 13,
+    "internal_gate_count": 1,
+    "repository_leaf_gate_count": 12,
+    "mechanical_status": "pass",
+    "raw_stdout_stderr_stored_in_report": false,
+    "formal_compilation_claimed_by_mechanical_report": false,
+    "mathematical_truth_claimed": false,
+    "canonical_eligibility_claimed": false
+  },
+  "tdd_regression_evidence": [
+    {
+      "case": "stale source revision must invalidate an otherwise hash-matching report",
+      "red_commit": "85114c745afb0b2f1a405896946b16f873cdd701",
+      "red_ci_run_number": 201,
+      "red_ci_run_id": 33733181887,
+      "red_result": "FAIL as expected: stale source_revision was accepted",
+      "green_commit": "e7c14e2554120a1232d6b30ed55e62a2d486f59f",
+      "green_ci_run_number": 202,
+      "green_ci_run_id": 33733264665,
+      "green_result": "PASS"
+    },
+    {
+      "case": "integration entrypoint must execute the live mechanical trust report path",
+      "red_commit": "a2628aeffe0f7e9f9eba4d8cf0e1a9280bbaa38b",
+      "red_ci_run_number": 210,
+      "red_ci_run_id": 33733964485,
+      "red_result": "FAIL as expected: validate-mechanical-trust.mjs did not exist",
+      "green_commit": "7cb9e1dd2d523a3a633ac5cfdbcca060eee23709",
+      "green_ci_run_number": 211,
+      "green_ci_run_id": 33734050891,
+      "green_result": "PASS with 13 scoped gates"
+    },
+    {
+      "case": "executor may not amplify or rewrite declared verification scope",
+      "red_commit": "bc0f41e37fcdfd23cc46adf181e3e45e9f684dee",
+      "red_ci_run_number": 212,
+      "red_ci_run_id": 33734191967,
+      "red_result": "FAIL as expected through repository_tests gate after scope-amplification regression was introduced",
+      "green_commit": "98c5e3e6bb3550bf5cece37f5c233757649a2b68",
+      "green_ci_run_number": 213,
+      "green_ci_run_id": 33734293470,
+      "green_result": "PASS"
+    }
+  ],
+  "implementation_head_verification": {
+    "ocme_ci": {
+      "run_number": 214,
+      "run_id": 33734456748,
+      "conclusion": "success"
+    },
+    "lean_ci": {
+      "run_number": 182,
+      "run_id": 33734456725,
+      "conclusion": "success",
+      "gates": [
+        "pinned Lean toolchain",
+        "pinned Mathlib dependency",
+        "formal proof compilation",
+        "proof-placeholder rejection"
+      ]
+    }
+  },
+  "known_boundary": {
+    "source_revision_semantics": "Git commit identity; R4 does not claim a clean/unmodified working tree content hash",
+    "lean_mechanical_scope": "lean_source_gate is source-level only; separate Lean CI supplies formal-build evidence",
+    "candidate_semantics": "R4 binds repository mechanical checks to a protocol-level candidate revision; semantic mathematical verification is outside R4"
+  },
+  "final_head_verification": {
+    "required": true,
+    "status": "pending",
+    "reason": "the validation artifact creates a new branch HEAD and must independently pass OCME CI and Lean CI"
+  },
+  "acceptance_rule": "R4 is FINAL_ACCEPTED only after the validation-artifact HEAD passes both OCME CI and Lean CI."
+}
