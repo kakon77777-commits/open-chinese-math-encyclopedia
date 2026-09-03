@@ -1,4 +1,5 @@
 import { validateRepairPatch, decodePointer } from '../../lib/repair-patch-validation.js'
+import { validateCandidateEnvelope } from '../../lib/candidate-envelope-validation.js'
 
 function containerAndKey(root, segments) {
   if (!segments?.length) throw new Error('repair operation path must not be empty')
@@ -51,13 +52,19 @@ function applyOperation(root, operation) {
   }
 }
 
-export async function applyRepairPatch(candidate, ledger, patch, { task } = {}) {
+export async function applyRepairPatch(candidate, ledger, patch, { task, contract } = {}) {
   const validation = await validateRepairPatch(patch, { task, candidate, ledger })
   if (!validation.ok) throw new Error(validation.errors.join('\n'))
+  if (!contract || typeof contract !== 'object') throw new TypeError('repair application requires a design contract')
 
   const nextCandidate = structuredClone(candidate)
   for (const operation of patch.operations) applyOperation(nextCandidate, operation)
   nextCandidate.candidate_revision_id = patch.next_candidate_revision_id
+
+  const candidateValidation = await validateCandidateEnvelope(nextCandidate, task, contract)
+  if (!candidateValidation.ok) {
+    throw new Error(`Repaired candidate invalid:\n${candidateValidation.errors.join('\n')}`)
+  }
 
   const resolved = new Set(patch.resolves_objections)
   const nextLedger = structuredClone(ledger).map(objection =>
