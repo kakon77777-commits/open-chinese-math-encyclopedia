@@ -52,7 +52,7 @@ assert.deepEqual(syntheticTasks, originalTasks, 'scheduler must not mutate input
 const afterA = classifyMaterializationTasks(syntheticTasks, syntheticAtlas, {
   completedTaskIds: ['task-atlas-seed-a'],
 })
-assert.deepEqual(afterA.ready.map(task => task.atlas_id), ['atlas-seed-c', 'atlas-seed-b'])
+assert.deepEqual(afterA.ready.map(task => task.atlas_id), ['atlas-seed-b', 'atlas-seed-c'])
 assert.equal(afterA.ready.some(task => task.atlas_id === 'atlas-seed-a'), false)
 
 assert.throws(
