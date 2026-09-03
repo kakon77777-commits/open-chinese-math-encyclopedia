@@ -1,0 +1,95 @@
+{
+  "schema_version": "ocme-r2-materialization-validation-v0.1",
+  "phase": "R2",
+  "feature": "Atlas Materialization Task Runtime",
+  "baseline": "OCME v0.10 + merged R1 SEDB-Math",
+  "base_commit": "27a91a05e7f96f6ad2492c3544f43e1b6b967009",
+  "branch": "feature/ocme-r2-materialization-runtime",
+  "validated_implementation_commit": "85fbc42d235398f9491f09735f7cb96e70afec51",
+  "verification": {
+    "ocme_ci": {
+      "run_id": 33720545974,
+      "run_number": 145,
+      "conclusion": "success",
+      "full_check": "pass"
+    },
+    "lean_ci": {
+      "run_id": 33720546253,
+      "run_number": 113,
+      "conclusion": "success",
+      "formal_proof_build": "pass",
+      "proof_placeholder_gate": "pass"
+    },
+    "atlas": {
+      "node_count": 80,
+      "canonical_mko_count": 6,
+      "atlas_seed_count": 74,
+      "prerequisite_edge_count": 128
+    },
+    "materialization": {
+      "task_count": 74,
+      "dependency_safe_batch_count": 9,
+      "task_derivation": "pass",
+      "cross_validation": "pass",
+      "scheduler": "pass",
+      "export_byte_equivalence": "pass",
+      "export_check": "pass"
+    },
+    "canonical_data_drift": false,
+    "ai_provider_dependency": false
+  },
+  "tdd_evidence": [
+    {
+      "task": "deterministic Atlas-seed task derivation",
+      "red_commit": "4dbf106a0cceca29fee137fddd96067c1884425f",
+      "red_failure": "ERR_MODULE_NOT_FOUND: lib/materialization-task-store.js",
+      "green_commit": "17e3c223e0f1452647aaadf567d88a7d8787599a"
+    },
+    {
+      "task": "materialization task schema and semantic cross-validation",
+      "red_commit": "ad7464498d6bef94b5addb30691c7462f2aa51e6",
+      "red_failure": "ERR_MODULE_NOT_FOUND: lib/materialization-task-validation.js",
+      "green_commit": "c8697577cbef4ece06bc79ba9d0dec0cf3b50ca4"
+    },
+    {
+      "task": "dependency-aware scheduler",
+      "red_commit": "b16e7ddbda1d2200adf1864323e0cdcdb96155bf",
+      "red_failure": "ERR_MODULE_NOT_FOUND: runtime/production/task-scheduler.js",
+      "green_commit": "b07ff6bb74fb2fdde5fc5ac573fd5f8c6b06a657"
+    },
+    {
+      "task": "reproducible materialization task export",
+      "red_commit": "298063caaa29efa869224dec69b4c511de773c7a",
+      "red_failure": "ENOENT: artifacts/materialization-tasks.jsonl",
+      "green_commit": "bd30808e0eb8d1dd631d7acf8f450370d0fe8a2e"
+    }
+  ],
+  "canonical_data_unchanged": [
+    "public/data/mko/",
+    "public/data/evidence/",
+    "public/data/architecture/",
+    "public/data/atlas/",
+    "public/data/sedb-math/",
+    "formal/"
+  ],
+  "r2_scope": [
+    "materialization task schema",
+    "deterministic Atlas-seed task derivation",
+    "exact seed coverage validation",
+    "canonical-node scheduling exclusion",
+    "target/priority/prerequisite drift detection",
+    "dependency-aware ready/blocked classification",
+    "dependency-safe deterministic batching",
+    "reproducible 74-line JSONL export",
+    "materialization runtime validator",
+    "repository check-chain integration"
+  ],
+  "explicit_non_goals": [
+    "Designer/Builder/Verifier orchestration",
+    "live GLM or other AI provider",
+    "risk/diversity/frontier adjudication",
+    "generative UI",
+    "AMRAL bridge",
+    "persistent task execution state beyond queued"
+  ]
+}
