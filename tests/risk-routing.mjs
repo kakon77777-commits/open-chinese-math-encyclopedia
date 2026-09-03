@@ -141,4 +141,21 @@ const central = classifyRoutingRisk({ ...inputs, atlas: centralAtlas })
 assert.equal(central.downstream_dependency_count, expectedDownstreamCount + 8)
 assert.ok(central.risk_score > baseline.risk_score)
 
+const threeCritical = classifyRoutingRisk({
+  ...inputs,
+  objections: [0, 1, 2].map(index => ({
+    ...objectionFixture,
+    objection_id: `objection-${candidateRevisionId}-critical-${index}`,
+    severity: 'critical',
+  })),
+})
+assert.equal(threeCritical.risk_score, 100)
+assert.equal(threeCritical.risk_class, 'L4')
+const threeCriticalValidation = await validateRiskProfile(threeCritical, {
+  task,
+  atlasEntry,
+  mechanicalReport: passMechanicalReport,
+})
+assert.equal(threeCriticalValidation.ok, true, threeCriticalValidation.errors.join('\n'))
+
 console.log(`R5 routing risk RED/GREEN tests passed: baseline=${baseline.risk_class}/${baseline.risk_score}.`)
