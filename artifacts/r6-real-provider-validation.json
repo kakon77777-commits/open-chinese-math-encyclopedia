@@ -1,0 +1,247 @@
+{
+  "schema_version": "ocme-r6-real-provider-validation-v0.1",
+  "phase": "R6",
+  "title": "Real Provider Integration Runtime",
+  "status": "implementation_validated_live_pilot_not_run_pending_artifact_head_verification",
+  "base_commit": "a41ff5d42f3c7d8974c8e23a9512541c7cc90df1",
+  "implementation_commit": "1a852659577c1bba57a102c7cf87a305a11982a1",
+  "branch": "feature/ocme-r6-real-provider-integration",
+  "pull_request": 16,
+  "scope": {
+    "provider_registry": true,
+    "deterministic_model_policy": true,
+    "versioned_role_prompts": true,
+    "output_schema_registry": true,
+    "glm_http_adapter": true,
+    "provider_runtime": true,
+    "ai_run_records": true,
+    "offline_provider_validation": true,
+    "credential_gated_live_pilot_path": true,
+    "normal_ci_network_required": false,
+    "live_ai_provider_used_in_normal_ci": false,
+    "provider_tools_enabled": false,
+    "provider_web_search_enabled": false,
+    "provider_mcp_enabled": false,
+    "canonicalization_authority": false,
+    "trust_plane_bypass": false,
+    "new_npm_dependencies": false,
+    "canonical_data_modified": false,
+    "protected_paths_with_zero_diff": [
+      "public/data/mko/",
+      "public/data/evidence/",
+      "public/data/architecture/",
+      "public/data/atlas/",
+      "data/sedb-math/",
+      "formal/"
+    ]
+  },
+  "implemented_contracts": [
+    "existing R3 provider.run(request) contract remains unchanged",
+    "ProviderRegistry requires explicit provider registration and has no silent fallback",
+    "ProviderRuntime owns provider/model policy enrichment and rejects caller-supplied provider_policy",
+    "AI Run Records bind canonical request-plus-policy input hashes and structured-output hashes",
+    "AI Run Records preserve requested model alias separately from provider-resolved model_version provenance",
+    "same model family can serve Designer, Builder, Builder Repair and Verifier while prompt/context/source/goal metadata remain distinct",
+    "Model Policy snapshots caller model configuration at construction time to preserve deterministic resolution",
+    "output schema registry resolves only the four accepted R3 DBV artifact schemas",
+    "role prompts explicitly prohibit canonical/truth authority and hidden-reasoning disclosure",
+    "GLM adapter uses HTTPS Bearer-authenticated chat/completions transport with JSON-object response mode",
+    "GLM adapter uses Node built-in fetch and adds no SDK dependency",
+    "GLM adapter rejects tool-call completion and does not enable tools, web search, MCP or arbitrary function execution",
+    "GLM reasoning_content is discarded and only a boolean discard marker may cross the adapter boundary",
+    "GLM API key is stored in a JavaScript private field and is absent from serialized adapter state",
+    "provider errors and timeout errors are sanitized and do not interpolate API keys or provider response bodies",
+    "provider request and prompt boundaries recursively reject explicit credential fields",
+    "existing R3 DBV loop runs unchanged through ProviderRuntime and produces one immutable run record per provider call",
+    "normal npm run check uses Fake Provider and injected fetch only; no real network is required",
+    "manual pilot:glm path requires GLM_API_KEY and never falls back to Fake Provider"
+  ],
+  "policy_versions": {
+    "model_policy": "ocme-model-policy-v0.1",
+    "ai_run_record": "ocme-ai-run-record-v0.1",
+    "designer_prompt": "ocme-designer-v0.1",
+    "builder_prompt": "ocme-builder-v0.1",
+    "builder_repair_prompt": "ocme-builder-repair-v0.1",
+    "verifier_prompt": "ocme-verifier-v0.1"
+  },
+  "provider_compatibility": {
+    "transport_style": "OpenAI-compatible chat completions",
+    "default_base_url": "https://open.bigmodel.cn/api/paas/v4",
+    "supported_configurable_bases": [
+      "https://open.bigmodel.cn/api/paas/v4",
+      "https://open.bigmodel.cn/api/coding/paas/v4",
+      "https://api.z.ai/api/paas/v4"
+    ],
+    "endpoint_suffix": "/chat/completions",
+    "response_format": { "type": "json_object" },
+    "default_model": "glm-5.3-flash",
+    "model_is_environment_overridable": true,
+    "base_url_is_environment_overridable": true,
+    "references": [
+      "https://docs.bigmodel.cn/cn/guide/develop/http/introduction",
+      "https://docs.bigmodel.cn/api-reference/模型-api/对话补全",
+      "https://docs.z.ai/api-reference/llm/chat-completion",
+      "https://zcode.z.ai/cn/docs/configuration"
+    ],
+    "compatibility_note": "Model availability can vary by provider endpoint/account. R6 treats the model string and base URL as deployment configuration rather than canonical protocol identity."
+  },
+  "offline_integration": {
+    "dbv_status": "converged",
+    "dbv_attempts": 2,
+    "ai_run_record_count": 5,
+    "distinct_role_policy_topologies": 4,
+    "glm_transport_test": "injected_fetch_json_mode",
+    "real_network_used": false,
+    "reasoning_content_crossed_boundary": false,
+    "provider_tool_execution": false
+  },
+  "live_pilot": {
+    "status": "not_run_no_credentials",
+    "reason": "GLM_API_KEY was not available in the implementation environment",
+    "normal_ci_substitute_allowed": false,
+    "connectivity_claimed": false,
+    "manual_command": "npm run pilot:glm"
+  },
+  "tdd_regression_evidence": [
+    {
+      "case": "provider registry and AI Run Record baseline",
+      "red_commit": "f6cc799033bcd8158c6ea83d3032be2775b72218",
+      "red_ci_run_number": 251,
+      "red_ci_run_id": 33749957320,
+      "red_result": "FAIL as expected before provider registry and AI Run Record validation existed",
+      "green_commit": "113f17b00dc79e0a21a0863b5cc965526799f045",
+      "green_ci_run_number": 254,
+      "green_ci_run_id": 33750120977,
+      "green_result": "PASS"
+    },
+    {
+      "case": "deterministic model policy, prompt library and output schema registry",
+      "red_commit": "a0f9b4dfdb524bfcd5d06b40db187405c316b2d6",
+      "red_ci_run_number": 257,
+      "red_ci_run_id": 33750309057,
+      "red_result": "FAIL as expected before model policy and prompt/schema modules existed",
+      "green_commit": "481ee7f6c811709bd5a8a151f48539748f52484b",
+      "green_ci_run_number": 261,
+      "green_ci_run_id": 33750548200,
+      "green_result": "PASS"
+    },
+    {
+      "case": "GLM HTTP adapter request, response, reasoning-discard and error behavior",
+      "red_commit": "e9545bd6efb6c0d685165ae7a59a9eb41b82925d",
+      "red_ci_run_number": 262,
+      "red_ci_run_id": 33750703526,
+      "red_result": "FAIL as expected before GLM adapter existed",
+      "green_commit": "52fb4d4383f9e5c8d4ba896b4e24cf99ca8d3a56",
+      "green_ci_run_number": 264,
+      "green_ci_run_id": 33750825212,
+      "green_result": "PASS"
+    },
+    {
+      "case": "ProviderRuntime and unchanged DBV loop integration",
+      "red_commit": "6de75822b9dfc6433203e1a36192f06977a2d5f2",
+      "red_ci_run_number": 267,
+      "red_ci_run_id": 33751029870,
+      "red_result": "FAIL as expected before ProviderRuntime existed",
+      "green_commit": "755ce2fd5f971e12459f2980fa9e6a0e9b6a14c7",
+      "green_ci_run_number": 268,
+      "green_ci_run_id": 33751146860,
+      "green_result": "PASS"
+    },
+    {
+      "case": "offline repository integration entrypoint",
+      "red_commit": "330b389ec8a78267a1062a163dd55b6bb90b6f18",
+      "red_ci_run_number": 269,
+      "red_ci_run_id": 33751259776,
+      "red_result": "FAIL as expected because validate-provider-runtime.mjs did not exist",
+      "green_commit": "e260e1e00d2a622dc296efbee941c3645994fc89",
+      "green_ci_run_number": 272,
+      "green_ci_run_id": 33751480479,
+      "green_result": "PASS"
+    },
+    {
+      "case": "GLM API key must not be a public serializable adapter property",
+      "red_commit": "b5c3ddc2ffa0dfd10f2629e1f9ebfd356ddd2706",
+      "red_ci_run_number": 273,
+      "red_ci_run_id": 33751641847,
+      "red_result": "FAIL as expected while adapter stored a public apiKey property",
+      "green_commit": "4e0479589c612ddd5606c9aa7b0dacb11b0598d9",
+      "green_ci_run_number": 274,
+      "green_ci_run_id": 33751737071,
+      "green_result": "PASS"
+    },
+    {
+      "case": "provider-resolved model version must be distinct from requested model alias",
+      "red_commit": "59bdf6d81a930b6bbf989bb88661de2203996144",
+      "red_ci_run_number": 275,
+      "red_ci_run_id": 33751861366,
+      "red_result": "FAIL as expected while model_version copied only the requested policy alias",
+      "green_commit": "2c179aafb594526242c6f575ae83039ea295c5b6",
+      "green_ci_run_number": 277,
+      "green_ci_run_id": 33751995035,
+      "green_result": "PASS"
+    },
+    {
+      "case": "nested credential fields must not cross provider request or prompt boundaries",
+      "red_commit": "8316692d2db0c15b1d31ec55899cb3fe834739b0",
+      "red_ci_run_number": 278,
+      "red_ci_run_id": 33752171515,
+      "red_result": "FAIL as expected because request context credentials could be serialized",
+      "green_commit": "0ff579281ff713ff8031843c4c7ebb20f91dcaf0",
+      "green_ci_run_number": 282,
+      "green_ci_run_id": 33752380978,
+      "green_result": "PASS"
+    },
+    {
+      "case": "Model Policy must snapshot caller model configuration",
+      "red_commit": "21c9c43748cf36f5849765200a6c3e9193505692",
+      "red_ci_run_number": 283,
+      "red_ci_run_id": 33752494394,
+      "red_result": "FAIL as expected because caller mutation changed future model resolution",
+      "green_commit": "2ac0cef8e1e59b762591a5b6138b7ce57f3f7954",
+      "green_ci_run_number": 284,
+      "green_ci_run_id": 33752585079,
+      "green_result": "PASS"
+    }
+  ],
+  "implementation_head_verification": {
+    "commit": "1a852659577c1bba57a102c7cf87a305a11982a1",
+    "ocme_ci": {
+      "run_number": 285,
+      "run_id": 33752710437,
+      "conclusion": "success"
+    },
+    "lean_ci": {
+      "run_number": 253,
+      "run_id": 33752710503,
+      "conclusion": "success",
+      "gates": [
+        "pinned Lean toolchain",
+        "pinned Mathlib dependency",
+        "formal proof compilation",
+        "proof-placeholder rejection"
+      ]
+    }
+  },
+  "scope_audit": {
+    "base": "a41ff5d42f3c7d8974c8e23a9512541c7cc90df1",
+    "implementation_head": "1a852659577c1bba57a102c7cf87a305a11982a1",
+    "changed_files_before_validation_artifact": 22,
+    "result": "R6-only docs/lib/schema/runtime/scripts/tests plus package integration; protected canonical/formal paths unchanged",
+    "new_dependency_count": 0,
+    "pilot_glm_in_normal_check": false
+  },
+  "known_boundaries": {
+    "live_connectivity": "not verified because no GLM_API_KEY was available",
+    "model_availability": "deployment-specific; GLM_MODEL and GLM_BASE_URL are configurable",
+    "structured_output": "R6 uses JSON object mode but existing R3 semantic validators remain required",
+    "hidden_reasoning": "reasoning_content is discarded and is neither a review artifact nor inter-role context",
+    "provider_tools": "disabled in R6",
+    "canonical_authority": "none; provider output cannot bypass R4/R5 or canonical policy"
+  },
+  "final_head_verification": {
+    "required": true,
+    "status": "pending",
+    "reason": "committing this validation artifact creates a new branch HEAD that must independently pass OCME CI and Lean CI"
+  },
+  "acceptance_rule": "R6 implementation is FINAL_ACCEPTED only after the validation-artifact HEAD passes both OCME CI and Lean CI. Live GLM connectivity remains a separately tracked state and must not be inferred from implementation acceptance."
+}
