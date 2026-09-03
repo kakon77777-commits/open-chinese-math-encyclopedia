@@ -72,13 +72,16 @@ export class ProviderRuntime {
         run_id: runId,
       },
     }
+    const resolvedModelVersion = typeof response.provider_metadata.model_version === 'string' && response.provider_metadata.model_version.length > 0
+      ? response.provider_metadata.model_version
+      : policy.model_version
 
     const record = {
       schema_version: 'ocme-ai-run-record-v0.1',
       run_id: runId,
       provider: policy.provider,
       model: policy.model,
-      model_version: policy.model_version,
+      model_version: resolvedModelVersion,
       role: request.role,
       prompt_id: policy.prompt_id,
       prompt_version: policy.prompt_version,
