@@ -65,6 +65,8 @@ const adapter = new GlmAdapter({
     return jsonResponse(providerPayload)
   },
 })
+assert.equal(Object.hasOwn(adapter, 'apiKey'), false, 'API key must not be a public adapter property')
+assert.equal(JSON.stringify(adapter).includes(SECRET), false, 'serializing adapter must not reveal API key')
 
 const response = await adapter.run(request)
 assert.equal(captured.url, 'https://open.bigmodel.cn/api/paas/v4/chat/completions')
