@@ -46,7 +46,7 @@
         "required": ["factor_id", "score_delta", "observed", "reason"],
         "properties": {
           "factor_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$", "minLength": 1},
-          "score_delta": {"type": "integer", "minimum": 0, "maximum": 100},
+          "score_delta": {"type": "integer", "minimum": 0},
           "observed": {"type": "string", "minLength": 1},
           "reason": {"type": "string", "minLength": 1}
         }
