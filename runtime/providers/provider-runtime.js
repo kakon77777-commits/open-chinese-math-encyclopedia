@@ -1,5 +1,6 @@
 import { sha256CanonicalJson } from '../../lib/canonical-json.js'
 import { validateAiRunRecord } from '../../lib/ai-run-record-validation.js'
+import { assertNoProviderCredentialFields } from '../../lib/provider-credential-boundary.js'
 import { validateProviderRequest, validateProviderResponse } from './provider-interface.js'
 
 function assertRuntimeDependency(value, method, name) {
@@ -40,6 +41,7 @@ export class ProviderRuntime {
 
   async run(rawRequest) {
     const request = validateProviderRequest(rawRequest)
+    assertNoProviderCredentialFields(request)
     if (Object.hasOwn(request.run_metadata, 'provider_policy')) {
       throw new Error('run_metadata.provider_policy is runtime-owned')
     }
