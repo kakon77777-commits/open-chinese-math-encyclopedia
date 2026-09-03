@@ -12,17 +12,7 @@ const artifactPath = path.join(ROOT, 'artifacts', 'materialization-tasks.jsonl')
 const expected = serializeMaterializationTasks(await loadMaterializationTasks())
 assert.equal(expected.trimEnd().split('\n').length, 74)
 
-let actual
-try {
-  actual = await fs.readFile(artifactPath, 'utf8')
-} catch (error) {
-  if (error?.code === 'ENOENT') {
-    console.error('MATERIALIZATION_TASKS_JSONL_BEGIN')
-    console.error(expected)
-    console.error('MATERIALIZATION_TASKS_JSONL_END')
-  }
-  throw error
-}
+const actual = await fs.readFile(artifactPath, 'utf8')
 assert.equal(actual, expected, 'committed materialization task artifact must match canonical Atlas derivation')
 
 const check = spawnSync(process.execPath, ['scripts/export-materialization-tasks.mjs', '--check'], {
