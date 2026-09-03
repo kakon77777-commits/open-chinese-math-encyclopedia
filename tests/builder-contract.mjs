@@ -56,4 +56,12 @@ assert.equal((await validateCandidateEnvelope(canonicalState, task, contract)).o
 const reasoningTrace = { ...validCandidate(), reasoning_trace: 'must not cross the protocol boundary' }
 assert.equal((await validateCandidateEnvelope(reasoningTrace, task, contract)).ok, false)
 
+const nestedCanonicalState = validCandidate()
+nestedCanonicalState.candidate_artifact.metadata = { canonical_state: 'canonical' }
+assert.equal((await validateCandidateEnvelope(nestedCanonicalState, task, contract)).ok, false)
+
+const nestedReasoningTrace = validCandidate()
+nestedReasoningTrace.candidate_artifact.analysis = { reasoning_trace: 'must not be hidden in candidate payload' }
+assert.equal((await validateCandidateEnvelope(nestedReasoningTrace, task, contract)).ok, false)
+
 console.log('Builder candidate envelope tests passed.')
