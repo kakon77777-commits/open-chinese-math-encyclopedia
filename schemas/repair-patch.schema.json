@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/repair-patch-v0.1.json",
+  "title": "OCME Repair Patch v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "patch_id",
+    "task_id",
+    "source_candidate_revision_id",
+    "next_candidate_revision_id",
+    "candidate_id",
+    "resolves_objections",
+    "resolution_evidence",
+    "operations",
+    "evidence_updates",
+    "dependency_impact"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-repair-patch-v0.1"},
+    "patch_id": {"type": "string", "pattern": "^repair-candidate-task-atlas-", "minLength": 28},
+    "task_id": {"type": "string", "pattern": "^task-atlas-", "minLength": 12},
+    "source_candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+    "next_candidate_revision_id": {"type": "string", "pattern": "^candidate-task-atlas-.+-r[0-9]+$"},
+    "candidate_id": {"type": "string", "pattern": "^mko-", "minLength": 5},
+    "resolves_objections": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^objection-", "minLength": 12}
+    },
+    "resolution_evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["objection_id", "note"],
+        "properties": {
+          "objection_id": {"type": "string", "pattern": "^objection-", "minLength": 12},
+          "note": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["op", "path"],
+        "properties": {
+          "op": {"enum": ["add", "replace", "remove"]},
+          "path": {"type": "string", "pattern": "^/", "minLength": 2},
+          "value": {}
+        }
+      }
+    },
+    "evidence_updates": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "dependency_impact": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}
