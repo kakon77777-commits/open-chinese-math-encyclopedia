@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.example/schemas/materialization-task-v0.1.json",
+  "title": "OCME Materialization Task v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "atlas_id",
+    "target_mko_id",
+    "priority",
+    "state",
+    "prerequisite_atlas_ids"
+  ],
+  "properties": {
+    "schema_version": {"const": "ocme-materialization-task-v0.1"},
+    "task_id": {"type": "string", "pattern": "^task-atlas-", "minLength": 12},
+    "atlas_id": {"type": "string", "pattern": "^atlas-", "minLength": 7},
+    "target_mko_id": {"type": "string", "pattern": "^mko-", "minLength": 5},
+    "priority": {"enum": ["P1", "P2", "P3"]},
+    "state": {"const": "queued"},
+    "prerequisite_atlas_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^atlas-", "minLength": 7}
+    }
+  }
+}
