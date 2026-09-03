@@ -42,6 +42,15 @@ assert.equal(overridden.resolve(request('builder', 'candidate_build')).model, 'g
 assert.equal(overridden.resolve(request('builder', 'builder_repair')).model, 'glm-builder')
 assert.equal(overridden.resolve(request('verifier', 'candidate_verify')).model, 'glm-verifier')
 
+const mutableModels = { designer: 'glm-designer-stable' }
+const snapshotted = createModelPolicy({ provider: 'glm', model: 'glm-default', models: mutableModels })
+mutableModels.designer = 'glm-designer-mutated-after-construction'
+assert.equal(
+  snapshotted.resolve(request('designer', 'design_contract')).model,
+  'glm-designer-stable',
+  'model policy must snapshot caller configuration at construction time',
+)
+
 assert.throws(() => shared.resolve(request('designer', 'candidate_build')), /unsupported role\/prompt/)
 assert.throws(() => shared.resolve(request('canonicalizer', 'canonicalize')), /unsupported role\/prompt/)
 assert.throws(
