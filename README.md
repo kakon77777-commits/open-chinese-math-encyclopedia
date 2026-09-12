@@ -218,6 +218,8 @@ schemas/question-v0.1.schema.json
 
 主架構者負責選題、brief 與發布驗收；Question Producer 由使用者手動啟動，每次依 brief 生產最多 100 道候選變種題；高階數學審查者負責低頻全庫嚴證與跨領域整合。現階段不設自動排程，候選題也不會自動成為 Canonical MKO 或 Evidence Object。
 
+目前 80-node Atlas 的主要領域分類覆蓋 20 個 domain registry 中的 8 個；下一階段採覆蓋優先，先補足缺少 Canonical MKO 的領域，再考慮把單批題數提高到 1,000 或以上。
+
 ## MCP 與 AI
 
 v0.9 MCP 已可查詢：

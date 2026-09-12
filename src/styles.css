@@ -258,7 +258,8 @@ pre { max-height: 650px; overflow: auto; padding: 24px; color: #d9f7ee; backgrou
 
 .domain-cloud { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 .domain-cloud article { min-height: 230px; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.domain-cloud article > span { color: var(--muted); font: italic .8rem var(--serif); }
+.domain-cloud article.is-empty { background: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(16,38,34,.025) 10px, rgba(16,38,34,.025) 20px); }
+.domain-cloud article > div { display: flex; justify-content: space-between; color: var(--muted); }.domain-cloud article > div > span { font: italic .8rem var(--serif); }.domain-cloud article > div > small { font-size: .65rem; font-weight: 850; }
 .domain-cloud h3 { margin: 35px 0 8px; font: 500 1.25rem var(--serif); }.domain-cloud p { color: var(--muted); font-size: .78rem; }
 .method-heading { margin: 100px 0 35px; }.method-heading h2 { margin: 0; font: 500 clamp(2.7rem, 5vw, 5rem)/1 var(--serif); }
 .method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
