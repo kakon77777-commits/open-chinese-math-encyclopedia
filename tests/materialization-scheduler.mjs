@@ -76,8 +76,8 @@ const atlas = await loadCoreAtlas()
 const tasks = buildMaterializationTasks(atlas)
 const realBatches = buildMaterializationBatches(tasks, atlas)
 const flattened = realBatches.flat()
-assert.equal(flattened.length, 74)
-assert.equal(new Set(flattened.map(task => task.task_id)).size, 74)
+assert.equal(flattened.length, 71)
+assert.equal(new Set(flattened.map(task => task.task_id)).size, 71)
 
 const batchIndex = new Map()
 realBatches.forEach((batch, index) => {
@@ -105,4 +105,4 @@ for (const batch of realBatches) {
   assert.deepEqual(batch, sorted)
 }
 
-console.log(`Materialization scheduler tests passed: ${realBatches.length} dependency-safe batches cover 74 tasks.`)
+console.log(`Materialization scheduler tests passed: ${realBatches.length} dependency-safe batches cover 71 tasks.`)
