@@ -14,7 +14,7 @@ try {
 
   const required = [
     'index.html', 'src/main.js', 'src/styles.css', 'favicon.svg', 'site.webmanifest',
-    'robots.txt', 'sitemap.xml', '_headers', 'build-manifest.json',
+    'robots.txt', 'sitemap.xml', 'build-manifest.json',
     'data/index.json', 'data/atlas/core-atlas.json', 'data/evidence/index.json',
     'data/architecture/learning-paths.json', 'data/questions/index.json',
   ]

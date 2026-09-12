@@ -205,7 +205,7 @@ npm run preview:site
 npm run deploy:site
 ```
 
-Cloudflare Pages 專案名稱為 `ocme`，正式網址為 `https://ocme.evemisslab.com/`。
+Cloudflare Workers Static Assets 專案名稱為 `ocme`，正式網址為 `https://ocme.evemisslab.com/`。
 
 ## 每日題庫
 
