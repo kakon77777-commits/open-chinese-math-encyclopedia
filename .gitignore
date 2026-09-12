@@ -4,3 +4,4 @@ artifacts/
 .felra-cache/
 __pycache__/
 *.py[cod]
+.wrangler/

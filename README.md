@@ -184,9 +184,7 @@ Formula drift
 
 ## 網站
 
-目前既有網站仍以 MKO、公式與 Evidence 閱讀為主。
-
-v0.11 將正式以 Core Atlas 建立六個入口：
+v0.11 網站已以 Core Atlas 建立六個入口：
 
 ```text
 現代通識數學
@@ -198,6 +196,27 @@ AI 導航
 ```
 
 Atlas 可以先作為網站目錄與預覽節點；只有 `canonical_mko` 才能進入完整數學頁面。`atlas_seed` 應顯示為「規劃中／待建置」，不得偽裝成已審定內容。
+
+網站另包含每日題庫入口、MKO 分層閱讀、Evidence 邊界與 R1–R7 runtime 說明。Production build 只複製公開網站與 `public/data/`，不會部署 runtime、schemas、research、docs 或 `node_modules`。
+
+```bash
+npm run build:site
+npm run preview:site
+npm run deploy:site
+```
+
+Cloudflare Pages 專案名稱為 `ocme`，正式網址為 `https://ocme.evemisslab.com/`。
+
+## 每日題庫
+
+題庫合約位於：
+
+```text
+docs/OCME_QUESTION_FACTORY_CONTRACT_v0.1.md
+schemas/question-v0.1.schema.json
+```
+
+主架構者負責選題、brief 與發布驗收；Question Producer 每日依 brief 生產最多 1,000 道候選變種題；高階數學審查者負責低頻全庫嚴證與跨領域整合。候選題不會自動成為 Canonical MKO 或 Evidence Object。
 
 ## MCP 與 AI
 
@@ -244,10 +263,10 @@ AI 候選分類 ≠ 人工審定分類
 v0.10 Core Mathematical Atlas       已建立 80-node baseline
 → 本地 AI 小批次 materialization
 
-v0.11 Website Information Architecture
-→ 六入口網站
-→ Atlas 搜尋、篩選與局部圖
+v0.11 Website Information Architecture  已建立並可部署
+→ 六入口網站、Atlas 搜尋與節點詳頁
 → canonical / planned maturity UI
+→ 每日題庫入口與 Question Factory contract
 
 v1.0 Automated Publishing System
 → 搜尋、研究、生成、驗證、EveGlyph 審查、CI、網站發布與排程閉環
