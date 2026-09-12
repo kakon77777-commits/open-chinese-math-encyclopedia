@@ -216,7 +216,7 @@ docs/OCME_QUESTION_FACTORY_CONTRACT_v0.1.md
 schemas/question-v0.1.schema.json
 ```
 
-主架構者負責選題、brief 與發布驗收；Question Producer 每日依 brief 生產最多 1,000 道候選變種題；高階數學審查者負責低頻全庫嚴證與跨領域整合。候選題不會自動成為 Canonical MKO 或 Evidence Object。
+主架構者負責選題、brief 與發布驗收；Question Producer 由使用者手動啟動，每次依 brief 生產最多 100 道候選變種題；高階數學審查者負責低頻全庫嚴證與跨領域整合。現階段不設自動排程，候選題也不會自動成為 Canonical MKO 或 Evidence Object。
 
 ## MCP 與 AI
 

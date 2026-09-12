@@ -2,7 +2,7 @@
 
 ## 目的
 
-Question Factory 每日產生最多 1,000 道結構化變種題候選，供 OCME 的練習與評量層使用。題目不是 Canonical MKO、不是 Evidence Object，也不能授權修改 Atlas、MKO、架構分類或形式證明狀態。
+Question Factory 每次由使用者手動啟動，依當日 brief 產生最多 100 道結構化變種題候選，供 OCME 的練習與評量層使用。現階段不設自動排程。題目不是 Canonical MKO、不是 Evidence Object，也不能授權修改 Atlas、MKO、架構分類或形式證明狀態。
 
 ## 角色分工
 
@@ -42,7 +42,7 @@ Question Producer 不得自行宣稱人類已審查，不得把模型共識當�
 - `mko-right-triangle`
 - `mko-euclid-pythagorean-theorem`
 
-建議比例：距離計算 300 題、直角三角形判定 300 題、畢達哥拉斯缺邊與反例辨識 400 題。所有數值題必須可由獨立程式重算答案；有限重算不構成定理的普遍證明。
+建議比例：距離計算 30 題、直角三角形判定 30 題、畢達哥拉斯缺邊與反例辨識 40 題。所有數值題必須可由獨立程式重算答案；有限重算不構成定理的普遍證明。
 
 ## 發布閘門
 

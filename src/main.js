@@ -433,7 +433,7 @@ function renderMethods() {
 function renderPractice() {
   const batches = state.questions?.batches || []
   const published = state.questions?.published_question_count || 0
-  $('#view').innerHTML = `<section class="practice-hero"><div><p class="kicker light">DAILY QUESTION FACTORY</p><h1>每日一千題，<br>先通過邊界再發布。</h1><p>變種題由專責模型生產；主架構者選題、定義合約與驗收。大量生成不會自動升格成可信內容。</p></div><div class="factory-meter"><span>今日已發布</span><strong>${published.toLocaleString('zh-TW')}</strong><small>/ ${state.questions?.daily_target || 1000} 題</small><progress value="${Math.min(100, published / (state.questions?.daily_target || 1000) * 100)}" max="100">${published}</progress></div></section>
+  $('#view').innerHTML = `<section class="practice-hero"><div><p class="kicker light">QUESTION FACTORY</p><h1>每日一百題，<br>先覆蓋，再逐步加密。</h1><p>變種題由使用者手動啟動專責模型生產；主架構者選題、定義合約與驗收。100 題是目前的品質與成本基線，不是永久上限。</p></div><div class="factory-meter"><span>今日已發布</span><strong>${published.toLocaleString('zh-TW')}</strong><small>/ ${state.questions?.daily_target || 100} 題</small><progress value="${Math.min(100, published / (state.questions?.daily_target || 100) * 100)}" max="100">${published}</progress></div></section>
   <section class="page-shell practice-layout">
     <article class="detail-panel"><p class="kicker">PRODUCTION CONTRACT</p><h2>題目如何進入網站</h2><ol class="factory-steps"><li><span>1</span><div><b>主架構者選題</b><p>只從已指定的 MKO 與學習目標建立每日 brief。</p></div></li><li><span>2</span><div><b>出題模型產生變種</b><p>每題保留參數、答案、解釋、來源 MKO 與生成資訊。</p></div></li><li><span>3</span><div><b>機械檢查</b><p>驗證 Schema、ID、重複、答案一致性與可重現參數。</p></div></li><li><span>4</span><div><b>候選批次發布</b><p>尚未審查的題目必須明示 candidate，不冒充 Canonical MKO。</p></div></li></ol></article>
     <article class="detail-panel"><p class="kicker">BATCHES</p><h2>已發布批次</h2>${batches.length ? `<div class="batch-list">${batches.map(batch => `<div><b>${escapeHtml(batch.id)}</b><span>${batch.question_count} 題</span><small>${escapeHtml(batch.status)}</small></div>`).join('')}</div>` : '<div class="empty-state"><b>第一批尚未發布</b><p>題庫合約已建立；專責出題任務啟動後，通過驗收的批次才會出現在這裡。</p></div>'}</article>
@@ -453,7 +453,7 @@ function renderAbout() {
   $('#view').innerHTML = `<section class="about-hero"><p class="kicker light">AI-NATIVE, EVIDENCE-AWARE</p><h1>可信任，不是因為<br>AI 說它正確。</h1><p>可信任來自可見的範圍、可重播的程序、未被刪除的異議，以及人類仍然保有的決定權。</p></section>
   <section class="page-shell">
     <div class="runtime-flow">${stages.map(([code, title, copy]) => `<article><span>${code}</span><div><h2>${escapeHtml(title)}</h2><p>${escapeHtml(copy)}</p></div></article>`).join('')}</div>
-    <section class="role-section"><p class="kicker">OPERATING MODEL</p><h2>三層分工，權限不混淆</h2><div class="role-grid"><article><span>01</span><h3>日常主架構</h3><p>網站、選題、研究包、MKO、排程、發布與跨角色整合。</p><small>高頻 · 主責</small></article><article><span>02</span><h3>高階數學審查</h3><p>由 GPT‑6 等高階模型低頻進行全庫嚴證與架構整合，完成前先討論。</p><small>低頻 · 高風險審查</small></article><article><span>03</span><h3>大批量出題</h3><p>由 GPT‑5.6 Terra 或經核准的高速模型依 brief 產生每日變種題。</p><small>每日 · 候選生產</small></article></div></section>
+    <section class="role-section"><p class="kicker">OPERATING MODEL</p><h2>三層分工，權限不混淆</h2><div class="role-grid"><article><span>01</span><h3>日常主架構</h3><p>網站、選題、研究包、MKO、人工觸發批次、發布與跨角色整合。</p><small>高頻 · 主責</small></article><article><span>02</span><h3>高階數學審查</h3><p>由 GPT‑6 等高階模型低頻進行全庫嚴證與架構整合，完成前先討論。</p><small>低頻 · 高風險審查</small></article><article><span>03</span><h3>批量出題</h3><p>由 GPT‑5.6 Terra 或經核准的高速模型在使用者啟動後，依 brief 生產每批 100 道候選題。</p><small>手動啟動 · 候選生產</small></article></div></section>
     <section class="principle-grid"><article><b>Atlas seed</b><span>≠</span><b>Canonical MKO</b></article><article><b>有限計算</b><span>≠</span><b>普遍證明</b></article><article><b>模型共識</b><span>≠</span><b>獨立驗證</b></article><article><b>大量生成</b><span>≠</span><b>已審定內容</b></article></section>
   </section>`
 }
@@ -508,7 +508,7 @@ async function init() {
     methods: methods.methods,
     paths: paths.paths,
     curricula,
-    questions: questions || { daily_target: 1000, published_question_count: 0, batches: [] },
+    questions: questions || { daily_target: 100, published_question_count: 0, batches: [] },
   })
   renderShell()
   window.addEventListener('hashchange', renderRoute)
