@@ -12,19 +12,19 @@ v0.10 在 v0.9 Mathematical World Architecture 上加入第一份可供網站與
 Atlas node != Canonical MKO
 ```
 
-Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依賴與排序」；Canonical MKO 才是已完成公式、來源、Evidence 與審查契約的正式數學知識物件。
+Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依賴與排序」；Canonical MKO 則是已存在、通過 Schema 且明確揭露來源、Evidence 與審查狀態的正式數學知識物件。Canonical 不等於已有 Evidence，也不等於已完成人工審查。
 
 目前基線：
 
 ```text
 80 個 Core Atlas nodes
-6 個 canonical MKO mappings
-74 個 atlas_seed / materialization tasks
+9 個 canonical MKO mappings
+71 個 atlas_seed / materialization tasks
 9 個 Evidence Object
 5 個 formal_proof
 20 個頂層數學領域
 20 個核心數學方法
-5 條學習路徑
+6 條學習路徑
 4 套課綱／能力框架
 12 個難度維度
 ```
@@ -50,8 +50,11 @@ Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依
 
 ### `canonical_mko`
 
-代表 Atlas 節點已對應到真正存在的 Canonical MKO。v0.10 共有 6 個：
+代表 Atlas 節點已對應到真正存在且通過結構驗證的 Canonical MKO。目前共有 9 個：
 
+- 自然數；
+- 集合；
+- 命題；
 - 集合隸屬；
 - 函數映射；
 - 趨近關係；
@@ -78,7 +81,7 @@ Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依
 
 ## Materialization Queue
 
-74 個 `atlas_seed` 依優先級分成：
+71 個 `atlas_seed` 依優先級分成：
 
 ```text
 P1  通識、網站骨架與後續節點高度依賴的核心概念
@@ -109,6 +112,7 @@ public/data/mko/                 Canonical MKO
 public/data/evidence/            內容定址 Evidence
 public/data/architecture/        領域、方法、路徑、課綱與 Architecture Profile
 public/data/atlas/               v0.10 Core Mathematical Atlas
+research/                        Atlas 物化前的來源、語義與審查研究包
 schemas/                         交換格式
 formal/lean/                     Lean／Mathlib 來源
 lib/atlas-store.js               Atlas 查詢與 materialization queue
@@ -134,7 +138,7 @@ Validator 會拒絕：
 - `canonical_mko` 指向不存在的 MKO；
 - `atlas_seed` 偽裝為 canonical；
 - 已存在 MKO 卻仍標示為 seed；
-- 六個既有 canonical mapping 被改寫。
+- 九個既有 canonical mapping 被改寫。
 
 ## 十二維難度
 

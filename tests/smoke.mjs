@@ -9,11 +9,14 @@ import {
 import { listEvidence } from '../lib/evidence-store.js'
 
 const index = await listObjects()
-assert.equal(index.length, 6)
+assert.equal(index.length, 9)
 assert.deepEqual(index.map(entry => entry.id), [
   'mko-right-triangle',
   'mko-euclidean-length',
   'mko-euclid-pythagorean-theorem',
+  'mko-natural-number',
+  'mko-set',
+  'mko-proposition',
   'mko-set-membership',
   'mko-function-mapping',
   'mko-tends-to-relation',
@@ -85,11 +88,24 @@ assert.equal(tendsTo.verification.producers[0].status, 'active')
 assert.equal(tendsTo.verification.evidence_refs.length, 1)
 assert.equal(tendsTo.formalization.status, 'formalized_filter_tendsto_core')
 
+for (const [objectId, astType] of [
+  ['mko-natural-number', 'membership'],
+  ['mko-set', 'membership'],
+  ['mko-proposition', 'symbol'],
+]) {
+  const candidate = await loadObject(objectId)
+  assert.equal(candidate.version, '0.10.0')
+  assert.equal(candidate.formula.semantic_ast.type, astType)
+  assert.equal(candidate.verification.evidence_refs.length, 0)
+  assert.equal(candidate.verification.producers[0].status, 'configured')
+  assert.equal(candidate.formalization.status, 'not_formalized')
+}
+
 const graph = await buildDependencyGraph()
 assert.equal(graph.schema_version, 'ocme-dependency-graph-v0.3')
-assert.equal(graph.nodes.length, 6)
+assert.equal(graph.nodes.length, 9)
 assert.equal(graph.edges.length, 4)
 assert.equal(graph.edges.some(edge => edge.from === 'mko-set-membership' && edge.to === 'mko-function-mapping'), true)
 assert.equal(graph.edges.some(edge => edge.from === 'mko-function-mapping' && edge.to === 'mko-tends-to-relation'), true)
 assert.equal(graph.nodes.every(node => Array.isArray(node.evidence_refs)), true)
-console.log('Smoke tests passed: 6 MKO objects, 9 evidence objects, 5 formal proofs and 4 dependency edges.')
+console.log('Smoke tests passed: 9 MKO objects, 9 evidence objects, 5 formal proofs and 4 dependency edges.')

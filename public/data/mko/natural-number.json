@@ -1,0 +1,110 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-natural-number",
+  "semantic_family_id": "sf-natural-number",
+  "type": "concept",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": {
+    "zh-Hant": "自然數",
+    "en": "Natural number"
+  },
+  "summary": {
+    "zh-Hant": "自然數是用於計數與離散次序的基本數；本條目採用包含 0 的慣例。"
+  },
+  "statement": {
+    "zh-Hant": "在本條目的慣例中，自然數集合 N 包含 0，並包含 0 經有限次後繼所得的 1、2、3 等數。"
+  },
+  "formula": {
+    "tex": "n\\in N",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>n</mi><mo>∈</mo><mi>N</mi></mrow></math>",
+    "semantic_ast": {
+      "type": "membership",
+      "element": {
+        "type": "symbol",
+        "name": "n",
+        "glyph": "n"
+      },
+      "set": {
+        "type": "symbol",
+        "name": "N",
+        "glyph": "N"
+      }
+    },
+    "compiler": {
+      "id": "ocme-formula-core",
+      "version": "0.4.0",
+      "source_sha256": "6558f6d9cd02d3403ad5c1b32af1f06a1d0fd44fef37a35b7a22ae5772cca97a"
+    }
+  },
+  "assumptions": [
+    {
+      "id": "a1",
+      "zh-Hant": "本條目的符號 N 明定包含 0。"
+    },
+    {
+      "id": "a2",
+      "zh-Hant": "n 表示任意一個待判定是否屬於 N 的數。"
+    }
+  ],
+  "symbols": [
+    {
+      "token": "n",
+      "role": "natural_number_candidate",
+      "role_zh": "自然數候選",
+      "scope": "concept"
+    },
+    {
+      "token": "N",
+      "role": "natural_number_set",
+      "role_zh": "自然數集合",
+      "scope": "concept"
+    },
+    {
+      "token": "∈",
+      "role": "membership_relation",
+      "role_zh": "隸屬關係",
+      "scope": "concept"
+    }
+  ],
+  "dependencies": [],
+  "explanation": {
+    "paragraphs_zh": [
+      "自然數提供計數與排列離散次序的基本語言。0 表示沒有對象的數量；從任一自然數取後繼，可得到下一個自然數。",
+      "不同數學傳統對 0 是否屬於自然數有不同慣例。為了和 Lean 的 Nat 及本庫後續物件一致，本條目固定採 N 包含 0；閱讀外部資料時仍應先確認該資料的定義。",
+      "自然數本身與書寫它的數字符號不同。例如十進位符號 2、二進位符號 10 可以表示同一個自然數。"
+    ],
+    "common_misconception_zh": "常見誤解是以為所有教材對自然數是否包含 0 都有相同約定，或把數字的書寫方式與數本身混為一談。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目是概念候選稿；研究來源不是 OCME Evidence，尚未建立計算檢查或 Lean 形式證明。",
+    "evidence_refs": [],
+    "producers": [
+      {
+        "id": "lean-mathlib",
+        "adapter": "formal_system",
+        "config_path": "formal/lean/lakefile.toml",
+        "status": "configured"
+      }
+    ]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": [
+      "Lean 4",
+      "Mathlib"
+    ],
+    "next_obligation_zh": "建立 OCME 的 N、0 與後繼到 Lean Nat 的明確語義橋，驗證後再產生內容位址化 Evidence。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-natural-number.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-08-07"
+  }
+}

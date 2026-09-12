@@ -32,6 +32,36 @@
       "tags": ["幾何", "三角形", "定理", "FELRA", "Lean", "Mathlib", "語義橋"]
     },
     {
+      "id": "mko-natural-number",
+      "title": "自然數",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/natural-number.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["自然數", "數系", "基礎", "AI候選", "待形式化"]
+    },
+    {
+      "id": "mko-set",
+      "title": "集合",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/set.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["集合", "基礎", "外延", "AI候選", "待形式化"]
+    },
+    {
+      "id": "mko-proposition",
+      "title": "命題",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/proposition.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["邏輯", "命題", "基礎", "AI候選", "待形式化"]
+    },
+    {
       "id": "mko-set-membership",
       "title": "集合隸屬",
       "type": "definition",

@@ -16,6 +16,9 @@
     {"object_id":"mko-set-membership","framework_id":"curriculum-ocme-formalized","item_id":"lean.set-semantics","relation":"introduced_in","status":"reviewed","rationale_zh":"對齊 Lean Set 作為謂詞的表示。"},
     {"object_id":"mko-function-mapping","framework_id":"curriculum-ocme-formalized","item_id":"lean.total-function","relation":"introduced_in","status":"reviewed","rationale_zh":"對齊 Lean 總函數型別的形式語義。"},
     {"object_id":"mko-tends-to-relation","framework_id":"curriculum-ocme-formalized","item_id":"mathlib.filter-tendsto","relation":"introduced_in","status":"reviewed","rationale_zh":"對齊 Mathlib Filter.Tendsto 核心。"},
-    {"object_id":"mko-euclid-pythagorean-theorem","framework_id":"curriculum-ocme-formalized","item_id":"mathlib.pythagorean-bridge","relation":"extends","status":"reviewed","rationale_zh":"展示向量核心與邊長模型的形式語義橋。"}
+    {"object_id":"mko-euclid-pythagorean-theorem","framework_id":"curriculum-ocme-formalized","item_id":"mathlib.pythagorean-bridge","relation":"extends","status":"reviewed","rationale_zh":"展示向量核心與邊長模型的形式語義橋。"},
+    {"object_id":"mko-natural-number","framework_id":"curriculum-ocme-general","item_id":"numbers.natural","relation":"introduced_in","status":"candidate","rationale_zh":"自然數是計數、離散次序與後續數系的基礎候選項目。"},
+    {"object_id":"mko-set","framework_id":"curriculum-ocme-university-core","item_id":"foundations.set","relation":"introduced_in","status":"candidate","rationale_zh":"集合提供大學數學中元素、結構與建構的基礎語言。"},
+    {"object_id":"mko-proposition","framework_id":"curriculum-ocme-university-core","item_id":"foundations.proposition","relation":"introduced_in","status":"candidate","rationale_zh":"命題提供邏輯連接詞、量詞與證明的基礎語言。"}
   ]
 }

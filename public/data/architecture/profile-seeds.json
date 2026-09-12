@@ -93,6 +93,53 @@
       "order_roles":["logical_order","pedagogical_order","formalization_order"],
       "method_ids":["method-localization","method-formal-verification"],
       "curriculum_alignment_ids":["curriculum-ocme-university-core:analysis.tends-to","curriculum-ocme-formalized:mathlib.filter-tendsto"]
+    },
+    {
+      "object_id":"mko-natural-number",
+      "classification_assertions":[
+        ["domain","arithmetic_number_systems","primary",1.0,"自然數是算術與數系建構的基礎對象。"],
+        ["object_kind","concept","primary",1.0,"此物件建立自然數的概念與本庫慣例。"],
+        ["representation","symbolic_formula","supporting",0.8,"以 n∈N 表示個別數與自然數集合的關係。"],
+        ["method","method-direct-proof","contextual",0.3,"後續自然數性質常以直接論證或歸納處理。"]
+      ],
+      "difficulty":{"audience":"general_learner","task":"conceptual_understanding","levels":[1,1,1,1,1,1,2,1,1,1,5,2]},
+      "path_ids":["path-foundational-language-candidate"],
+      "order_roles":["logical_order","pedagogical_order","curriculum_order"],
+      "method_ids":["method-direct-proof"],
+      "curriculum_alignment_ids":["curriculum-ocme-general:numbers.natural"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.72,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 Atlas 與 research packet 建立的本地 AI 候選設定，尚待人工審查。"}
+    },
+    {
+      "object_id":"mko-set",
+      "classification_assertions":[
+        ["domain","foundations_logic","primary",1.0,"集合是現代數學基礎語言的核心概念。"],
+        ["domain","formalized_mathematics","supporting",0.5,"形式系統必須明定集合的型別與建構原則。"],
+        ["object_kind","concept","primary",1.0,"此物件建立集合、元素與外延觀點的概念邊界。"],
+        ["representation","set_theoretic","primary",1.0,"集合主要以元素隸屬及集合記法表示。"],
+        ["method","method-direct-proof","contextual",0.3,"後續集合相等與包含關係可用直接論證處理。"]
+      ],
+      "difficulty":{"audience":"general_learner","task":"conceptual_understanding","levels":[3,2,3,3,3,3,3,3,3,3,4,4]},
+      "path_ids":["path-foundational-language-candidate"],
+      "order_roles":["logical_order","pedagogical_order","formalization_order","curriculum_order"],
+      "method_ids":["method-direct-proof"],
+      "curriculum_alignment_ids":["curriculum-ocme-university-core:foundations.set"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.7,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 Atlas 與 research packet 建立的本地 AI 候選設定，尚待集合論範圍的人工審查。"}
+    },
+    {
+      "object_id":"mko-proposition",
+      "classification_assertions":[
+        ["domain","foundations_logic","primary",1.0,"命題是邏輯推理與證明語言的基本對象。"],
+        ["domain","formalized_mathematics","supporting",0.6,"Lean 以 Prop 表示命題並以項表示證明。"],
+        ["object_kind","concept","primary",1.0,"此物件區分命題、真假與已有證明等概念。"],
+        ["representation","symbolic_formula","primary",0.9,"以 P 作為不預設真假的命題變項。"],
+        ["method","method-direct-proof","contextual",0.3,"後續命題可成為直接證明與其他推理方法的目標。"]
+      ],
+      "difficulty":{"audience":"general_learner","task":"conceptual_understanding","levels":[3,2,3,3,3,3,3,3,3,3,4,4]},
+      "path_ids":["path-foundational-language-candidate"],
+      "order_roles":["logical_order","pedagogical_order","formalization_order","curriculum_order"],
+      "method_ids":["method-direct-proof"],
+      "curriculum_alignment_ids":["curriculum-ocme-university-core:foundations.proposition"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.7,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 Atlas 與 research packet 建立的本地 AI 候選設定，尚待邏輯語境的人工審查。"}
     }
   ]
 }
