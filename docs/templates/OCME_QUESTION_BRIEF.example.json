@@ -1,0 +1,55 @@
+{
+  "schema_version": "ocme-question-brief-v0.1",
+  "date": "2026-09-12",
+  "batch_id": "batch-20260912-geometry-foundations",
+  "manual_trigger_required": true,
+  "automatic_schedule": false,
+  "question_count": 100,
+  "source_mko_ids": [
+    "mko-euclidean-length",
+    "mko-right-triangle",
+    "mko-euclid-pythagorean-theorem"
+  ],
+  "allocations": [
+    {
+      "family_id": "qf-euclidean-distance",
+      "source_mko_id": "mko-euclidean-length",
+      "count": 30
+    },
+    {
+      "family_id": "qf-right-triangle-definition",
+      "source_mko_id": "mko-right-triangle",
+      "count": 30
+    },
+    {
+      "family_id": "qf-pythagorean-relation",
+      "source_mko_id": "mko-euclid-pythagorean-theorem",
+      "count": 40
+    }
+  ],
+  "audience": [
+    "lower_secondary",
+    "upper_secondary"
+  ],
+  "difficulty_levels": [
+    1,
+    2,
+    3
+  ],
+  "required_checks": [
+    "json_schema",
+    "id_uniqueness",
+    "seed_uniqueness",
+    "exact_stem_deduplication",
+    "source_mko_existence",
+    "independent_answer_recomputation",
+    "manifest_sha256"
+  ],
+  "prohibited_claims": [
+    "Do not use the converse of the Pythagorean theorem unless a cited Canonical MKO explicitly provides it.",
+    "Do not infer a right angle from side lengths alone in this batch.",
+    "Do not mark AI-generated questions as human reviewed."
+  ],
+  "staging_directory": "D:\\Ai\\work together\\OCME-question-factory\\batches\\2026-09-12",
+  "publication_authority": "main_architect_only"
+}

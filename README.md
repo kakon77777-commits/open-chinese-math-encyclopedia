@@ -209,6 +209,12 @@ Cloudflare Workers Static Assets 專案名稱為 `ocme`，正式網址為 `https
 
 ## 每日題庫
 
+每日人工營運計畫：
+
+```text
+docs/OCME_DAILY_OPERATING_PLAN_v0.1.md
+```
+
 題庫合約位於：
 
 ```text
