@@ -37,9 +37,19 @@ async function collectFiles(directory) {
 
 await fs.rm(OUTPUT, { recursive: true, force: true })
 await fs.mkdir(OUTPUT, { recursive: true })
-await fs.copyFile(path.join(ROOT, 'index.html'), path.join(OUTPUT, 'index.html'))
 await copyDirectory(path.join(ROOT, 'src'), path.join(OUTPUT, 'src'))
 await copyDirectory(path.join(ROOT, 'public'), OUTPUT)
+
+const [htmlSource, mainSource, styleSource] = await Promise.all([
+  fs.readFile(path.join(ROOT, 'index.html'), 'utf8'),
+  fs.readFile(path.join(ROOT, 'src', 'main.js')),
+  fs.readFile(path.join(ROOT, 'src', 'styles.css')),
+])
+const shortDigest = bytes => createHash('sha256').update(bytes).digest('hex').slice(0, 12)
+const versionedHtml = htmlSource
+  .replace('/src/main.js', `/src/main.js?v=${shortDigest(mainSource)}`)
+  .replace('/src/styles.css', `/src/styles.css?v=${shortDigest(styleSource)}`)
+await fs.writeFile(path.join(OUTPUT, 'index.html'), versionedHtml, 'utf8')
 
 const files = await collectFiles(OUTPUT)
 const manifest = {

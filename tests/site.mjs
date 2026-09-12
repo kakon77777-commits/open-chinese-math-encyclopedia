@@ -29,6 +29,8 @@ try {
   const html = await fs.readFile(path.join(output, 'index.html'), 'utf8')
   assert.match(html, /OCME · 開源中文數學百科/)
   assert.match(html, /https:\/\/ocme\.evemisslab\.com\//)
+  assert.match(html, /\/src\/main\.js\?v=[a-f0-9]{12}/)
+  assert.match(html, /\/src\/styles\.css\?v=[a-f0-9]{12}/)
 
   const atlas = JSON.parse(await fs.readFile(path.join(output, 'data/atlas/core-atlas.json'), 'utf8'))
   const index = JSON.parse(await fs.readFile(path.join(output, 'data/index.json'), 'utf8'))
