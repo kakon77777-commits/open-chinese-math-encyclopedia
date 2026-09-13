@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-variable-expression",
+  "semantic_family_id": "sf-variable-expression",
+  "type": "concept",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "變數與代數式", "en": "Variables and algebraic expressions" },
+  "summary": { "zh-Hant": "代數式以變數、常數與已定義運算表示依輸入而定的數學量。" },
+  "statement": { "zh-Hant": "代數式的值由其中變數的取值、作用域、型別或數系以及運算規則共同決定；沒有等號的代數式本身不是方程式。" },
+  "formula": {
+    "tex": "x+1",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow></math>",
+    "semantic_ast": { "type": "addition", "operands": [{ "type": "symbol", "name": "x", "glyph": "x" }, { "type": "number", "value": 1 }] },
+    "compiler": { "id": "ocme-formula-core", "version": "0.4.0", "source_sha256": "156f5402c1d0baa8cc6ddacc95a391875b247476d35de8dc44953b74dec8af3a" }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "x 的作用域與所屬數系已在使用情境中指定。" },
+    { "id": "a2", "zh-Hant": "加法在 x 所屬型別上已有定義，且常數 1 可在該型別中解讀。" }
+  ],
+  "symbols": [
+    { "token": "x", "role": "variable", "role_zh": "變數", "scope": "expression" },
+    { "token": "1", "role": "constant", "role_zh": "常數", "scope": "expression" },
+    { "token": "+", "role": "addition_operation", "role_zh": "加法運算", "scope": "expression" }
+  ],
+  "dependencies": [
+    { "id": "mko-arithmetic-operations", "title_zh": "四則運算", "reason_zh": "代數式以已定義的算術運算組合變數與常數。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "變數是可在明示範圍內取值的符號。代數式 x+1 描述一個依 x 改變的量；在 x 未指定前，它通常不能化成單一固定數。",
+      "表達式、方程式與恆等式承擔不同角色。x+1 是表達式；x+1=3 是要求兩個表達式相等的方程；在指定範圍內對所有取值成立的等式才可能是恆等式。",
+      "語法相異的表達式可能在某個數系中等價，但等價改寫必須依據該數系的運算規則，而不是只看外觀。"
+    ],
+    "common_misconception_zh": "常見誤解是把含變數的表達式當成已有固定值，或把任何包含 x 的文字都視為方程式。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目尚未定義通用代數式語法樹或求值器，也未聲稱所有改寫在任意數系都有效。",
+    "evidence_refs": [],
+    "producers": [{ "id": "lean-mathlib", "adapter": "formal_system", "config_path": "formal/lean/lakefile.toml", "status": "configured" }]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "建立帶型別變數、常數與運算的最小表達式語法及求值函數，並驗證作用域與型別邊界。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-variable-expression.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-09-13"
+  }
+}

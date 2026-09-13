@@ -1,0 +1,59 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-counting-principle",
+  "semantic_family_id": "sf-counting-principle",
+  "type": "concept",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "基本計數原理", "en": "Basic counting principles" },
+  "summary": { "zh-Hant": "加法與乘法原理把互斥分支或連續選擇的有限數量組合成總數。" },
+  "statement": { "zh-Hant": "互斥選擇類別的數量相加；連續選擇階段的可能組合數，在各階段選項數與條件明確時相乘。" },
+  "formula": {
+    "tex": "N(A)",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>N</mi><mo>(</mo><mi>A</mi><mo>)</mo></mrow></math>",
+    "semantic_ast": { "type": "function_call", "callee": { "type": "symbol", "name": "N", "glyph": "N" }, "arguments": [{ "type": "symbol", "name": "A", "glyph": "A" }] },
+    "compiler": { "id": "ocme-formula-core", "version": "0.4.0", "source_sha256": "1d44d27d4de9ca8df9b51db22d0ae693a835dcb75c014537d96ef3027e7b9629" }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "被計數的選擇集合或選擇序列是有限的。" },
+    { "id": "a2", "zh-Hant": "使用加法原理時，各類別互不重疊，或重疊已被另外修正。" },
+    { "id": "a3", "zh-Hant": "使用乘法原理時，每個階段及其可選數量已依先前選擇明確描述。" }
+  ],
+  "symbols": [
+    { "token": "N", "role": "cardinality_notation", "role_zh": "有限數量函數", "scope": "counting" },
+    { "token": "A", "role": "finite_choice_collection", "role_zh": "有限選擇集合", "scope": "counting" }
+  ],
+  "dependencies": [
+    { "id": "mko-natural-number", "title_zh": "自然數", "reason_zh": "有限對象的數量以自然數表示。" },
+    { "id": "mko-arithmetic-operations", "title_zh": "四則運算", "reason_zh": "基本計數原理使用加法與乘法組合局部數量。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "若一件工作可以用互斥的 m 種方式或 n 種方式完成，總方式數為 m+n。互斥條件很重要，否則同一結果可能被重複計數。",
+      "若一個流程先有 m 種選擇，每一種之後都有 n 種選擇，則有 m×n 種有序組合。若後續選項數依前一步而變，就必須分支後分別計數。",
+      "N(A) 只表示有限集合 A 的元素數量。加法與乘法原理的完整公式及其形式證明將在後續編譯器與 Evidence 工作中分開處理。"
+    ],
+    "common_misconception_zh": "常見誤解是對會重疊的案例直接相加，或在後續選項數依前一步改變時仍無條件相乘。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目尚未把加法與乘法原理的全部條件綁定至形式 Evidence；代表式 N(A) 不是完整證明。",
+    "evidence_refs": [],
+    "producers": [{ "id": "lean-mathlib", "adapter": "formal_system", "config_path": "formal/lean/lakefile.toml", "status": "configured" }]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "分別對齊 Fintype.card_sum 與 Fintype.card_prod，並在加法原理中明示不重疊條件。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-counting-principle.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-09-13"
+  }
+}

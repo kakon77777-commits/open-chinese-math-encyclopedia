@@ -234,7 +234,7 @@ function renderHome() {
     </section>
 
     <section class="content-section featured-section">
-      <div class="split-heading"><div><p class="kicker">已物化內容</p><h2>先從九個知識物件開始</h2></div><a class="text-link" href="#knowledge">查看全部 →</a></div>
+      <div class="split-heading"><div><p class="kicker">已物化內容</p><h2>先從 ${state.index.objects.length} 個知識物件開始</h2></div><a class="text-link" href="#knowledge">查看全部 →</a></div>
       <div class="featured-strip">
         ${featured.map((entry, index) => `<a class="feature-card" href="#object/${entry.id}">
           <span class="feature-index">0${index + 1}</span><span class="status-dot"></span>

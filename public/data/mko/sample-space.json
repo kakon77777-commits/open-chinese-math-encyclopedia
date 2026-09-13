@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-sample-space",
+  "semantic_family_id": "sf-sample-space",
+  "type": "concept",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "樣本空間", "en": "Sample space" },
+  "summary": { "zh-Hant": "樣本空間是針對一個已指定隨機試驗所列出的所有可能基本結果。" },
+  "statement": { "zh-Hant": "若隨機試驗的樣本空間為 S，則每個可能基本結果 x 都滿足 x∈S；空間本身不附帶各結果等可能的假設。" },
+  "formula": {
+    "tex": "x\\in S",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>x</mi><mo>∈</mo><mi>S</mi></mrow></math>",
+    "semantic_ast": { "type": "membership", "element": { "type": "symbol", "name": "x", "glyph": "x" }, "set": { "type": "symbol", "name": "S", "glyph": "S" } },
+    "compiler": { "id": "ocme-formula-core", "version": "0.4.0", "source_sha256": "02b34da15e67f33de54904d207c337a358c89a5b760124bad2e4ba3604797ad3" }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "隨機試驗與觀察尺度已經明確指定。" },
+    { "id": "a2", "zh-Hant": "S 包含該試驗在指定描述下的所有可能基本結果。" }
+  ],
+  "symbols": [
+    { "token": "x", "role": "outcome", "role_zh": "可能結果", "scope": "experiment" },
+    { "token": "S", "role": "sample_space", "role_zh": "樣本空間", "scope": "experiment" },
+    { "token": "∈", "role": "membership_relation", "role_zh": "隸屬關係", "scope": "experiment" }
+  ],
+  "dependencies": [
+    { "id": "mko-set", "title_zh": "集合", "reason_zh": "樣本空間以集合方式收納一個試驗的所有可能結果。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "擲一枚硬幣一次時，可以用 S={正面,反面}；若改成記錄連續兩次結果，樣本空間就包含四個有序結果。樣本空間取決於試驗與觀察方式。",
+      "樣本空間回答哪些結果可能發生，事件則是其中一組結果。是否等可能、如何指派機率，是後續機率模型的額外資料。",
+      "完整性是相對於已指定試驗而言。漏掉可能結果會使後續事件與機率計算失去正確的論域。"
+    ],
+    "common_misconception_zh": "常見誤解是認為列入同一樣本空間的結果必定等可能，或把一次試驗的單一結果與事件集合混為一談。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目只建立樣本空間概念，沒有指派機率、均勻性或獨立性，也沒有新增 Evidence Object。",
+    "evidence_refs": [],
+    "producers": [{ "id": "lean-mathlib", "adapter": "formal_system", "config_path": "formal/lean/lakefile.toml", "status": "configured" }]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "選定結果型別 Ω，區分基本結果、事件集合與機率測度，且不得無條件加入均勻分布。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-sample-space.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-09-13"
+  }
+}

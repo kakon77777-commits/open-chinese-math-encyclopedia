@@ -42,6 +42,26 @@
       "tags": ["自然數", "數系", "基礎", "AI候選", "待形式化"]
     },
     {
+      "id": "mko-arithmetic-operations",
+      "title": "四則運算",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/arithmetic-operations.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["算術", "運算", "數系", "AI候選", "待形式化"]
+    },
+    {
+      "id": "mko-variable-expression",
+      "title": "變數與代數式",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/variable-expression.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["代數", "變數", "表達式", "AI候選", "待形式化"]
+    },
+    {
       "id": "mko-set",
       "title": "集合",
       "type": "concept",
@@ -72,6 +92,16 @@
       "tags": ["集合", "基礎", "關係", "Lean", "Mathlib"]
     },
     {
+      "id": "mko-sample-space",
+      "title": "樣本空間",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/sample-space.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["機率", "樣本空間", "結果", "AI候選", "待形式化"]
+    },
+    {
       "id": "mko-function-mapping",
       "title": "函數映射",
       "type": "definition",
@@ -90,6 +120,26 @@
       "evidence_ref_count": 1,
       "producer_ids": ["lean-mathlib"],
       "tags": ["極限", "分析", "趨近", "Filter", "Lean", "Mathlib"]
+    },
+    {
+      "id": "mko-mathematical-induction",
+      "title": "數學歸納法",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/mathematical-induction.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["證明", "歸納法", "自然數", "AI候選", "待形式化"]
+    },
+    {
+      "id": "mko-counting-principle",
+      "title": "基本計數原理",
+      "type": "concept",
+      "version": "0.10.0",
+      "path": "/data/mko/counting-principle.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["組合", "計數", "加法原理", "乘法原理", "AI候選"]
     }
   ]
 }
