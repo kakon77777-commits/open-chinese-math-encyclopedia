@@ -1,0 +1,40 @@
+{
+  "report_version": "ocme-question-factory-validation-v0.1",
+  "batch_id": "batch-20260912-geometry-foundations",
+  "checked_at": "2026-09-13",
+  "verifier": {
+    "file": "verify-batch.mjs",
+    "schema_source": "D:\\Ai\\work together\\OCME\\schemas\\question-v0.1.schema.json",
+    "answer_method": "independent parameter recomputation"
+  },
+  "outcome": "passed",
+  "counts": {
+    "total": 100,
+    "by_source_mko": {
+      "mko-euclid-pythagorean-theorem": 40,
+      "mko-euclidean-length": 30,
+      "mko-right-triangle": 30
+    },
+    "unique_ids": 100,
+    "unique_seeds": 100,
+    "unique_stems": 100,
+    "exact_stem_duplicate_rate": 0
+  },
+  "presentation_checks": {
+    "negative_squared_terms_parenthesized": true
+  },
+  "source_mko_presence": {
+    "mko-euclid-pythagorean-theorem": true,
+    "mko-euclidean-length": true,
+    "mko-right-triangle": true
+  },
+  "source_mko_snapshot_hash_match": {
+    "mko-euclidean-length": true,
+    "mko-right-triangle": true,
+    "mko-euclid-pythagorean-theorem": true
+  },
+  "batch_sha256": "818fc9bd154b15a97199c437c5345260e55307eada85586bf547e52c4ae518dc",
+  "manifest_hash_match": true,
+  "limitations_zh": "本報告只驗證有限題目的結構與參數化答案；不等同於相關幾何定義或畢達哥拉斯定理的普遍證明，也不表示人工審查或發布核准。",
+  "errors": []
+}

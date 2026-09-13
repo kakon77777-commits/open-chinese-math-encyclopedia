@@ -4,7 +4,7 @@ import { executeCommandGate } from '../runtime/trust/command-executor.js'
 
 const registryValidation = validateMechanicalGateRegistry(MECHANICAL_GATES)
 assert.equal(registryValidation.ok, true, registryValidation.errors.join('\n'))
-assert.equal(MECHANICAL_GATES.length, 12)
+assert.equal(MECHANICAL_GATES.length, 13)
 assert.equal(new Set(MECHANICAL_GATES.map(gate => gate.gate_id)).size, MECHANICAL_GATES.length)
 assert.ok(MECHANICAL_GATES.every(gate => Array.isArray(gate.args)))
 assert.ok(MECHANICAL_GATES.every(gate => Array.isArray(gate.scope) && gate.scope.length > 0))

@@ -51,6 +51,13 @@ export const MECHANICAL_GATES = Object.freeze([
     tool_name: 'node',
   },
   {
+    gate_id: 'question_batch_validation',
+    scope: ['published question Schema, source snapshots, identity, deduplication, answer and explanation witness checks'],
+    executable: 'node',
+    args: ['scripts/validate-question-batches.mjs'],
+    tool_name: 'node',
+  },
+  {
     gate_id: 'sedb_math_validation',
     scope: ['SEDB-Math state/event schema and transition invariants'],
     executable: 'node',

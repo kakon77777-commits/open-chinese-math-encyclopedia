@@ -1,0 +1,70 @@
+{
+  "schema_version": "ocme-question-factory-batch-manifest-v0.1",
+  "batch_id": "batch-20260913-foundational-language",
+  "date": "2026-09-13",
+  "base_seed": 20260913,
+  "status": "candidate",
+  "generator": {
+    "role": "question_producer",
+    "model": "GPT-5.6 Terra",
+    "contract_version": "ocme-question-factory-v0.1"
+  },
+  "source_mko_ids": [
+    "mko-natural-number",
+    "mko-set-membership",
+    "mko-proposition",
+    "mko-function-mapping"
+  ],
+  "source_mko_snapshots": {
+    "mko-natural-number": {
+      "path": "public/data/mko/natural-number.json",
+      "sha256": "222b72502fb661f3372012f602fd2f1eeef754b9e2069498c6b24234778730c4"
+    },
+    "mko-set-membership": {
+      "path": "public/data/mko/set-membership.json",
+      "sha256": "bb56a96d4b22c2a22b9f6712c4e3df69e0671eed80c4a97b35180cd5d9b6e4da"
+    },
+    "mko-proposition": {
+      "path": "public/data/mko/proposition.json",
+      "sha256": "77a5e0d8403fa47d1ee57431b11f6fc52bfdde80a575db9dac3589fb0b9e8510"
+    },
+    "mko-function-mapping": {
+      "path": "public/data/mko/function-mapping.json",
+      "sha256": "5e8d46a5889f245e03bd9013782af77d8a67615429428548376866a5e3c7a2e5"
+    }
+  },
+  "counts": {
+    "total": 100,
+    "by_family": {
+      "qf-natural-number-membership": 20,
+      "qf-finite-set-membership": 25,
+      "qf-proposition-classification": 25,
+      "qf-finite-function-mapping": 30
+    },
+    "by_source_mko": {
+      "mko-natural-number": 20,
+      "mko-set-membership": 25,
+      "mko-proposition": 25,
+      "mko-function-mapping": 30
+    }
+  },
+  "generation": {
+    "attempted": 100,
+    "accepted": 100,
+    "rejected": 0,
+    "rejection_rate": 0
+  },
+  "artifacts": {
+    "brief": "../../briefs/2026-09-13.json",
+    "questions_jsonl": "questions.jsonl",
+    "questions_sha256": "f9197588b4d22a517e5a50d721638afb80a8f8f03cc65234ee357d2ba1823172",
+    "verifier": "../../verify-20260913.mjs"
+  },
+  "semantic_boundaries": [
+    "OCME 的自然數 N 包含 0；不得假設所有外部傳統都使用同一慣例。",
+    "有限集合題只能對明示列舉的元素判定隸屬，不得暗示無限制概括。",
+    "命題分類必須區分疑問句、命令句、未封閉開放句與可判真假的封閉陳述；命題不等於已證明為真。",
+    "有限映射只有在定義域中每個輸入恰有一個輸出時才是函數；不得把陪域與值域混同。"
+  ],
+  "limitations_zh": "全部題目均為 candidate，未宣稱人工審查或發布；有限分類與答案重算不構成普遍證明。"
+}

@@ -231,6 +231,8 @@ schemas/question-v0.1.schema.json
 
 目前 80-node Atlas 的主要領域分類覆蓋 20 個 domain registry 中的 8 個；下一階段採覆蓋優先，先補足缺少 Canonical MKO 的領域，再考慮把單批題數提高到 1,000 或以上。
 
+公開題庫批次使用 `npm run validate:questions` 驗證 Schema、來源 MKO 快照、全域 ID、seed、題幹／語義模板、答案、解釋 witness 與 SHA-256。網站可直接瀏覽每批候選題，但 `candidate_validated` 仍不等於人工審定。
+
 ## MCP 與 AI
 
 v0.9 MCP 已可查詢：
