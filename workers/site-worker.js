@@ -18,8 +18,10 @@ export default {
   async fetch(request, env) {
     const response = await env.ASSETS.fetch(request)
     const headers = new Headers(response.headers)
+    const pathname = new URL(request.url).pathname
     for (const [name, value] of Object.entries(SECURITY_HEADERS)) headers.set(name, value)
-    headers.set('Cache-Control', cacheControl(new URL(request.url).pathname, headers.get('Content-Type') || ''))
+    if (pathname.endsWith('.jsonl')) headers.set('Content-Type', 'application/x-ndjson; charset=utf-8')
+    headers.set('Cache-Control', cacheControl(pathname, headers.get('Content-Type') || ''))
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,

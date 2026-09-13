@@ -23,4 +23,8 @@ assert.equal(data.headers.get('Cache-Control'), 'public, max-age=300, stale-whil
 const asset = await worker.fetch(new Request('https://ocme.evemisslab.com/src/main.js'), environment('export {}', 'text/javascript'))
 assert.equal(asset.headers.get('Cache-Control'), 'public, max-age=3600')
 
+const jsonl = await worker.fetch(new Request('https://ocme.evemisslab.com/data/questions/batches/sample/questions.jsonl'), environment('{}\n', ''))
+assert.equal(jsonl.headers.get('Content-Type'), 'application/x-ndjson; charset=utf-8')
+assert.equal(jsonl.headers.get('Cache-Control'), 'public, max-age=300, stale-while-revalidate=86400')
+
 console.log('Site Worker tests passed: streamed assets receive CSP, browser protections, and route-specific cache policy.')
