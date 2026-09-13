@@ -23,6 +23,10 @@ function sha256(bytes) {
   return createHash('sha256').update(bytes).digest('hex')
 }
 
+function sha256CanonicalText(bytes) {
+  return sha256(Buffer.from(bytes.toString('utf8').replace(/\r\n?/g, '\n'), 'utf8'))
+}
+
 function resolvePublic(publicPath) {
   if (typeof publicPath !== 'string' || !publicPath.startsWith('/data/questions/')) {
     throw new Error(`invalid public question path: ${publicPath}`)
@@ -153,7 +157,7 @@ for (const batch of questionIndex.batches || []) {
       if (!knownMkoIds.has(id)) fail(scope, `unknown snapshot source MKO ${id}`)
       const sourcePath = path.resolve(ROOT, snapshot.path)
       if (!sourcePath.startsWith(path.join(PUBLIC, 'data', 'mko') + path.sep)) fail(scope, `snapshot path escapes MKO data: ${snapshot.path}`)
-      else if (sha256(await fs.readFile(sourcePath)) !== snapshot.sha256) fail(scope, `source MKO snapshot drift: ${id}`)
+      else if (sha256CanonicalText(await fs.readFile(sourcePath)) !== snapshot.sha256) fail(scope, `source MKO snapshot drift: ${id}`)
     }
     publishedCount += questions.length
   } catch (error) {

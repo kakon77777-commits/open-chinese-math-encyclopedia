@@ -22,7 +22,7 @@
     },
     "mko-set-membership": {
       "path": "public/data/mko/set-membership.json",
-      "sha256": "bb56a96d4b22c2a22b9f6712c4e3df69e0671eed80c4a97b35180cd5d9b6e4da"
+      "sha256": "2a438aa79c23e6d37869e1e63eb48420bcf2f114f44b58fe5bea386076b4f0db"
     },
     "mko-proposition": {
       "path": "public/data/mko/proposition.json",
@@ -30,7 +30,7 @@
     },
     "mko-function-mapping": {
       "path": "public/data/mko/function-mapping.json",
-      "sha256": "5e8d46a5889f245e03bd9013782af77d8a67615429428548376866a5e3c7a2e5"
+      "sha256": "f103408037c3680d770316d998ec3b92d19797f2865d8c94fa74efaf38bbc2b0"
     }
   },
   "counts": {

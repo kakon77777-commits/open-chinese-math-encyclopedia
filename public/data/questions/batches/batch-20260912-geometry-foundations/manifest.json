@@ -17,15 +17,15 @@
   "source_mko_snapshots": {
     "mko-euclidean-length": {
       "path": "public/data/mko/euclidean-length.json",
-      "sha256": "849dce77c7ae326fd2051ccfe6da59b27c073ebd3316f6692f07044be6d3081e"
+      "sha256": "485948172a6b39e7ec2cf3170ab03489fed98190d0c868161fbbd037f7151e91"
     },
     "mko-right-triangle": {
       "path": "public/data/mko/right-triangle.json",
-      "sha256": "4ead1116e138d78896f86057e8729061f89688e821d0e26ee6ec5668fabd69f0"
+      "sha256": "189cad28fbc4231852d6848d7f5209ff5d91a3b2dabd6380708fc678de0a758e"
     },
     "mko-euclid-pythagorean-theorem": {
       "path": "public/data/mko/pythagorean-theorem.json",
-      "sha256": "6f3bb561705eaec42d375373c2eb1ffd604387aae72593fe7ed60909433cde71"
+      "sha256": "f91873f82805e9a6d9ee8358fa64afa78e7594fc6568999814e34c1205ad51c6"
     }
   },
   "counts": {
