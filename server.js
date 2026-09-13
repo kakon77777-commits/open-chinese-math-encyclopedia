@@ -10,14 +10,17 @@ const MIME = {
   '.js': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.md': 'text/markdown; charset=utf-8',
   '.svg': 'image/svg+xml',
+  '.xml': 'application/xml; charset=utf-8',
 }
 
 function resolveInside(urlPath) {
   const clean = decodeURIComponent(urlPath.split('?')[0])
   let relative = clean === '/' ? 'index.html' : clean.replace(/^\/+/, '')
   if (relative.startsWith('data/')) relative = path.join('public', relative)
+  if (['favicon.svg', 'site.webmanifest', 'robots.txt', 'sitemap.xml'].includes(relative)) relative = path.join('public', relative)
   const target = path.resolve(ROOT, relative)
   if (target !== ROOT && !target.startsWith(ROOT + path.sep)) throw new Error('path escape')
   return target

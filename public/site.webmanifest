@@ -1,0 +1,16 @@
+{
+  "name": "OCME 開源中文數學百科",
+  "short_name": "OCME",
+  "start_url": "/#home",
+  "display": "standalone",
+  "background_color": "#f3f0e8",
+  "theme_color": "#102622",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

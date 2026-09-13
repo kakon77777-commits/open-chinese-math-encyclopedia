@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.evemisslab.com/schemas/question-v0.1.json",
+  "title": "OCME Question Candidate v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "batch_id", "language", "source_mko_ids",
+    "title_zh", "stem_zh", "answer", "difficulty", "variant",
+    "verification", "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "ocme-question-v0.1" },
+    "id": { "type": "string", "pattern": "^q-[0-9]{8}-[a-z0-9-]+-[0-9]{4}$" },
+    "batch_id": { "type": "string", "pattern": "^batch-[0-9]{8}-[a-z0-9-]+$" },
+    "language": { "const": "zh-Hant" },
+    "source_mko_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" }
+    },
+    "title_zh": { "type": "string", "minLength": 2 },
+    "stem_zh": { "type": "string", "minLength": 8 },
+    "answer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value", "explanation_zh"],
+      "properties": {
+        "kind": { "enum": ["numeric", "choice", "expression", "short_text", "proof_outline"] },
+        "value": { "anyOf": [{ "type": "string" }, { "type": "number" }, { "type": "boolean" }] },
+        "choices": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+        "explanation_zh": { "type": "string", "minLength": 8 }
+      }
+    },
+    "difficulty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["band", "level", "skills"],
+      "properties": {
+        "band": { "enum": ["primary_foundation", "lower_secondary", "upper_secondary", "undergraduate_core"] },
+        "level": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "skills": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 2 } }
+      }
+    },
+    "variant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["family_id", "seed", "parameters"],
+      "properties": {
+        "family_id": { "type": "string", "pattern": "^qf-[a-z0-9-]+$" },
+        "seed": { "type": "integer", "minimum": 0 },
+        "parameters": { "type": "object" }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "checks", "warning_zh"],
+      "properties": {
+        "status": { "enum": ["candidate", "mechanically_checked", "reviewed", "rejected"] },
+        "checks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 2 } },
+        "warning_zh": { "type": "string", "minLength": 8 }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generator_role", "generator_model", "generated_at", "contract_version"],
+      "properties": {
+        "generator_role": { "const": "question_producer" },
+        "generator_model": { "type": "string", "minLength": 2 },
+        "generated_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+        "contract_version": { "const": "ocme-question-factory-v0.1" }
+      }
+    }
+  }
+}

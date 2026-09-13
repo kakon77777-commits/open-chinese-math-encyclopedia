@@ -1,0 +1,90 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-proposition",
+  "semantic_family_id": "sf-proposition",
+  "type": "concept",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": {
+    "zh-Hant": "命題",
+    "en": "Proposition"
+  },
+  "summary": {
+    "zh-Hant": "命題是在指定邏輯脈絡中可被斷言或否定，並可談論真假的有意義陳述。"
+  },
+  "statement": {
+    "zh-Hant": "本條目採入門古典邏輯語境：命題 P 可以為真或為假；P 是命題不表示 P 已被證明為真。"
+  },
+  "formula": {
+    "tex": "P",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mi>P</mi></math>",
+    "semantic_ast": {
+      "type": "symbol",
+      "name": "P",
+      "glyph": "P"
+    },
+    "compiler": {
+      "id": "ocme-formula-core",
+      "version": "0.4.0",
+      "source_sha256": "5c62e091b8c0565f1bafad0dad5934276143ae2ccef7a5381e8ada5b1a8d26d2"
+    }
+  },
+  "assumptions": [
+    {
+      "id": "a1",
+      "zh-Hant": "P 是指定邏輯脈絡中良構且有意義的命題。"
+    },
+    {
+      "id": "a2",
+      "zh-Hant": "真與假的二分敘述限於本條目採用的入門古典語境。"
+    }
+  ],
+  "symbols": [
+    {
+      "token": "P",
+      "role": "proposition_variable",
+      "role_zh": "命題變項",
+      "scope": "concept"
+    }
+  ],
+  "dependencies": [],
+  "explanation": {
+    "paragraphs_zh": [
+      "命題是可以被斷言或否定的陳述。真的命題與假的命題都仍是命題；真假是命題的語義狀態，而不是判定某段文字是否屬於命題的唯一先決條件。",
+      "證明用來支持某命題為真，但『P 是命題』不等於『P 已經有證明』。在 Lean 中可先有 P : Prop，再另外詢問是否存在 P 的證明項。",
+      "像 x>0 這類含未指定自由變數的開放句，需經代入、量化或明確指定脈絡，才成為可在該封閉語境中評估的陳述。"
+    ],
+    "common_misconception_zh": "常見誤解是把疑問句、命令句或未封閉的開放表達式直接當作命題，或把『是命題』誤解成『已證明為真』。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目是概念候選稿；研究來源不是 OCME Evidence，尚未建立計算檢查或 Lean 形式證明。",
+    "evidence_refs": [],
+    "producers": [
+      {
+        "id": "lean-mathlib",
+        "adapter": "formal_system",
+        "config_path": "formal/lean/lakefile.toml",
+        "status": "configured"
+      }
+    ]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": [
+      "Lean 4",
+      "Mathlib"
+    ],
+    "next_obligation_zh": "以 P : Prop 建立命題與證明項的最小 Lean 語義橋，並清楚區分古典真假語義所需的額外原理。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-proposition.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-08-07"
+  }
+}

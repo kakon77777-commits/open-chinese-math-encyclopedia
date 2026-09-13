@@ -1,0 +1,7 @@
+{
+  "schema_version": "ocme-question-index-v0.1",
+  "daily_target": 100,
+  "published_question_count": 0,
+  "last_published_at": null,
+  "batches": []
+}

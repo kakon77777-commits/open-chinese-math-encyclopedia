@@ -41,4 +41,15 @@ assert.equal(failResult.exit_code, 3)
 assert.match(failResult.stderr_sha256, /^[a-f0-9]{64}$/)
 assert.equal(Object.hasOwn(failResult, 'stderr'), false)
 
+const npmResult = await executeCommandGate({
+  gate_id: 'executor_npm_fixture',
+  scope: ['cross-platform npm executable resolution'],
+  executable: 'npm',
+  args: ['--version'],
+  tool_name: 'npm',
+})
+assert.equal(npmResult.status, 'pass')
+assert.equal(npmResult.executable, 'npm')
+assert.match(npmResult.tool.version, /^\d+\./)
+
 console.log('Mechanical gate registry and executor tests passed.')

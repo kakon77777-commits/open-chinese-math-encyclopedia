@@ -12,19 +12,19 @@ v0.10 在 v0.9 Mathematical World Architecture 上加入第一份可供網站與
 Atlas node != Canonical MKO
 ```
 
-Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依賴與排序」；Canonical MKO 才是已完成公式、來源、Evidence 與審查契約的正式數學知識物件。
+Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依賴與排序」；Canonical MKO 則是已存在、通過 Schema 且明確揭露來源、Evidence 與審查狀態的正式數學知識物件。Canonical 不等於已有 Evidence，也不等於已完成人工審查。
 
 目前基線：
 
 ```text
 80 個 Core Atlas nodes
-6 個 canonical MKO mappings
-74 個 atlas_seed / materialization tasks
+9 個 canonical MKO mappings
+71 個 atlas_seed / materialization tasks
 9 個 Evidence Object
 5 個 formal_proof
 20 個頂層數學領域
 20 個核心數學方法
-5 條學習路徑
+6 條學習路徑
 4 套課綱／能力框架
 12 個難度維度
 ```
@@ -50,8 +50,11 @@ Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依
 
 ### `canonical_mko`
 
-代表 Atlas 節點已對應到真正存在的 Canonical MKO。v0.10 共有 6 個：
+代表 Atlas 節點已對應到真正存在且通過結構驗證的 Canonical MKO。目前共有 9 個：
 
+- 自然數；
+- 集合；
+- 命題；
 - 集合隸屬；
 - 函數映射；
 - 趨近關係；
@@ -78,7 +81,7 @@ Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依
 
 ## Materialization Queue
 
-74 個 `atlas_seed` 依優先級分成：
+71 個 `atlas_seed` 依優先級分成：
 
 ```text
 P1  通識、網站骨架與後續節點高度依賴的核心概念
@@ -109,6 +112,7 @@ public/data/mko/                 Canonical MKO
 public/data/evidence/            內容定址 Evidence
 public/data/architecture/        領域、方法、路徑、課綱與 Architecture Profile
 public/data/atlas/               v0.10 Core Mathematical Atlas
+research/                        Atlas 物化前的來源、語義與審查研究包
 schemas/                         交換格式
 formal/lean/                     Lean／Mathlib 來源
 lib/atlas-store.js               Atlas 查詢與 materialization queue
@@ -134,7 +138,7 @@ Validator 會拒絕：
 - `canonical_mko` 指向不存在的 MKO；
 - `atlas_seed` 偽裝為 canonical；
 - 已存在 MKO 卻仍標示為 seed；
-- 六個既有 canonical mapping 被改寫。
+- 九個既有 canonical mapping 被改寫。
 
 ## 十二維難度
 
@@ -180,9 +184,7 @@ Formula drift
 
 ## 網站
 
-目前既有網站仍以 MKO、公式與 Evidence 閱讀為主。
-
-v0.11 將正式以 Core Atlas 建立六個入口：
+v0.11 網站已以 Core Atlas 建立六個入口：
 
 ```text
 現代通識數學
@@ -194,6 +196,35 @@ AI 導航
 ```
 
 Atlas 可以先作為網站目錄與預覽節點；只有 `canonical_mko` 才能進入完整數學頁面。`atlas_seed` 應顯示為「規劃中／待建置」，不得偽裝成已審定內容。
+
+網站另包含每日題庫入口、MKO 分層閱讀、Evidence 邊界與 R1–R7 runtime 說明。Production build 只複製公開網站與 `public/data/`，不會部署 runtime、schemas、research、docs 或 `node_modules`。
+
+```bash
+npm run build:site
+npm run preview:site
+npm run deploy:site
+```
+
+Cloudflare Workers Static Assets 專案名稱為 `ocme`，正式網址為 `https://ocme.evemisslab.com/`。
+
+## 每日題庫
+
+每日人工營運計畫：
+
+```text
+docs/OCME_DAILY_OPERATING_PLAN_v0.1.md
+```
+
+題庫合約位於：
+
+```text
+docs/OCME_QUESTION_FACTORY_CONTRACT_v0.1.md
+schemas/question-v0.1.schema.json
+```
+
+主架構者負責選題、brief 與發布驗收；Question Producer 由使用者手動啟動，每次依 brief 生產最多 100 道候選變種題；高階數學審查者負責低頻全庫嚴證與跨領域整合。現階段不設自動排程，候選題也不會自動成為 Canonical MKO 或 Evidence Object。
+
+目前 80-node Atlas 的主要領域分類覆蓋 20 個 domain registry 中的 8 個；下一階段採覆蓋優先，先補足缺少 Canonical MKO 的領域，再考慮把單批題數提高到 1,000 或以上。
 
 ## MCP 與 AI
 
@@ -240,10 +271,10 @@ AI 候選分類 ≠ 人工審定分類
 v0.10 Core Mathematical Atlas       已建立 80-node baseline
 → 本地 AI 小批次 materialization
 
-v0.11 Website Information Architecture
-→ 六入口網站
-→ Atlas 搜尋、篩選與局部圖
+v0.11 Website Information Architecture  已建立並可部署
+→ 六入口網站、Atlas 搜尋與節點詳頁
 → canonical / planned maturity UI
+→ 每日題庫入口與 Question Factory contract
 
 v1.0 Automated Publishing System
 → 搜尋、研究、生成、驗證、EveGlyph 審查、CI、網站發布與排程閉環

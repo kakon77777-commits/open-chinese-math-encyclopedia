@@ -1,8 +1,20 @@
 import crypto from 'node:crypto'
 import { spawn } from 'node:child_process'
+import path from 'node:path'
 import { ROOT } from '../../lib/store.js'
 
 const versionCache = new Map()
+
+function resolvePlatformInvocation(executable, args, env = process.env) {
+  if (process.platform !== 'win32' || !['npm', 'npx'].includes(executable)) return { executable, args }
+  const cliName = executable === 'npm' ? 'npm-cli.js' : 'npx-cli.js'
+  const environmentCli = executable === 'npm' ? env.npm_execpath : null
+  const cliPath = environmentCli || path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', cliName)
+  return {
+    executable: env.npm_node_execpath || process.execPath,
+    args: [cliPath, ...args],
+  }
+}
 
 function sha256Text(value) {
   return crypto.createHash('sha256').update(value, 'utf8').digest('hex')
@@ -10,7 +22,13 @@ function sha256Text(value) {
 
 function capture(executable, args, { cwd = ROOT, env = process.env, timeoutMs = 120000 } = {}) {
   return new Promise(resolve => {
-    const child = spawn(executable, args, { cwd, env, shell: false, windowsHide: true })
+    let child
+    try {
+      child = spawn(executable, args, { cwd, env, shell: false, windowsHide: true })
+    } catch (error) {
+      resolve({ exitCode: 127, stdout: '', stderr: `${error.message}\n`, timedOut: false })
+      return
+    }
     let stdout = ''
     let stderr = ''
     let timedOut = false
@@ -36,15 +54,15 @@ function capture(executable, args, { cwd = ROOT, env = process.env, timeoutMs = 
   })
 }
 
-async function detectToolVersion(toolName, executable, options) {
-  const cacheKey = `${toolName}\u0000${executable}`
+async function detectToolVersion(toolName, invocation, options) {
+  const cacheKey = `${toolName}\u0000${invocation.executable}\u0000${invocation.args.join('\u0000')}`
   if (versionCache.has(cacheKey)) return versionCache.get(cacheKey)
 
   let version
   if (toolName === 'node') {
     version = process.version
   } else {
-    const probe = await capture(executable, ['--version'], { ...options, timeoutMs: Math.min(options?.timeoutMs ?? 120000, 10000) })
+    const probe = await capture(invocation.executable, invocation.args, { ...options, timeoutMs: Math.min(options?.timeoutMs ?? 120000, 10000) })
     version = (probe.stdout || probe.stderr).trim().split(/\r?\n/)[0] || `exit-${probe.exitCode}`
   }
   versionCache.set(cacheKey, version)
@@ -59,10 +77,13 @@ export async function executeCommandGate(gate, options = {}) {
   if (!Array.isArray(gate.args)) throw new TypeError('gate.args must be an array')
   if (typeof gate.tool_name !== 'string' || gate.tool_name.length === 0) throw new TypeError('gate.tool_name is required')
 
+  const environment = options.env || process.env
+  const invocation = resolvePlatformInvocation(gate.executable, gate.args, environment)
+  const versionInvocation = resolvePlatformInvocation(gate.executable, ['--version'], environment)
   const started = process.hrtime.bigint()
-  const result = await capture(gate.executable, gate.args, options)
+  const result = await capture(invocation.executable, invocation.args, options)
   const durationMs = Number((process.hrtime.bigint() - started) / 1000000n)
-  const toolVersion = await detectToolVersion(gate.tool_name, gate.executable, options)
+  const toolVersion = await detectToolVersion(gate.tool_name, versionInvocation, options)
 
   return {
     gate_id: gate.gate_id,

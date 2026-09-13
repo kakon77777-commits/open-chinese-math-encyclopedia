@@ -91,6 +91,23 @@
         {"from":"mko-euclid-pythagorean-theorem","to":"mko-tends-to-relation","relation":"alternative_entry"}
       ],
       "review":{"status":"reviewed","reviewer":"Neo.K / Aletheia","version":1}
+    },
+    {
+      "schema_version":"ocme-learning-path-v0.1",
+      "id":"path-foundational-language-candidate",
+      "title_zh":"數學基礎語言候選路徑",
+      "audience":["general_learner","upper_secondary"],
+      "goal_zh":"從計數的具體語言前進到集合與命題，建立閱讀後續數學物件所需的三個基礎概念。",
+      "nodes":[
+        {"object_id":"mko-natural-number","position":1,"requirement":"required","rationale_zh":"先用熟悉的計數對象建立數學概念與符號的區分。"},
+        {"object_id":"mko-set","position":2,"requirement":"required","rationale_zh":"再以集合整理對象、元素與整體之間的語言。"},
+        {"object_id":"mko-proposition","position":3,"requirement":"required","rationale_zh":"最後引入可被斷言、判定與證明的數學陳述。"}
+      ],
+      "edges":[
+        {"from":"mko-natural-number","to":"mko-set","relation":"recommended_before"},
+        {"from":"mko-set","to":"mko-proposition","relation":"recommended_before"}
+      ],
+      "review":{"status":"candidate","reviewer":"Codex local AI","version":1}
     }
   ]
 }
