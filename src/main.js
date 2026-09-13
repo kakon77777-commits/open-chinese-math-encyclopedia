@@ -19,6 +19,7 @@ const state = {
   questions: null,
   objectCache: new Map(),
   evidenceCache: new Map(),
+  questionBatchCache: new Map(),
   renderToken: 0,
 }
 
@@ -42,6 +43,7 @@ const statusLabels = {
   P3: '進階擴展',
   reviewed: '已審查',
   candidate: '候選',
+  candidate_validated: '機械驗證候選',
   passed: '通過',
   active: '運作中',
   configured: '已設定',
@@ -83,6 +85,12 @@ async function loadJson(url, optional = false) {
     throw new Error(`無法讀取 ${url}（HTTP ${response.status}）`)
   }
   return response.json()
+}
+
+async function loadText(url) {
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`無法讀取 ${url}（HTTP ${response.status}）`)
+  return response.text()
 }
 
 async function loadObject(id) {
@@ -234,7 +242,7 @@ function renderHome() {
     </section>
 
     <section class="content-section featured-section">
-      <div class="split-heading"><div><p class="kicker">已物化內容</p><h2>先從九個知識物件開始</h2></div><a class="text-link" href="#knowledge">查看全部 →</a></div>
+      <div class="split-heading"><div><p class="kicker">已物化內容</p><h2>先從 ${state.index.objects.length} 個知識物件開始</h2></div><a class="text-link" href="#knowledge">查看全部 →</a></div>
       <div class="featured-strip">
         ${featured.map((entry, index) => `<a class="feature-card" href="#object/${entry.id}">
           <span class="feature-index">0${index + 1}</span><span class="status-dot"></span>
@@ -424,7 +432,7 @@ function renderMethods() {
   const categoryLabels = { proof: '證明方法', problem_solving: '問題解決', structural: '結構方法', analysis_computation: '分析與計算', formal: '形式驗證' }
   $('#view').innerHTML = `<section class="page-shell">
     ${sectionIntro('METHODS & DOMAINS', '數學由領域組織，也由方法穿透。', '領域回答「這個對象在哪裡」；方法回答「遇到這類問題可以怎麼做」。兩種分類彼此獨立。', `<span class="section-count">${state.methods.length} methods</span>`)}
-    <div class="domain-cloud">${state.domains.map((domain, index) => { const count = state.atlas.entries.filter(entry => entry.primary_domain === domain.id).length; return `<article class="${count === 0 ? 'is-empty' : ''}"><div><span>${String(index + 1).padStart(2, '0')}</span><small>${count} Atlas nodes</small></div><h3>${escapeHtml(domain.title_zh)}</h3><p>${escapeHtml(domain.description_zh)}</p></article>` }).join('')}</div>
+    <div class="domain-cloud">${state.domains.map((domain, index) => { const entries = state.atlas.entries.filter(entry => entry.primary_domain === domain.id); const canonical = entries.filter(entry => entry.maturity === 'canonical_mko').length; return `<article class="${entries.length === 0 ? 'is-empty' : ''}"><div><span>${String(index + 1).padStart(2, '0')}</span><small>${canonical}/${entries.length} canonical</small></div><h3>${escapeHtml(domain.title_zh)}</h3><p>${escapeHtml(domain.description_zh)}</p></article>` }).join('')}</div>
     <div class="method-heading"><p class="kicker">METHOD TOOLKIT</p><h2>二十種核心方法</h2></div>
     <div class="method-grid">${state.methods.map(method => `<article class="method-card"><header><span>${escapeHtml(categoryLabels[method.category] || method.category)}</span><code>${escapeHtml(method.id.replace('method-', ''))}</code></header><h3>${escapeHtml(method.title_zh)}</h3><p>${escapeHtml(method.description_zh)}</p><details><summary>適用訊號與步驟</summary><b>適用訊號</b><ul>${method.signals.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul><b>基本步驟</b><ol>${method.steps.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol><b>常見失敗</b><ul>${method.failure_modes.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></details></article>`).join('')}</div>
   </section>`
@@ -432,13 +440,64 @@ function renderMethods() {
 
 function renderPractice() {
   const batches = state.questions?.batches || []
-  const published = state.questions?.published_question_count || 0
+  const publishedTotal = state.questions?.published_question_count || 0
+  const latestDate = state.questions?.last_published_at
+  const published = batches.filter(batch => batch.date === latestDate).reduce((sum, batch) => sum + batch.question_count, 0)
   const target = state.questions?.daily_target || 100
-  $('#view').innerHTML = `<section class="practice-hero"><div><p class="kicker light">QUESTION FACTORY</p><h1>每日一百題，<br>先覆蓋，再逐步加密。</h1><p>變種題由使用者手動啟動專責模型生產；主架構者選題、定義合約與驗收。100 題是目前的品質與成本基線，不是永久上限。</p></div><div class="factory-meter"><span>今日已發布</span><strong>${published.toLocaleString('zh-TW')}</strong><small>/ ${target} 題</small><progress value="${Math.min(100, published / target * 100)}" max="100" aria-label="今日題目完成比例" aria-valuetext="${published} / ${target} 題"></progress></div></section>
+  $('#view').innerHTML = `<section class="practice-hero"><div><p class="kicker light">QUESTION FACTORY</p><h1>每日一百題，<br>先覆蓋，再逐步加密。</h1><p>變種題由使用者手動啟動專責模型生產；主架構者選題、定義合約與驗收。100 題是目前的品質與成本基線，不是永久上限。</p></div><div class="factory-meter"><span>最近一日已發布</span><strong>${published.toLocaleString('zh-TW')}</strong><small>/ ${target} 題</small><progress value="${Math.min(100, published / target * 100)}" max="100" aria-label="最近一日題目完成比例" aria-valuetext="${published} / ${target} 題"></progress></div></section>
   <section class="page-shell practice-layout">
     <article class="detail-panel"><p class="kicker">PRODUCTION CONTRACT</p><h2>題目如何進入網站</h2><ol class="factory-steps"><li><span>1</span><div><b>主架構者選題</b><p>只從已指定的 MKO 與學習目標建立每日 brief。</p></div></li><li><span>2</span><div><b>出題模型產生變種</b><p>每題保留參數、答案、解釋、來源 MKO 與生成資訊。</p></div></li><li><span>3</span><div><b>機械檢查</b><p>驗證 Schema、ID、重複、答案一致性與可重現參數。</p></div></li><li><span>4</span><div><b>候選批次發布</b><p>尚未審查的題目必須明示 candidate，不冒充 Canonical MKO。</p></div></li></ol></article>
-    <article class="detail-panel"><p class="kicker">BATCHES</p><h2>已發布批次</h2>${batches.length ? `<div class="batch-list">${batches.map(batch => `<div><b>${escapeHtml(batch.id)}</b><span>${batch.question_count} 題</span><small>${escapeHtml(batch.status)}</small></div>`).join('')}</div>` : '<div class="empty-state"><b>第一批尚未發布</b><p>題庫合約已建立；專責出題任務啟動後，通過驗收的批次才會出現在這裡。</p></div>'}</article>
+    <article class="detail-panel"><p class="kicker">BATCHES</p><h2>已發布候選批次</h2><p class="panel-note">累計 ${publishedTotal.toLocaleString('zh-TW')} 題；機械驗證不等於人工審定。</p>${batches.length ? `<div class="batch-list">${batches.map(batch => `<a href="#practice/${batch.id}"><b>${escapeHtml(batch.title_zh || batch.id)}</b><span>${batch.question_count} 題</span><small>${escapeHtml(batch.date)} · ${escapeHtml(batch.status)}</small></a>`).join('')}</div>` : '<div class="empty-state"><b>第一批尚未發布</b><p>題庫合約已建立；專責出題任務啟動後，通過驗收的批次才會出現在這裡。</p></div>'}</article>
   </section>`
+}
+
+function questionCard(question, index) {
+  return `<article class="question-card" data-question-haystack="${escapeHtml(`${question.title_zh} ${question.stem_zh} ${question.variant.family_id} ${question.source_mko_ids.join(' ')}`.toLowerCase())}">
+    <header><span>${String(index + 1).padStart(3, '0')}</span><span class="status-badge candidate">${escapeHtml(question.verification.status)}</span></header>
+    <p class="question-family">${escapeHtml(question.variant.family_id)}</p>
+    <h3>${escapeHtml(question.title_zh)}</h3>
+    <p class="question-stem">${escapeHtml(question.stem_zh)}</p>
+    <div class="question-meta"><span>難度 ${question.difficulty.level}</span><span>${escapeHtml(question.difficulty.band)}</span></div>
+    <div class="tag-row">${question.source_mko_ids.map(id => `<a href="#object/${id}">${escapeHtml(id)}</a>`).join('')}</div>
+    <details><summary>查看答案與解釋</summary><strong>${escapeHtml(question.answer.value)}</strong><p>${escapeHtml(question.answer.explanation_zh)}</p><small>Seed ${question.variant.seed}</small></details>
+  </article>`
+}
+
+async function renderQuestionBatch(batchId, token) {
+  const batch = state.questions.batches.find(item => item.id === batchId)
+  if (!batch) throw new Error(`找不到題目批次：${batchId}`)
+  let questions = state.questionBatchCache.get(batchId)
+  if (!questions) {
+    questions = (await loadText(batch.path)).trimEnd().split(/\r?\n/).map(JSON.parse)
+    state.questionBatchCache.set(batchId, questions)
+  }
+  if (token !== state.renderToken) return
+  const familyCounts = questions.reduce((counts, question) => {
+    counts[question.variant.family_id] = (counts[question.variant.family_id] || 0) + 1
+    return counts
+  }, {})
+  $('#view').innerHTML = `<section class="detail-hero">
+    <a class="back-link" href="#practice">← 返回題庫</a>
+    <p class="kicker">QUESTION BATCH · ${escapeHtml(batch.date)}</p>
+    <div class="detail-title"><div><span class="maturity atlas_seed">${escapeHtml(batch.status)}</span><h1>${escapeHtml(batch.title_zh || batch.id)}</h1></div><code>${escapeHtml(batch.id)}</code></div>
+    <p>${batch.question_count} 道已通過 Schema、去重、來源快照與獨立答案重算的候選題；仍未標記為人工審定。</p>
+  </section>
+  <section class="page-shell question-browser">
+    <div class="question-summary">${Object.entries(familyCounts).map(([family, count]) => `<span><b>${count}</b>${escapeHtml(family)}</span>`).join('')}</div>
+    <label class="search-box question-search"><span aria-hidden="true">⌕</span><input id="question-search" type="search" placeholder="搜尋題幹、題族或來源 MKO" autocomplete="off"></label>
+    <p class="result-line"><span id="question-result-count">${questions.length}</span> 道題目</p>
+    <div id="question-grid" class="question-grid">${questions.map(questionCard).join('')}</div>
+  </section>`
+  $('#question-search').addEventListener('input', event => {
+    const query = event.currentTarget.value.trim().toLowerCase()
+    let visible = 0
+    $$('.question-card').forEach(card => {
+      const match = !query || card.dataset.questionHaystack.includes(query)
+      card.hidden = !match
+      if (match) visible += 1
+    })
+    $('#question-result-count').textContent = visible
+  })
 }
 
 function renderAbout() {
@@ -482,6 +541,7 @@ async function renderRoute() {
     else if (page === 'object' && rest[0]) { renderLoading(); await renderObject(rest[0], token) }
     else if (page === 'paths') renderPaths()
     else if (page === 'methods') renderMethods()
+    else if (page === 'practice' && rest[0]) { renderLoading(); await renderQuestionBatch(rest[0], token) }
     else if (page === 'practice') renderPractice()
     else if (page === 'about') renderAbout()
     else window.location.hash = '#home'

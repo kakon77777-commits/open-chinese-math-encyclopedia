@@ -1,7 +1,32 @@
 {
   "schema_version": "ocme-question-index-v0.1",
   "daily_target": 100,
-  "published_question_count": 0,
-  "last_published_at": null,
-  "batches": []
+  "published_question_count": 200,
+  "last_published_at": "2026-09-13",
+  "batches": [
+    {
+      "id": "batch-20260913-foundational-language",
+      "date": "2026-09-13",
+      "title_zh": "數學基礎語言",
+      "question_count": 100,
+      "status": "candidate_validated",
+      "path": "/data/questions/batches/batch-20260913-foundational-language/questions.jsonl",
+      "manifest_path": "/data/questions/batches/batch-20260913-foundational-language/manifest.json",
+      "validation_report_path": "/data/questions/batches/batch-20260913-foundational-language/validation-report.json",
+      "sha256": "f9197588b4d22a517e5a50d721638afb80a8f8f03cc65234ee357d2ba1823172",
+      "source_mko_ids": ["mko-natural-number", "mko-set-membership", "mko-proposition", "mko-function-mapping"]
+    },
+    {
+      "id": "batch-20260912-geometry-foundations",
+      "date": "2026-09-12",
+      "title_zh": "幾何基礎",
+      "question_count": 100,
+      "status": "candidate_validated",
+      "path": "/data/questions/batches/batch-20260912-geometry-foundations/questions.jsonl",
+      "manifest_path": "/data/questions/batches/batch-20260912-geometry-foundations/manifest.json",
+      "validation_report_path": "/data/questions/batches/batch-20260912-geometry-foundations/validation-report.json",
+      "sha256": "818fc9bd154b15a97199c437c5345260e55307eada85586bf547e52c4ae518dc",
+      "source_mko_ids": ["mko-euclidean-length", "mko-right-triangle", "mko-euclid-pythagorean-theorem"]
+    }
+  ]
 }

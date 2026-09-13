@@ -6,6 +6,11 @@ const cases = [
   ['atlas-natural-number', 'mko-natural-number'],
   ['atlas-set', 'mko-set'],
   ['atlas-proposition', 'mko-proposition'],
+  ['atlas-arithmetic-operations', 'mko-arithmetic-operations'],
+  ['atlas-variable-expression', 'mko-variable-expression'],
+  ['atlas-sample-space', 'mko-sample-space'],
+  ['atlas-mathematical-induction', 'mko-mathematical-induction'],
+  ['atlas-counting-principle', 'mko-counting-principle'],
 ]
 
 for (const [atlasId, mkoId] of cases) {
@@ -16,7 +21,7 @@ for (const [atlasId, mkoId] of cases) {
   assert.equal(packet.includes('status: ai_candidate_complete'), true)
   assert.equal(packet.includes('review_required: true'), true)
   assert.equal(packet.includes('https://'), true)
-  assert.equal(packet.includes('Evidence refs 為空'), true)
+  assert.equal(packet.includes('Evidence refs 為空') || packet.includes('不新增 Evidence Object'), true)
 }
 
-console.log('Research packet tests passed: three source-grounded AI candidates require review and preserve an empty-Evidence boundary.')
+console.log('Research packet tests passed: eight source-grounded AI candidates require review and preserve an empty-Evidence boundary.')

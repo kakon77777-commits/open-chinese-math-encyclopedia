@@ -18,13 +18,13 @@ Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依
 
 ```text
 80 個 Core Atlas nodes
-9 個 canonical MKO mappings
-71 個 atlas_seed / materialization tasks
+14 個 canonical MKO mappings
+66 個 atlas_seed / materialization tasks
 9 個 Evidence Object
 5 個 formal_proof
 20 個頂層數學領域
 20 個核心數學方法
-6 條學習路徑
+7 條學習路徑
 4 套課綱／能力框架
 12 個難度維度
 ```
@@ -50,17 +50,22 @@ Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依
 
 ### `canonical_mko`
 
-代表 Atlas 節點已對應到真正存在且通過結構驗證的 Canonical MKO。目前共有 9 個：
+代表 Atlas 節點已對應到真正存在且通過結構驗證的 Canonical MKO。目前共有 14 個：
 
 - 自然數；
+- 四則運算；
+- 變數與代數式；
 - 集合；
 - 命題；
+- 樣本空間；
 - 集合隸屬；
 - 函數映射；
 - 趨近關係；
 - 歐幾里得長度；
 - 直角三角形；
-- 畢達哥拉斯定理。
+- 畢達哥拉斯定理；
+- 數學歸納法；
+- 基本計數原理。
 
 ### `atlas_seed`
 
@@ -81,7 +86,7 @@ Atlas 負責描述「OCME 應該有哪些核心節點、它們如何分類、依
 
 ## Materialization Queue
 
-71 個 `atlas_seed` 依優先級分成：
+66 個 `atlas_seed` 依優先級分成：
 
 ```text
 P1  通識、網站骨架與後續節點高度依賴的核心概念
@@ -138,7 +143,7 @@ Validator 會拒絕：
 - `canonical_mko` 指向不存在的 MKO；
 - `atlas_seed` 偽裝為 canonical；
 - 已存在 MKO 卻仍標示為 seed；
-- 九個既有 canonical mapping 被改寫。
+- 十四個既有 canonical mapping 被改寫。
 
 ## 十二維難度
 
@@ -225,6 +230,8 @@ schemas/question-v0.1.schema.json
 主架構者負責選題、brief 與發布驗收；Question Producer 由使用者手動啟動，每次依 brief 生產最多 100 道候選變種題；高階數學審查者負責低頻全庫嚴證與跨領域整合。現階段不設自動排程，候選題也不會自動成為 Canonical MKO 或 Evidence Object。
 
 目前 80-node Atlas 的主要領域分類覆蓋 20 個 domain registry 中的 8 個；下一階段採覆蓋優先，先補足缺少 Canonical MKO 的領域，再考慮把單批題數提高到 1,000 或以上。
+
+公開題庫批次使用 `npm run validate:questions` 驗證 Schema、來源 MKO 快照、全域 ID、seed、題幹／語義模板、答案、解釋 witness 與 SHA-256。網站可直接瀏覽每批候選題，但 `candidate_validated` 仍不等於人工審定。
 
 ## MCP 與 AI
 

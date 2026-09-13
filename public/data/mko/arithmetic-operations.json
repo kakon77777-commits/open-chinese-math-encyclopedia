@@ -1,0 +1,58 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-arithmetic-operations",
+  "semantic_family_id": "sf-arithmetic-operations",
+  "type": "concept",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "四則運算", "en": "Arithmetic operations" },
+  "summary": { "zh-Hant": "加、減、乘、除是依指定數系與定義域操作兩個數量的基本運算家族。" },
+  "statement": { "zh-Hant": "四則運算以兩個輸入形成結果；運算是否有定義、結果是否仍在原數系中，必須連同數系與除零等邊界一起指定。" },
+  "formula": {
+    "tex": "a+b",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow></math>",
+    "semantic_ast": { "type": "addition", "operands": [{ "type": "symbol", "name": "a", "glyph": "a" }, { "type": "symbol", "name": "b", "glyph": "b" }] },
+    "compiler": { "id": "ocme-formula-core", "version": "0.4.0", "source_sha256": "300273daf0bb57c239f83585d71ced54ce6b3b5fb81615abbeeb3f9cf5fae92f" }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "a 與 b 屬於已指定的數系。" },
+    { "id": "a2", "zh-Hant": "使用減法與除法時，必須另行檢查結果範圍與除數不為零等條件。" }
+  ],
+  "symbols": [
+    { "token": "a", "role": "left_operand", "role_zh": "左運算元", "scope": "concept" },
+    { "token": "b", "role": "right_operand", "role_zh": "右運算元", "scope": "concept" },
+    { "token": "+", "role": "addition_operation", "role_zh": "加法運算", "scope": "representative_formula" }
+  ],
+  "dependencies": [
+    { "id": "mko-natural-number", "title_zh": "自然數", "reason_zh": "以自然數提供基本數量與後繼算術的第一個運算語境。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "加法合併數量，乘法可描述等量群組的重複合併；減法尋找差，除法尋找等分或比值。每個運算都必須在明確數系中解讀。",
+      "自然數對加法與乘法封閉，但例如 3−5 不再是自然數，3÷2 也不是自然數整除結果。擴張到整數、有理數或實數會改變哪些結果可用。",
+      "本條目的 a+b 是加法代表式，不是四種運算的完整公式列舉；乘法 AST 與各數系的精確代數規則留待後續版本。"
+    ],
+    "common_misconception_zh": "常見誤解是認為四則運算在所有數系都無條件封閉，或把除以零當作普通除法結果。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目是運算家族的概念候選；尚未對四種運算及各數系邊界建立完整計算或形式 Evidence。",
+    "evidence_refs": [],
+    "producers": [{ "id": "lean-mathlib", "adapter": "formal_system", "config_path": "formal/lean/lakefile.toml", "status": "configured" }]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "分別指定自然數與擴張數系中的加減乘除、封閉條件及除零邊界，再建立精確 Lean 聲明。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-arithmetic-operations.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-09-13"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "report_version": "ocme-question-factory-validation-v0.1",
+  "batch_id": "batch-20260913-foundational-language",
+  "checked_at": "2026-09-13",
+  "verifier": {
+    "file": "verify-20260913.mjs",
+    "schema_source": "D:\\Ai\\work together\\OCME\\schemas\\question-v0.1.schema.json",
+    "answer_method": "independent family-specific rule recomputation"
+  },
+  "outcome": "passed",
+  "counts": {
+    "total": 100,
+    "by_family": {
+      "qf-natural-number-membership": 20,
+      "qf-finite-set-membership": 25,
+      "qf-proposition-classification": 25,
+      "qf-finite-function-mapping": 30
+    },
+    "by_source_mko": {
+      "mko-natural-number": 20,
+      "mko-set-membership": 25,
+      "mko-proposition": 25,
+      "mko-function-mapping": 30
+    },
+    "unique_ids": 100,
+    "unique_seeds": 100,
+    "unique_stems": 100,
+    "unique_semantic_templates": 100,
+    "exact_stem_duplicate_rate": 0,
+    "semantic_template_duplicate_rate": 0
+  },
+  "generation": {
+    "attempted": 100,
+    "accepted": 100,
+    "rejected": 0,
+    "rejection_rate": 0
+  },
+  "source_mko_presence": {
+    "mko-natural-number": true,
+    "mko-set-membership": true,
+    "mko-proposition": true,
+    "mko-function-mapping": true
+  },
+  "source_mko_snapshot_hash_match": {
+    "mko-natural-number": true,
+    "mko-set-membership": true,
+    "mko-proposition": true,
+    "mko-function-mapping": true
+  },
+  "batch_sha256": "f9197588b4d22a517e5a50d721638afb80a8f8f03cc65234ee357d2ba1823172",
+  "manifest_hash_match": true,
+  "semantic_boundary_checks": {
+    "natural_number_zero_convention": true,
+    "finite_sets_explicit_only": true,
+    "proposition_not_proof": true,
+    "function_codomain_not_range": true,
+    "function_explanation_witnesses_accurate": true
+  },
+  "limitations_zh": "本報告只驗證有限題目的結構、語義邊界與參數化分類；不構成普遍證明、人工審查、整合或發布核准。",
+  "errors": []
+}

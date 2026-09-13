@@ -37,9 +37,10 @@ try {
   const questions = JSON.parse(await fs.readFile(path.join(output, 'data/questions/index.json'), 'utf8'))
   const manifest = JSON.parse(await fs.readFile(path.join(output, 'build-manifest.json'), 'utf8'))
   assert.equal(atlas.entries.length, 80)
-  assert.equal(index.objects.length, 9)
+  assert.equal(index.objects.length, 14)
   assert.equal(questions.daily_target, 100)
-  assert.equal(questions.published_question_count, 0)
+  assert.equal(questions.published_question_count, 200)
+  assert.equal(questions.batches.length, 2)
   assert.equal(manifest.files.some(file => file.path === 'data/index.json'), true)
   assert.equal(manifest.files.every(file => /^[a-f0-9]{64}$/.test(file.sha256)), true)
 } finally {

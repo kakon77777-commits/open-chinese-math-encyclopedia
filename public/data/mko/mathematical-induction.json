@@ -1,0 +1,59 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-mathematical-induction",
+  "semantic_family_id": "sf-mathematical-induction",
+  "type": "concept",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "數學歸納法", "en": "Mathematical induction" },
+  "summary": { "zh-Hant": "數學歸納法以基礎情況與歸納步驟證明自然數索引的整個命題族。" },
+  "statement": { "zh-Hant": "對從 0 起的命題族 P(n)，若 P(0) 成立，且任意自然數 n 都滿足 P(n) 蘊涵 P(n+1)，則所有自然數 n 都滿足 P(n)。" },
+  "formula": {
+    "tex": "P(n)",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>P</mi><mo>(</mo><mi>n</mi><mo>)</mo></mrow></math>",
+    "semantic_ast": { "type": "function_call", "callee": { "type": "symbol", "name": "P", "glyph": "P" }, "arguments": [{ "type": "symbol", "name": "n", "glyph": "n" }] },
+    "compiler": { "id": "ocme-formula-core", "version": "0.4.0", "source_sha256": "23873bf1e83a235dc436cf72a904024d9de43c846340842fd0f63b746ebe3777" }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "P 是以自然數 n 為索引的良構命題族。" },
+    { "id": "a2", "zh-Hant": "本條目採用 OCME 自然數從 0 開始的慣例。" },
+    { "id": "a3", "zh-Hant": "基礎情況與歸納步驟都必須在各自明示的作用域內被證明。" }
+  ],
+  "symbols": [
+    { "token": "P", "role": "proposition_family", "role_zh": "命題族", "scope": "induction" },
+    { "token": "n", "role": "natural_index", "role_zh": "自然數索引", "scope": "induction" }
+  ],
+  "dependencies": [
+    { "id": "mko-natural-number", "title_zh": "自然數", "reason_zh": "歸納順序由 0 與後繼所構成的自然數結構提供。" },
+    { "id": "mko-proposition", "title_zh": "命題", "reason_zh": "歸納法的對象是隨自然數索引變化的命題族。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "基礎情況建立第一個索引的命題；歸納步驟證明只要某一索引成立，下一個索引也成立。兩者合起來沿後繼鏈覆蓋全部自然數。",
+      "歸納假設 P(n) 只能在證明 P(n+1) 的步驟中使用，並不是無條件假設整個待證結論。歸納變數與其他參數的作用域也必須分清。",
+      "若命題從 1、某個 k 或其他結構開始，必須調整基礎情況與歸納原理；本條目的 P(n) 只是命題族代表式，不是完整邏輯公式。"
+    ],
+    "common_misconception_zh": "常見誤解是只驗證幾個前例就宣稱完成歸納，或在歸納步驟外無條件使用歸納假設。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目描述歸納原理，但尚未提交一個綁定此中文敘述範圍的 Lean formal proof Evidence。",
+    "evidence_refs": [],
+    "producers": [{ "id": "lean-mathlib", "adapter": "formal_system", "config_path": "formal/lean/lakefile.toml", "status": "configured" }]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "以 Nat.rec 或 induction tactic 建立明示 base 與 step 的最小證明，並保存其精確聲明與內容位址。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-mathematical-induction.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-09-13"
+  }
+}

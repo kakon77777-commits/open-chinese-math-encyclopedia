@@ -12,13 +12,13 @@ import {
 const bundle = await loadArchitectureBundle()
 const valid = await validateArchitectureBundle(bundle)
 assert.equal(valid.ok, true, valid.errors.join('\n'))
-assert.equal(valid.summary.object_count, 9)
-assert.equal(valid.summary.profile_count, 9)
+assert.equal(valid.summary.object_count, 14)
+assert.equal(valid.summary.profile_count, 14)
 assert.equal(valid.summary.domain_count, 20)
 assert.equal(valid.summary.method_count, 20)
-assert.equal(valid.summary.learning_path_count, 6)
+assert.equal(valid.summary.learning_path_count, 7)
 assert.equal(valid.summary.curriculum_framework_count, 4)
-assert.equal(valid.summary.curriculum_alignment_count, 13)
+assert.equal(valid.summary.curriculum_alignment_count, 18)
 assert.equal(valid.summary.difficulty_dimension_count, 12)
 
 const theorem = await loadArchitectureProfile('mko-euclid-pythagorean-theorem')
@@ -36,8 +36,15 @@ for (const objectId of ['mko-natural-number', 'mko-set', 'mko-proposition']) {
   assert.deepEqual(candidate.learning.path_ids, ['path-foundational-language-candidate'])
 }
 
+for (const objectId of ['mko-arithmetic-operations', 'mko-variable-expression', 'mko-sample-space', 'mko-mathematical-induction', 'mko-counting-principle']) {
+  const candidate = await loadArchitectureProfile(objectId)
+  assert.equal(candidate.review.status, 'candidate')
+  assert.equal(candidate.classification.assertions.every(item => item.source.method === 'ai_candidate' && item.source.reviewed === false), true)
+  assert.deepEqual(candidate.learning.path_ids, ['path-domain-coverage-wave-one'])
+}
+
 const summary = await getArchitectureSummary()
-assert.equal(summary.profile_count, 9)
+assert.equal(summary.profile_count, 14)
 assert.equal(summary.difficulty_dimensions.length, 12)
 
 const unknownDomain = structuredClone(bundle)
@@ -69,4 +76,4 @@ const malformedResult = await validateArchitectureBundle(malformedDifficulty)
 assert.equal(malformedResult.ok, false)
 assert.equal(malformedResult.errors.some(error => error.includes('formalization_burden') || error.includes('difficulty dimensions')), true)
 
-console.log('Architecture tests passed: 9 profiles, 20 domains, 20 methods, 6 paths, 12 dimensions and negative gates.')
+console.log('Architecture tests passed: 14 profiles, 20 domains, 20 methods, 7 paths, 12 dimensions and negative gates.')

@@ -140,6 +140,86 @@
       "method_ids":["method-direct-proof"],
       "curriculum_alignment_ids":["curriculum-ocme-university-core:foundations.proposition"],
       "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.7,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 Atlas 與 research packet 建立的本地 AI 候選設定，尚待邏輯語境的人工審查。"}
+    },
+    {
+      "object_id":"mko-arithmetic-operations",
+      "classification_assertions":[
+        ["domain","arithmetic_number_systems","primary",1.0,"四則運算是基本數量結構與數系擴張的共同介面。"],
+        ["object_kind","concept","primary",0.9,"此物件說明運算家族、定義域與封閉邊界。"],
+        ["representation","symbolic_formula","primary",0.8,"以 a+b 作為基本二元運算的代表式。"],
+        ["method","method-direct-proof","contextual",0.4,"後續運算性質可由定義與代數規則直接推導。"]
+      ],
+      "difficulty":{"audience":"general_learner","task":"conceptual_understanding","levels":[1,1,1,1,1,1,2,1,1,1,5,2]},
+      "path_ids":["path-domain-coverage-wave-one"],
+      "order_roles":["logical_order","pedagogical_order","curriculum_order"],
+      "method_ids":["method-direct-proof"],
+      "curriculum_alignment_ids":["curriculum-ocme-general:numbers.arithmetic-operations"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.72,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-13 research packet 建立的運算家族候選，待人工審查數系邊界。"}
+    },
+    {
+      "object_id":"mko-variable-expression",
+      "classification_assertions":[
+        ["domain","algebra","primary",1.0,"變數與表達式是方程、多項式與函數表示的代數前置。"],
+        ["domain","formalized_mathematics","supporting",0.4,"形式系統要求表達式具有明確語法、型別與作用域。"],
+        ["object_kind","concept","primary",1.0,"此物件區分變數、代數式、方程與求值。"],
+        ["representation","symbolic_formula","primary",1.0,"代數式主要以符號與運算組合呈現。"],
+        ["method","method-direct-proof","contextual",0.4,"等價改寫需要依指定規則逐步證成。"]
+      ],
+      "difficulty":{"audience":"general_learner","task":"conceptual_understanding","levels":[2,1,2,2,2,2,3,2,2,2,4,3]},
+      "path_ids":["path-domain-coverage-wave-one"],
+      "order_roles":["logical_order","pedagogical_order","formalization_order","curriculum_order"],
+      "method_ids":["method-direct-proof"],
+      "curriculum_alignment_ids":["curriculum-ocme-university-core:algebra.variable-expression"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.7,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-13 research packet 建立的代數候選，待人工審查表達式範圍。"}
+    },
+    {
+      "object_id":"mko-sample-space",
+      "classification_assertions":[
+        ["domain","probability_statistics","primary",1.0,"樣本空間是事件與機率模型的基本論域。"],
+        ["domain","foundations_logic","supporting",0.5,"樣本空間以集合與隸屬語言描述可能結果。"],
+        ["object_kind","concept","primary",1.0,"此物件界定隨機試驗的全部可能基本結果。"],
+        ["representation","set_theoretic","primary",1.0,"以結果集合與隸屬關係表示樣本空間。"],
+        ["method","method-probabilistic","primary",0.9,"建立機率問題前先指定試驗與結果空間。"]
+      ],
+      "difficulty":{"audience":"upper_secondary","task":"conceptual_understanding","levels":[3,2,3,3,3,2,2,2,3,3,4,4]},
+      "path_ids":["path-domain-coverage-wave-one"],
+      "order_roles":["logical_order","pedagogical_order","curriculum_order"],
+      "method_ids":["method-probabilistic"],
+      "curriculum_alignment_ids":["curriculum-ocme-university-core:probability.sample-space"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.73,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-13 research packet 建立的機率基礎候選，待人工審查試驗尺度。"}
+    },
+    {
+      "object_id":"mko-mathematical-induction",
+      "classification_assertions":[
+        ["domain","history_philosophy_methodology","primary",0.9,"數學歸納法是自然數族命題的核心證明方法。"],
+        ["domain","combinatorics_discrete","supporting",0.7,"離散結構與遞迴命題經常使用歸納法。"],
+        ["domain","formalized_mathematics","supporting",0.6,"Lean 的歸納型別提供可檢查的結構歸納原理。"],
+        ["object_kind","concept","primary",0.9,"此物件說明 base、step 與歸納假設作用域。"],
+        ["representation","symbolic_formula","supporting",0.8,"以 P(n) 表示自然數索引的命題族。"],
+        ["method","method-induction","primary",1.0,"此物件本身就是數學歸納方法的入口。"]
+      ],
+      "difficulty":{"audience":"upper_secondary","task":"proof_reading","levels":[4,3,4,4,4,4,2,4,4,4,3,5]},
+      "path_ids":["path-domain-coverage-wave-one"],
+      "order_roles":["logical_order","pedagogical_order","formalization_order","curriculum_order"],
+      "method_ids":["method-induction"],
+      "curriculum_alignment_ids":["curriculum-ocme-university-core:methods.mathematical-induction"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.72,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-13 research packet 建立的證明方法候選，待人工與形式化審查。"}
+    },
+    {
+      "object_id":"mko-counting-principle",
+      "classification_assertions":[
+        ["domain","combinatorics_discrete","primary",1.0,"基本計數原理是有限組合與枚舉的入口。"],
+        ["domain","arithmetic_number_systems","supporting",0.5,"局部選擇數以自然數加法與乘法組合。"],
+        ["object_kind","concept","primary",0.9,"此物件說明加法與乘法計數原理的條件。"],
+        ["representation","set_theoretic","supporting",0.8,"有限選擇族可用集合與基數表示。"],
+        ["method","method-construction","primary",0.9,"計數時先構造互斥分支或選擇序列。"]
+      ],
+      "difficulty":{"audience":"upper_secondary","task":"conceptual_understanding","levels":[3,2,3,3,3,3,3,3,3,3,4,4]},
+      "path_ids":["path-domain-coverage-wave-one"],
+      "order_roles":["logical_order","pedagogical_order","formalization_order","curriculum_order"],
+      "method_ids":["method-construction"],
+      "curriculum_alignment_ids":["curriculum-ocme-general:discrete.counting-principle"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.72,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-13 research packet 建立的組合計數候選，待人工審查不重疊與階段條件。"}
     }
   ]
 }

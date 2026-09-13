@@ -1,0 +1,49 @@
+{
+  "schema_version": "ocme-question-factory-batch-manifest-v0.1",
+  "batch_id": "batch-20260912-geometry-foundations",
+  "date": "2026-09-12",
+  "base_seed": 20260912,
+  "status": "candidate",
+  "generator": {
+    "role": "question_producer",
+    "model": "GPT-5.6 Terra",
+    "contract_version": "ocme-question-factory-v0.1"
+  },
+  "source_mko_ids": [
+    "mko-euclidean-length",
+    "mko-right-triangle",
+    "mko-euclid-pythagorean-theorem"
+  ],
+  "source_mko_snapshots": {
+    "mko-euclidean-length": {
+      "path": "public/data/mko/euclidean-length.json",
+      "sha256": "485948172a6b39e7ec2cf3170ab03489fed98190d0c868161fbbd037f7151e91"
+    },
+    "mko-right-triangle": {
+      "path": "public/data/mko/right-triangle.json",
+      "sha256": "189cad28fbc4231852d6848d7f5209ff5d91a3b2dabd6380708fc678de0a758e"
+    },
+    "mko-euclid-pythagorean-theorem": {
+      "path": "public/data/mko/pythagorean-theorem.json",
+      "sha256": "f91873f82805e9a6d9ee8358fa64afa78e7594fc6568999814e34c1205ad51c6"
+    }
+  },
+  "counts": {
+    "total": 100,
+    "mko-euclidean-length": 30,
+    "mko-right-triangle": 30,
+    "mko-euclid-pythagorean-theorem": 40,
+    "families": {
+      "qf-distance-coordinate": 30,
+      "qf-right-triangle-determination": 30,
+      "qf-pythagorean-missing-side": 25,
+      "qf-pythagorean-counterexample": 15
+    }
+  },
+  "artifacts": {
+    "questions_jsonl": "questions.jsonl",
+    "questions_sha256": "818fc9bd154b15a97199c437c5345260e55307eada85586bf547e52c4ae518dc",
+    "verifier": "../../verify-batch.mjs"
+  },
+  "limitations_zh": "全部題目均為 candidate，未宣稱人工審查；有限題例的答案重算不構成相關定義或定理的普遍證明。"
+}

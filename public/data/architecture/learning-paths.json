@@ -108,6 +108,33 @@
         {"from":"mko-set","to":"mko-proposition","relation":"recommended_before"}
       ],
       "review":{"status":"candidate","reviewer":"Codex local AI","version":1}
+    },
+    {
+      "schema_version":"ocme-learning-path-v0.1",
+      "id":"path-domain-coverage-wave-one",
+      "title_zh":"第一波領域覆蓋基礎",
+      "audience":["general_learner","upper_secondary"],
+      "goal_zh":"由自然數、集合與命題分支進入算術、代數、機率、歸納與基本組合計數。",
+      "nodes":[
+        {"object_id":"mko-natural-number","position":1,"requirement":"required","rationale_zh":"提供算術、歸納與有限計數的自然數基礎。"},
+        {"object_id":"mko-set","position":1,"requirement":"required","rationale_zh":"提供樣本空間作為結果集合的基礎。"},
+        {"object_id":"mko-proposition","position":1,"requirement":"required","rationale_zh":"提供歸納法所處理命題族的邏輯基礎。"},
+        {"object_id":"mko-arithmetic-operations","position":2,"requirement":"required","rationale_zh":"解鎖代數表達與基本計數中的數量組合。"},
+        {"object_id":"mko-sample-space","position":2,"requirement":"optional","rationale_zh":"從集合語言進入機率統計的結果論域。"},
+        {"object_id":"mko-mathematical-induction","position":2,"requirement":"optional","rationale_zh":"從自然數與命題進入結構化證明方法。"},
+        {"object_id":"mko-variable-expression","position":3,"requirement":"optional","rationale_zh":"從算術運算進入含變數的代數表達。"},
+        {"object_id":"mko-counting-principle","position":3,"requirement":"optional","rationale_zh":"以自然數與算術運算組合有限選擇數量。"}
+      ],
+      "edges":[
+        {"from":"mko-natural-number","to":"mko-arithmetic-operations","relation":"required_before"},
+        {"from":"mko-arithmetic-operations","to":"mko-variable-expression","relation":"required_before"},
+        {"from":"mko-set","to":"mko-sample-space","relation":"required_before"},
+        {"from":"mko-natural-number","to":"mko-mathematical-induction","relation":"required_before"},
+        {"from":"mko-proposition","to":"mko-mathematical-induction","relation":"required_before"},
+        {"from":"mko-natural-number","to":"mko-counting-principle","relation":"required_before"},
+        {"from":"mko-arithmetic-operations","to":"mko-counting-principle","relation":"required_before"}
+      ],
+      "review":{"status":"candidate","reviewer":"Codex local AI","version":1}
     }
   ]
 }
