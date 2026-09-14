@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ocme.evemisslab.com/schemas/core-atlas-v0.2-candidate.json",
+  "title": "OCME Core Mathematical Atlas v0.2 Candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "atlas_version",
+    "status",
+    "title_zh",
+    "design_note_zh",
+    "hard_prerequisite_semantics",
+    "groups",
+    "entries",
+    "migration"
+  ],
+  "properties": {
+    "schema_version": { "const": "ocme-core-atlas-v0.2-candidate" },
+    "atlas_version": { "const": "0.11.0-candidate.1" },
+    "status": { "const": "schema_candidate" },
+    "title_zh": { "type": "string", "minLength": 3 },
+    "design_note_zh": { "type": "string", "minLength": 20 },
+    "hard_prerequisite_semantics": { "const": "materialization_blocking" },
+    "groups": {
+      "type": "array",
+      "minItems": 8,
+      "items": { "$ref": "#/$defs/group" }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 80,
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "migration": { "$ref": "#/$defs/migration" }
+  },
+  "$defs": {
+    "group": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title_zh", "expected_count"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "title_zh": { "type": "string", "minLength": 2 },
+        "expected_count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "difficulty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "prerequisite_depth",
+        "prerequisite_breadth",
+        "abstraction_level",
+        "conceptual_discontinuity",
+        "notation_density",
+        "proof_burden",
+        "computational_burden",
+        "search_construction_burden",
+        "representation_switching",
+        "exception_boundary_density",
+        "intuition_accessibility",
+        "formalization_burden"
+      ],
+      "properties": {
+        "prerequisite_depth": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "prerequisite_breadth": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "abstraction_level": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "conceptual_discontinuity": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "notation_density": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "proof_burden": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "computational_burden": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "search_construction_burden": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "representation_switching": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "exception_boundary_density": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "intuition_accessibility": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "formalization_burden": { "type": "integer", "minimum": 0, "maximum": 5 }
+      }
+    },
+    "relation_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "reviewed"],
+      "properties": {
+        "method": {
+          "enum": ["expert_assessment", "source_import", "ai_candidate", "formal_dependency_analysis"]
+        },
+        "reviewed": { "type": "boolean" },
+        "reviewer": { "type": "string", "minLength": 2 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "supporting_relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_atlas_id", "relation", "rationale_zh", "source"],
+      "properties": {
+        "target_atlas_id": { "type": "string", "pattern": "^atlas-[a-z0-9-]+$" },
+        "relation": {
+          "enum": [
+            "semantic_support",
+            "specialization_of",
+            "generalization_of",
+            "representation_bridge",
+            "application_context",
+            "contrast_with",
+            "historical_context"
+          ]
+        },
+        "rationale_zh": { "type": "string", "minLength": 8 },
+        "source": { "$ref": "#/$defs/relation_source" }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title_zh",
+        "group",
+        "primary_domain",
+        "object_kind",
+        "summary_zh",
+        "prerequisites",
+        "relationships",
+        "methods",
+        "curriculum_band",
+        "difficulty",
+        "maturity",
+        "target_mko_id",
+        "materialization_priority"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^atlas-[a-z0-9-]+$" },
+        "title_zh": { "type": "string", "minLength": 1 },
+        "group": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "primary_domain": { "type": "string", "minLength": 2 },
+        "object_kind": { "type": "string", "minLength": 2 },
+        "summary_zh": { "type": "string", "minLength": 8 },
+        "prerequisites": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^atlas-[a-z0-9-]+$" }
+        },
+        "relationships": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/supporting_relation" }
+        },
+        "methods": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^method-[a-z0-9-]+$" }
+        },
+        "curriculum_band": {
+          "enum": [
+            "general_literacy",
+            "primary_foundation",
+            "lower_secondary",
+            "upper_secondary",
+            "undergraduate_core",
+            "undergraduate_advanced",
+            "graduate_core",
+            "research_specialized"
+          ]
+        },
+        "difficulty": { "$ref": "#/$defs/difficulty" },
+        "maturity": { "enum": ["atlas_seed", "canonical_mko"] },
+        "canonical_mko_id": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" },
+        "target_mko_id": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" },
+        "materialization_priority": { "enum": ["canonical", "P1", "P2", "P3"] }
+      },
+      "oneOf": [
+        {
+          "required": ["canonical_mko_id"],
+          "properties": {
+            "maturity": { "const": "canonical_mko" },
+            "canonical_mko_id": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" },
+            "materialization_priority": { "const": "canonical" }
+          }
+        },
+        {
+          "properties": {
+            "maturity": { "const": "atlas_seed" },
+            "materialization_priority": { "enum": ["P1", "P2", "P3"] }
+          }
+        }
+      ]
+    },
+    "alignment_exception": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["atlas_id", "hard_target_mko_ids", "actual_mko_dependency_ids", "reason_zh"],
+      "properties": {
+        "atlas_id": { "type": "string", "pattern": "^atlas-[a-z0-9-]+$" },
+        "hard_target_mko_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" }
+        },
+        "actual_mko_dependency_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^mko-[a-z0-9-]+$" }
+        },
+        "reason_zh": { "type": "string", "minLength": 8 }
+      }
+    },
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline_schema_version",
+        "baseline_atlas_version",
+        "baseline_commit",
+        "canonical_dependency_alignment"
+      ],
+      "properties": {
+        "baseline_schema_version": { "const": "ocme-core-atlas-v0.1" },
+        "baseline_atlas_version": { "const": "0.10.0" },
+        "baseline_commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "canonical_dependency_alignment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "exceptions"],
+          "properties": {
+            "status": { "enum": ["complete", "legacy_unresolved"] },
+            "exceptions": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/alignment_exception" }
+            }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "status": { "const": "complete" } } },
+              "then": { "properties": { "exceptions": { "type": "array", "maxItems": 0 } } },
+              "else": { "properties": { "exceptions": { "type": "array", "minItems": 1 } } }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

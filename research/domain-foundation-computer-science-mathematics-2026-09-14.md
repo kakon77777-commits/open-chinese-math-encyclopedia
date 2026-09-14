@@ -1,7 +1,7 @@
 ---
 packet_version: ocme-domain-foundation-packet-v0.1
 domain_id: computer_science_mathematics
-status: ai_candidate_for_gpt6_review
+status: reviewed_candidate_waiting_schema
 prepared_at: 2026-09-14
 review_required: true
 atlas_change_authorized: false
@@ -26,24 +26,24 @@ MIT 6.1200J 的正式課程綱要把集合、關係、圖、狀態機與不變�
 | 順序 | Candidate ID | 顯示名稱 | prerequisites | methods | 關鍵邊界 |
 | ---: | --- | --- | --- | --- | --- |
 | 1 | `atlas-decision-problem` | 決定問題 | `atlas-set`, `atlas-proposition`, `atlas-function-mapping` | `method-construction`, `method-direct-proof` | 將 yes-instances 視為輸入集合或布林謂詞；問題規格不等於已有算法 |
-| 2 | `atlas-computational-model` | 計算模型 | `atlas-relation`, `atlas-function-mapping`, `atlas-sequence` | `method-construction` | 必須命名模型與轉移語義；不能用「電腦可算」作未定義直覺 |
-| 3 | `atlas-algorithm-correctness` | 算法正確性與不變量 | `atlas-decision-problem`, `atlas-computational-model`, `atlas-mathematical-induction`, `atlas-proof` | `method-invariant`, `method-induction`, `method-formal-verification` | partial／total correctness、終止性與規格必須分開 |
-| 4 | `atlas-asymptotic-resource-bound` | 漸近資源界 | `atlas-natural-number`, `atlas-order-relation`, `atlas-function-mapping`, `atlas-quantifier` | `method-direct-proof`, `method-counterexample-search` | 必須指定輸入大小、成本模型、上／下／緊界；有限 benchmark 不是漸近證明 |
+| 2 | `atlas-computational-model` | 抽象計算模型 | `atlas-set`, `atlas-relation`, `atlas-natural-number` | `method-construction` | 最小 tuple 為 `(S,Init,Step,Halt)`；finite prefix 不表示所有 execution 終止 |
+| 3 | `atlas-algorithm-correctness` | 算法正確性 | `atlas-computational-model`, `atlas-proposition`, `atlas-proof` | `method-invariant`, `method-induction`, `method-formal-verification` | partial correctness、termination、total correctness、nondeterminism 與 stuck 分開 |
+| 4 | `atlas-asymptotic-resource-bound` | 漸近資源界 | `atlas-natural-number`, `atlas-arithmetic-operations`, `atlas-order-relation`, `atlas-function-mapping` | `method-direct-proof`, `method-counterexample-search` | 必須指定輸入大小、成本模型、上／下／緊界；有限 benchmark 不是漸近證明 |
 
-建議新群組為 `computer_science_mathematics`，`expected_count=4`。Representative 可以先從 decision problem 開始，因其最小語義可完全建立在已 Canonical 的集合、命題與函數映射；其餘三個節點仍有 seed 前置。
+候選群組為 `computer_science_mathematics`，目前 4 個 reviewed candidates、13 條 hard edges。Decision problem 可以先作 representative candidate；其餘節點仍有 relation、proof 或 order 等 seed 前置，不能以規劃中的 completed task 冒充已驗收 Canonical。
 
 ## Representative MKO candidate
 
 - ID：`mko-decision-problem`
-- 最小 statement：在已指定輸入型別 `X` 上，決定問題以子集合 `Y⊆X` 或等價的布林／命題謂詞描述哪些輸入是 yes-instance；這個規格不保證存在終止算法。
+- 最小 statement：在已指定輸入型別 `X` 上，決定問題以 `P:X→Prop` 或 yes-instance set 描述哪些輸入回答「是」；這個規格不保證存在 uniform decider 或終止算法。
 - 必須明示：布林值與命題在形式系統中可能需要一個可判定性橋；不能未經證明把任意 `Prop` 當成可執行 `Bool`。
 - 反例邊界：一組樣例輸入輸出不是完整問題規格；一段可在部分輸入運行的程式不自動證明可判定性或 total correctness。
 - Evidence：首輪無 Evidence；後續需要規格的有限示例 validator 與獨立的普遍性／可判定性正式義務，不能混成一個 green gate。
 - 依賴狀態：`mko-set`、`mko-proposition`、`mko-function-mapping` 目前皆為 Canonical，但 `subset` 尚未；可用集合／謂詞版本避開立即依賴 `mko-subset`。
 
-## 需 GPT-6 裁決
+## 高階審查結論與保留義務
 
-1. `decision problem` 作第一個 representative 是否過度偏向理論計算機科學，還是比「algorithm」更適合作為可精確定義的最小根節點？
-2. `computational model` 是否需要先拆出 `formal language／finite word`；若首波加入，總節點應增加而不是把字串偷偷塞進模型定義。
-3. `algorithm correctness` 是 primary CS mathematics，或應 primary `foundations_logic`、secondary CS？
-4. 漸近界節點是否需要新的 `method-asymptotic-analysis`；首波沿用 direct proof 可避免 method registry 過早膨脹，但表達力較弱。
+1. Decision problem 仍是第一個 representative；可執行 `Bool` 必須另有 `b x=true ↔ P x` 與 effective-presentation 橋。
+2. 最小計算模型不含 output function，也不要求 `S` 有限；run 只是任意 finite execution prefix。Reachability、termination 與 computability 另作 statement。
+3. Generic algorithm correctness 不 hard-depend decision problem 或 induction；後兩者分別是案例與方法。
+4. `T,g:ℕ→ℕ` 的 Big-O statement 必須明示 size/cost aggregation；nondeterministic nontermination 不能偷塞進自然數值 `T`。

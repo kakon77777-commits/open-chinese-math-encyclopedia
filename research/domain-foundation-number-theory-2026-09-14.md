@@ -1,7 +1,7 @@
 ---
 packet_version: ocme-domain-foundation-packet-v0.1
 domain_id: number_theory
-status: ai_candidate_for_gpt6_review
+status: reviewed_candidate_waiting_schema
 prepared_at: 2026-09-14
 review_required: true
 atlas_change_authorized: false
@@ -25,12 +25,12 @@ MSC2020 的 11-XX 是數論；其中初等數論明列乘法結構、歐幾里�
 
 | 順序 | Candidate ID | 顯示名稱 | prerequisites | methods | 關鍵邊界 |
 | ---: | --- | --- | --- | --- | --- |
-| 1 | `atlas-natural-divisibility` | 自然數整除 | `atlas-natural-number`, `atlas-arithmetic-operations`, `atlas-quantifier` | `method-direct-proof`, `method-construction` | `a ∣ b` 必須有自然數 witness `k` 使 `b=a*k`；特別處理 0 |
-| 2 | `atlas-gcd-coprime` | 最大公因數與互質 | `atlas-natural-divisibility`, `atlas-order-relation` | `method-invariant`, `method-construction` | gcd 的 0 邊界與互質定義必須固定；算法和規格分開 |
-| 3 | `atlas-prime-number` | 質數 | `atlas-natural-divisibility`, `atlas-quantifier`, `atlas-counterexample` | `method-direct-proof`, `method-contradiction` | 自然數質數要求至少為 2；1 不是質數 |
-| 4 | `atlas-modular-congruence` | 模合同 | `atlas-natural-divisibility`, `atlas-arithmetic-operations`, `atlas-relation` | `method-direct-proof` | 模數必須限制為正；等價關係性質需另證 |
+| 1 | `atlas-natural-divisibility` | 自然數整除 | `atlas-natural-number`, `atlas-arithmetic-operations` | `method-direct-proof`, `method-construction` | `a ∣ b` 必須有自然數 witness `k` 使 `b=a*k`；特別處理 0 |
+| 2 | `atlas-gcd-coprime` | 自然數最大公因數與互質 | `atlas-natural-divisibility` | `method-invariant`, `method-construction` | gcd 採整除偏序的 universal property；`gcd(0,0)=0` |
+| 3 | `atlas-prime-number` | 自然數質數 | `atlas-natural-divisibility` | `method-direct-proof`, `method-contradiction` | 首波以 `p≠0`、`p≠1` 與除數刻畫；不延伸到一般環 |
+| 4 | `atlas-modular-congruence` | 自然數模同餘 | `atlas-natural-number`, `atlas-arithmetic-operations` | `method-direct-proof` | `m≠0`；首波採對稱自然數 witness，等價關係與 `Nat.ModEq` 橋另證 |
 
-建議新群組為 `number_theory`，`expected_count=4`。四條新節點鏈只指向既有節點；尚未發現 graph cycle。`atlas-quantifier`、`atlas-order-relation`、`atlas-counterexample`、`atlas-relation` 仍是 seed，只有第一個代表性 MKO 在縮小依賴後可先進入 materialization 候選。
+候選群組為 `number_theory`，目前 4 個 reviewed candidates、6 條 hard edges。量詞、順序、反例與 relation 是 supporting／curriculum／method 關係，不得重新塞回 scheduler。這是新 Schema ledger，不表示目前 v0.10 已增加節點。
 
 ## Representative MKO candidate
 
@@ -39,11 +39,11 @@ MSC2020 的 11-XX 是數論；其中初等數論明列乘法結構、歐幾里�
 - 必須明示：`0∣b` 只在 `b=0` 時成立；每個自然數都整除 0；這些結論需要由 witness 定義重算，不靠語感。
 - 反例邊界：不能把整數論域的單位 `±1`、負因數或環論整除直接混入自然數版本。
 - Evidence：先維持 `evidence_refs=[]`、`not_formalized`；下一義務是建立定義對齊、0 邊界與傳遞性的 Lean Evidence，且把有限數值測試和普遍證明分開。
-- 依賴狀態：為了 immediate candidate，可將 MKO 最小依賴限定為 `mko-natural-number`、`mko-arithmetic-operations`；量詞是 statement 語法前置，但在 Canonical materialization 是否為硬依賴需 GPT-6 裁決。
+- 依賴狀態：hard dependencies 限定為 `mko-natural-number`、`mko-arithmetic-operations`；量詞是 supporting 語言／課程關係。只有新 Schema 與 packet migration 通過後才能重新評估 ready。
 
-## 需 GPT-6 裁決
+## 高階審查結論與保留義務
 
-1. 整除節點首波應限定 `ℕ`，還是等待 `mko-integer` 後直接建立 `ℤ` 版本？
-2. 量詞、順序與反例節點未 materialize 時，是 blocking prerequisite、semantic reference，還是 curriculum-only edge？
-3. `gcd` 與 `coprime` 是否應拆成兩節點；首波合併可減少 breadth，但會把函數與關係概念放在同一 MKO。
-4. 模合同首波是否只對自然數正模數，日後另以整數商環／`ZMod n` 升級；不得把兩個層次寫成同一無條件定義。
+1. 首波固定 `ℕ` 且包含 0；整數與環論版本另建語義層。
+2. `gcd` 與 `coprime` 可保留同一教學頁，但 function／relation statements 必須分欄；算法另證。
+3. 模同餘最小定義為 `∃u,v∈ℕ, a+m*u=b+m*v`，不 hard-depend divisibility。自反、對稱、傳遞與 `Nat.ModEq` 等價橋仍需 formal proof。
+4. 禁止使用自然數截斷減法 `m∣(a-b)` 當定義；例如 `m=2,a=0,b=1` 會產生錯誤結果。
