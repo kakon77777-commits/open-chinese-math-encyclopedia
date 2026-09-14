@@ -1,0 +1,80 @@
+{
+  "schema_version": "ocme-question-factory-batch-manifest-v0.1",
+  "batch_id": "batch-20260914-domain-foundations",
+  "date": "2026-09-14",
+  "base_seed": 20260914,
+  "status": "candidate",
+  "generator": {
+    "role": "question_producer",
+    "model": "GPT-5.6 Terra",
+    "contract_version": "ocme-question-factory-v0.1"
+  },
+  "source_mko_ids": [
+    "mko-arithmetic-operations",
+    "mko-variable-expression",
+    "mko-sample-space",
+    "mko-mathematical-induction",
+    "mko-counting-principle"
+  ],
+  "source_mko_snapshots": {
+    "mko-arithmetic-operations": {
+      "path": "public/data/mko/arithmetic-operations.json",
+      "sha256": "452d77028e2659b860c94200c1de159c4184dde86d6d73950e1998a0080e265a"
+    },
+    "mko-variable-expression": {
+      "path": "public/data/mko/variable-expression.json",
+      "sha256": "da4b6e4a4edfd379a38b6535fd3030cc5c552e2b549572c0d4733d68974a292c"
+    },
+    "mko-sample-space": {
+      "path": "public/data/mko/sample-space.json",
+      "sha256": "c58b0d07252ece257a4143fd10f0f25b249023f4ed50bc6d393f4752a91267f7"
+    },
+    "mko-mathematical-induction": {
+      "path": "public/data/mko/mathematical-induction.json",
+      "sha256": "53fe3a341f5fa25780e7aa742a25087665b257b3c91a3e4f718b50f368a8dd67"
+    },
+    "mko-counting-principle": {
+      "path": "public/data/mko/counting-principle.json",
+      "sha256": "0a0619ebbab98b96543b42abc4e66d927aeea705c65ee85b3a9badb6d3b3cf57"
+    }
+  },
+  "source_snapshot_algorithm": "sha256(UTF-8 source text with CRLF/CR normalized to LF)",
+  "counts": {
+    "total": 100,
+    "by_family": {
+      "qf-arithmetic-domain-boundary": 20,
+      "qf-variable-expression-evaluation": 20,
+      "qf-finite-sample-space-completeness": 20,
+      "qf-induction-proof-obligation": 20,
+      "qf-basic-counting-principle": 20
+    },
+    "by_source_mko": {
+      "mko-arithmetic-operations": 20,
+      "mko-variable-expression": 20,
+      "mko-sample-space": 20,
+      "mko-mathematical-induction": 20,
+      "mko-counting-principle": 20
+    }
+  },
+  "generation": {
+    "attempted": 100,
+    "accepted": 100,
+    "rejected": 0,
+    "rejection_rate": 0
+  },
+  "artifacts": {
+    "brief": "../../briefs/2026-09-14.json",
+    "questions_jsonl": "questions.jsonl",
+    "questions_sha256": "726b3f94ccd05d8c91cc7e306b42fd71b6d9040e194db91739a250d488fd1de7",
+    "byte_length": 154850,
+    "verifier": "../../verify-20260914.mjs"
+  },
+  "semantic_boundaries": [
+    "四則運算題必須明示數系；自然數減法或除法結果若離開自然數，應判為在該數系中不封閉，而不是宣稱運算在所有數系無定義；除數為零不得產生一般數值答案。",
+    "代數式求值題必須明示變數值與數系，只能使用來源 MKO 已支持的加法代表式或完全明示的基本運算；不得把沒有等號的表達式稱為方程式。",
+    "樣本空間題只使用明示有限試驗與觀察尺度，檢查列舉是否完整；不得從樣本空間本身推論等可能、獨立或任何機率值。",
+    "歸納法題只辨識 base case、induction hypothesis、induction step 與結論的角色或缺漏；不得把檢查有限多個例子當作完成普遍證明，也不得假裝今天的有限題目驗證提供 Lean Evidence。",
+    "基本計數題必須明示加法分支互斥，或明示每一連續階段的選項數；若分支重疊或後續選項數依前一步改變，必須拒絕無條件套用簡單加法或乘法。"
+  ],
+  "limitations_zh": "全部題目均為 candidate；有限分類、答案重算與 witness 檢查不構成普遍證明、形式 Evidence、人工審查或發布。"
+}

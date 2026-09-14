@@ -3,6 +3,7 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Ajv2020 from 'ajv/dist/2020.js'
+import { sourceForNewQuestionFamily, validateNewQuestionFamily } from '../lib/question-family-boundaries.js'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const PUBLIC = path.join(ROOT, 'public')
@@ -14,6 +15,16 @@ const validateQuestion = new Ajv2020({ allErrors: true }).compile(schema)
 const knownMkoIds = new Set(objectIndex.objects.map(item => item.id))
 const errors = []
 const globalIds = new Set()
+const establishedFamilySources = Object.freeze({
+  'qf-distance-coordinate': 'mko-euclidean-length',
+  'qf-right-triangle-determination': 'mko-right-triangle',
+  'qf-pythagorean-missing-side': 'mko-euclid-pythagorean-theorem',
+  'qf-pythagorean-counterexample': 'mko-euclid-pythagorean-theorem',
+  'qf-natural-number-membership': 'mko-natural-number',
+  'qf-finite-set-membership': 'mko-set-membership',
+  'qf-proposition-classification': 'mko-proposition',
+  'qf-finite-function-mapping': 'mko-function-mapping',
+})
 
 function fail(scope, message) {
   errors.push(`${scope}: ${message}`)
@@ -100,6 +111,11 @@ function expectedAnswer(question, scope) {
     }
     return asYesNo(finiteFunctionIsValid(parameters))
   }
+  const newFamilyResult = validateNewQuestionFamily(question)
+  if (newFamilyResult) {
+    for (const message of newFamilyResult.errors) fail(scope, message)
+    return newFamilyResult.expected
+  }
   fail(scope, `unsupported question family ${family}`)
   return undefined
 }
@@ -143,6 +159,9 @@ for (const batch of questionIndex.batches || []) {
       const template = question.variant.parameters.semantic_template
       if (template && templates.has(template)) fail(questionScope, 'duplicate semantic template')
       if (template) templates.add(template)
+      const expectedSource = establishedFamilySources[question.variant.family_id] ?? sourceForNewQuestionFamily(question.variant.family_id)
+      if (!expectedSource) fail(questionScope, `question family has no source binding: ${question.variant.family_id}`)
+      else if (question.source_mko_ids.length !== 1 || question.source_mko_ids[0] !== expectedSource) fail(questionScope, `source attribution mismatch: expected only ${expectedSource}`)
       for (const id of question.source_mko_ids) if (!knownMkoIds.has(id)) fail(questionScope, `unknown source MKO ${id}`)
       if (question.stem_zh.includes('畢達哥拉斯逆定理') || question.answer.explanation_zh.includes('畢達哥拉斯逆定理')) fail(questionScope, 'uncited converse theorem')
       if (question.answer.explanation_zh.includes('+-') || /\(-\d+(?:\.\d+)?²/u.test(question.answer.explanation_zh)) fail(questionScope, 'ambiguous negative-square notation')
@@ -157,6 +176,7 @@ for (const batch of questionIndex.batches || []) {
       if (!knownMkoIds.has(id)) fail(scope, `unknown snapshot source MKO ${id}`)
       const sourcePath = path.resolve(ROOT, snapshot.path)
       if (!sourcePath.startsWith(path.join(PUBLIC, 'data', 'mko') + path.sep)) fail(scope, `snapshot path escapes MKO data: ${snapshot.path}`)
+      else if (typeof snapshot.sha256 !== 'string') fail(scope, `source MKO snapshot is missing LF-normalized text SHA-256: ${id}`)
       else if (sha256CanonicalText(await fs.readFile(sourcePath)) !== snapshot.sha256) fail(scope, `source MKO snapshot drift: ${id}`)
     }
     publishedCount += questions.length
