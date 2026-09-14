@@ -18,7 +18,13 @@ assert.match(html.headers.get('Content-Security-Policy'), /default-src 'self'/)
 assert.equal(html.headers.get('X-Content-Type-Options'), 'nosniff')
 
 const data = await worker.fetch(new Request('https://ocme.evemisslab.com/data/index.json'), environment('{}', 'application/json'))
-assert.equal(data.headers.get('Cache-Control'), 'public, max-age=300, stale-while-revalidate=86400')
+assert.equal(data.headers.get('Cache-Control'), 'public, max-age=0, must-revalidate')
+
+const questionIndex = await worker.fetch(new Request('https://ocme.evemisslab.com/data/questions/index.json'), environment('{}', 'application/json'))
+assert.equal(questionIndex.headers.get('Cache-Control'), 'public, max-age=0, must-revalidate')
+
+const buildManifest = await worker.fetch(new Request('https://ocme.evemisslab.com/build-manifest.json'), environment('{}', 'application/json'))
+assert.equal(buildManifest.headers.get('Cache-Control'), 'public, max-age=0, must-revalidate')
 
 const asset = await worker.fetch(new Request('https://ocme.evemisslab.com/src/main.js'), environment('export {}', 'text/javascript'))
 assert.equal(asset.headers.get('Cache-Control'), 'public, max-age=3600')

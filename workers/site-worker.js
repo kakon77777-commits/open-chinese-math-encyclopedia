@@ -10,6 +10,9 @@ function cacheControl(pathname, contentType) {
   if (pathname === '/' || pathname.endsWith('.html') || contentType.includes('text/html')) {
     return 'public, max-age=0, must-revalidate'
   }
+  if (pathname === '/build-manifest.json' || (pathname.startsWith('/data/') && pathname.endsWith('/index.json'))) {
+    return 'public, max-age=0, must-revalidate'
+  }
   if (pathname.startsWith('/data/')) return 'public, max-age=300, stale-while-revalidate=86400'
   return 'public, max-age=3600'
 }
