@@ -1,0 +1,139 @@
+{
+  "schema_version": "ocme-phase-b-domain-review-v1.0",
+  "review_id": "phase-b-pure-formal-atlas-review-20260914",
+  "reviewed_snapshot": "25879a9f012b34be0b8d067ec009913c4801cc59",
+  "status": "discussion_completed_with_recorded_obligations",
+  "hard_prerequisite_semantics": "materialization_blocking",
+  "reviewer_task": {
+    "thread_id": "01a09e48-d69f-7300-95bb-82400b4764f8",
+    "title": "Atlas（GPT-6）",
+    "requested_model": "gpt-6-astra",
+    "speaker_label": "unresolved",
+    "relay_is_authorship": false
+  },
+  "authority": {
+    "implementation_authorized": false,
+    "canonical_promotion_authorized": false,
+    "deployment_authorized": false
+  },
+  "domain_decisions": {
+    "topology": "concur_with_changes",
+    "number_theory": "concur_with_changes",
+    "computer_science_mathematics": "concur_with_changes",
+    "formalized_mathematics": "concur_with_changes_mixed_domain"
+  },
+  "candidate_node_count": 14,
+  "hard_prerequisite_edge_count": 33,
+  "candidate_nodes": [
+    {
+      "id": "atlas-topological-space",
+      "domain_id": "topology",
+      "target_mko_id": "mko-topological-space",
+      "hard_prerequisites": ["atlas-set", "atlas-set-operations"]
+    },
+    {
+      "id": "atlas-open-closed-set",
+      "domain_id": "topology",
+      "target_mko_id": "mko-open-closed-set",
+      "hard_prerequisites": ["atlas-topological-space", "atlas-subset", "atlas-set-operations"]
+    },
+    {
+      "id": "atlas-neighborhood",
+      "domain_id": "topology",
+      "target_mko_id": "mko-neighborhood",
+      "hard_prerequisites": ["atlas-topological-space", "atlas-open-closed-set", "atlas-set-membership"]
+    },
+    {
+      "id": "atlas-topological-continuity",
+      "domain_id": "topology",
+      "target_mko_id": "mko-topological-continuity",
+      "hard_prerequisites": ["atlas-topological-space", "atlas-open-closed-set", "atlas-function-mapping"]
+    },
+    {
+      "id": "atlas-natural-divisibility",
+      "domain_id": "number_theory",
+      "target_mko_id": "mko-natural-divisibility",
+      "hard_prerequisites": ["atlas-natural-number", "atlas-arithmetic-operations"]
+    },
+    {
+      "id": "atlas-gcd-coprime",
+      "domain_id": "number_theory",
+      "target_mko_id": "mko-gcd-coprime",
+      "hard_prerequisites": ["atlas-natural-divisibility"]
+    },
+    {
+      "id": "atlas-prime-number",
+      "domain_id": "number_theory",
+      "target_mko_id": "mko-prime-number",
+      "hard_prerequisites": ["atlas-natural-divisibility"]
+    },
+    {
+      "id": "atlas-modular-congruence",
+      "domain_id": "number_theory",
+      "target_mko_id": "mko-modular-congruence",
+      "hard_prerequisites": ["atlas-natural-number", "atlas-arithmetic-operations"]
+    },
+    {
+      "id": "atlas-decision-problem",
+      "domain_id": "computer_science_mathematics",
+      "target_mko_id": "mko-decision-problem",
+      "hard_prerequisites": ["atlas-set", "atlas-proposition", "atlas-function-mapping"]
+    },
+    {
+      "id": "atlas-computational-model",
+      "domain_id": "computer_science_mathematics",
+      "target_mko_id": "mko-computational-model",
+      "hard_prerequisites": ["atlas-set", "atlas-relation", "atlas-natural-number"]
+    },
+    {
+      "id": "atlas-algorithm-correctness",
+      "domain_id": "computer_science_mathematics",
+      "target_mko_id": "mko-algorithm-correctness",
+      "hard_prerequisites": ["atlas-computational-model", "atlas-proposition", "atlas-proof"]
+    },
+    {
+      "id": "atlas-asymptotic-resource-bound",
+      "domain_id": "computer_science_mathematics",
+      "target_mko_id": "mko-asymptotic-resource-bound",
+      "hard_prerequisites": ["atlas-natural-number", "atlas-arithmetic-operations", "atlas-order-relation", "atlas-function-mapping"]
+    },
+    {
+      "id": "atlas-formal-statement",
+      "domain_id": "formalized_mathematics",
+      "target_mko_id": "mko-lean-formal-statement",
+      "hard_prerequisites": ["atlas-proposition"]
+    },
+    {
+      "id": "atlas-proof-term",
+      "domain_id": "formalized_mathematics",
+      "target_mko_id": "mko-lean-proof-term",
+      "hard_prerequisites": ["atlas-formal-statement", "atlas-proof"]
+    }
+  ],
+  "withdrawn_atlas_candidates": [
+    {
+      "id": "atlas-kernel-checking",
+      "disposition": "evidence_runtime_backlog",
+      "reason_zh": "目前內容是檢查與重播流程；沒有獨立且足以作 Atlas 節點的數學 statement。"
+    },
+    {
+      "id": "atlas-axiom-assumption-inventory",
+      "disposition": "evidence_runtime_backlog",
+      "reason_zh": "公理盤點是逐 Evidence receipt 義務；盤點成功本身不證公理一致性。"
+    }
+  ],
+  "coverage_contract": {
+    "primary_domain_coverage": "domain-level navigation coverage; denominator must be explicitly declared",
+    "supporting_facet_coverage": "Architecture Profile supporting/contextual assertions; not a materialization gate",
+    "formal_evidence_coverage": "statement-level only; current statement denominator is not measured"
+  },
+  "unresolved_obligations": [
+    "A new Atlas Schema/version must be accepted before the 80-node and 8-group limits can change.",
+    "Legacy Atlas hard prerequisites and Canonical MKO dependencies have six observed mismatches that require item-by-item migration.",
+    "Real-function and topological continuity need an explicit subspace/isolated-point bridge before equivalence claims.",
+    "Natural modular congruence needs a formal bridge between the symmetric witness definition and Nat.ModEq.",
+    "Decision-problem Prop specifications need a separate executable Bool and effective-presentation bridge.",
+    "Finite execution prefixes do not establish termination or total correctness.",
+    "Lean formal Evidence needs per-statement theorem identity, context, import/declaration closure, and axiom receipts."
+  ]
+}

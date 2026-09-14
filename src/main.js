@@ -448,6 +448,14 @@ function renderPractice() {
   <section class="page-shell practice-layout">
     <article class="detail-panel"><p class="kicker">PRODUCTION CONTRACT</p><h2>題目如何進入網站</h2><ol class="factory-steps"><li><span>1</span><div><b>主架構者選題</b><p>只從已指定的 MKO 與學習目標建立每日 brief。</p></div></li><li><span>2</span><div><b>出題模型產生變種</b><p>每題保留參數、答案、解釋、來源 MKO 與生成資訊。</p></div></li><li><span>3</span><div><b>機械檢查</b><p>驗證 Schema、ID、重複、答案一致性與可重現參數。</p></div></li><li><span>4</span><div><b>候選批次發布</b><p>尚未審查的題目必須明示 candidate，不冒充 Canonical MKO。</p></div></li></ol></article>
     <article class="detail-panel"><p class="kicker">BATCHES</p><h2>已發布候選批次</h2><p class="panel-note">累計 ${publishedTotal.toLocaleString('zh-TW')} 題；機械驗證不等於人工審定。</p>${batches.length ? `<div class="batch-list">${batches.map(batch => `<a href="#practice/${batch.id}"><b>${escapeHtml(batch.title_zh || batch.id)}</b><span>${batch.question_count} 題</span><small>${escapeHtml(batch.date)} · ${escapeHtml(batch.status)}</small></a>`).join('')}</div>` : '<div class="empty-state"><b>第一批尚未發布</b><p>題庫合約已建立；專責出題任務啟動後，通過驗收的批次才會出現在這裡。</p></div>'}</article>
+    <article class="detail-panel solution-mode-panel">
+      <header><div><p class="kicker">SOLUTION MODES</p><h2>先快速理解，完整過程稍後登場。</h2></div><span>目前模式 · 快速</span></header>
+      <div class="solution-mode-grid">
+        <div><b>現階段</b><p>每題提供可核對的答案與關鍵解釋，讓我們先用較低成本完成跨領域覆蓋。</p></div>
+        <div><b>詳細推導模式</b><p>未來會逐步加入定義、假設、使用定理、中間步驟、替代解法與驗證邊界。</p></div>
+      </div>
+      <p class="solution-mode-note">請等待我們未來的詳細推導模式。現階段我們只提供快速解答及解釋。想先展開完整過程？請使用擴充模式，問你喜歡的任何一個 AI <span aria-label="歪臉笑">😏</span></p>
+    </article>
   </section>`
 }
 

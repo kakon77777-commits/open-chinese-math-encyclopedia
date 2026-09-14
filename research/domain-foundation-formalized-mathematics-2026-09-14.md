@@ -1,7 +1,7 @@
 ---
 packet_version: ocme-domain-foundation-packet-v0.1
 domain_id: formalized_mathematics
-status: ai_candidate_challenge_for_gpt6_review
+status: reviewed_mixed_domain_candidate_waiting_schema
 prepared_at: 2026-09-14
 review_required: true
 atlas_change_authorized: false
@@ -22,32 +22,30 @@ MSC2020 在電腦科學主類中特別列出 68V「支援數學研究與實務�
 主架構者對「形式化數學是純 primary domain」提出 `CHALLENGE`：
 
 - 一個形式化的畢達哥拉斯定理，其數學 primary domain 仍應是 `geometry`；形式化狀態由 `method-formal-verification`、Evidence Object、producer 與 formalization metadata 表達。
-- 只有當研究對象本身是形式陳述、proof term、kernel checking、axiom inventory 或可信重播時，才使用 `primary_domain=formalized_mathematics`。
+- 只有當研究對象本身是形式陳述或 proof term 時，才使用 `primary_domain=formalized_mathematics`；kernel checking、axiom inventory 與 replay receipt 目前分流到 Evidence/runtime。
 - 因此可保留 registry domain 作導航與元數學／形式化基礎，但不得把所有 Lean-backed MKO 複製或重新歸類到此領域。
 
 ## 候選 Atlas 節點
 
 | 順序 | Candidate ID | 顯示名稱 | prerequisites | methods | 關鍵邊界 |
 | ---: | --- | --- | --- | --- | --- |
-| 1 | `atlas-formal-statement` | 形式陳述 | `atlas-proposition`, `atlas-logical-connectives`, `atlas-quantifier` | `method-construction`, `method-formal-verification` | 自然語言主張、型別正確的形式陳述、可證定理是三個不同狀態 |
-| 2 | `atlas-proof-term` | 證明項 | `atlas-formal-statement`, `atlas-proof` | `method-construction`, `method-formal-verification` | tactic log 不是權威證據；核心可檢查的 proof term 才是證明產物 |
-| 3 | `atlas-kernel-checking` | 核心檢查與可信基底 | `atlas-proof-term` | `method-formal-verification` | 編譯、外部求解器、kernel check 與獨立 replay 必須分層 |
-| 4 | `atlas-axiom-assumption-inventory` | 公理與假設盤點 | `atlas-formal-statement`, `atlas-proof-term` | `method-formal-verification`, `method-counterexample-search` | `sorryAx`／額外公理／unsafe 或 compiler trust 不能隱藏在「PASS」後面 |
+| 1 | `atlas-formal-statement` | 證明助理中的形式陳述（Lean 首實例） | `atlas-proposition` | `method-construction`, `method-formal-verification` | source syntax 在 pinned environment／context 中 elaborates to `P:Prop`；不等於已有 proof term |
+| 2 | `atlas-proof-term` | 證明項（Lean 首實例） | `atlas-formal-statement`, `atlas-proof` | `method-construction`, `method-formal-verification` | `Γ⊢t:P` 綁定指定演算與 statement；tactic log 不是 proof term receipt |
 
-建議新群組為 `formalized_mathematics`，`expected_count=4`，但群組是否進入 Core Atlas 必須先通過 GPT-6 的分類裁決。這四個節點是 formalization 的研究對象；現有九個 Evidence Object 與五個 Lean formal proof Evidence 不因此被複製成新 MKO。
+候選群組為 `formalized_mathematics`，目前只保留 2 個 reviewed candidates、3 條 hard edges；沒有 4-node 配額。`atlas-kernel-checking` 與 `atlas-axiom-assumption-inventory` 已撤回並移到 Evidence/runtime backlog。現有 Evidence 不因此被複製成新 MKO。
 
 ## Representative MKO candidate
 
-- ID：`mko-formal-statement`
-- 最小 statement：形式陳述是在明示形式語言、型別／語法環境與假設上下文中可被解析與型別檢查的命題；well-formed 或 type-correct 不等於已證明。
+- ID：`mko-lean-formal-statement`
+- 最小 statement：在 pinned Lean environment `E` 與合法 context `Γ` 下，source syntax `s` elaboration 成功得到 `P` 且 `Γ⊢P:Prop`；parse 成功、type-correct 與已證明是三個不同狀態。
 - 必須明示：source statement、elaborated expression、assumption context 與工具鏈版本；人類語義對齊仍是獨立義務。
 - 反例邊界：一段能 parse 的文字可能型別錯誤；一個 type-correct proposition 可能未證；一個 theorem 若含 `sorryAx` 或未盤點公理，不能宣稱完整可信。
 - Evidence：首輪不新建 Evidence；後續至少需要 statement identity、Lean source hash、toolchain、axiom inventory、kernel result 與 replay result 的分欄紀錄。
-- 依賴狀態：`mko-proposition` 已 Canonical；`mko-logical-connectives` 與 `mko-quantifier` 尚未，因此代表性 MKO 目前不是 dependency-safe materialization。
+- 依賴狀態：hard 只依 `mko-proposition`；connectives／quantifier 是 supporting 語言與課程關係。即使依賴已 Canonical，新 Schema 與非重複語義審查未完成前仍不 materialize。
 
-## 需 GPT-6 裁決
+## 高階審查結論與保留義務
 
-1. `formalized_mathematics` 應保留 primary domain、改為 supporting／method facet，或採混合規則？
-2. `formal statement` 是否屬 `foundations_logic` primary、`formalized_mathematics` secondary；目前 Schema 若只允許一個 primary，需先決定分類而非偷偷複製。
-3. proof term 與 kernel checking 是否應是 Atlas 數學節點，還是 Evidence／runtime architecture profile；若後者，應拒絕本封包對應節點而改建非 Atlas artifact。
-4. 哪些 trust assumptions 必須納入 acceptance gate：公理、`sorryAx`、Lean／Mathlib version、kernel、compiler trust、外部 prover、平台可重播性？
+1. 採混合 domain 規則：形式化物件本身可 primary；一般數學內容只用 supporting facet、method 與 Evidence。
+2. 新 MKO 必須研究 `E/Γ/s/P` 表示關係，不能只重複既有 `mko-proposition` 的 `P:Prop`。
+3. Evidence pipeline 後續需保存逐 theorem identity、context、import/declaration closure 與 `#print axioms` 類 receipt；目前為 `NOT_MEASURED`。
+4. `sorryAx` 與未核准 custom axioms 拒絕；compiler-trust 路徑預設分流。Kernel PASS 不替代自然語言 semantic alignment 或公理一致性。
