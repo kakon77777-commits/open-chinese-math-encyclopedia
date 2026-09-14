@@ -1,0 +1,72 @@
+{
+  "report_version": "ocme-question-factory-validation-v0.1",
+  "batch_id": "batch-20260914-domain-foundations",
+  "checked_at": "2026-09-14",
+  "verifier": {
+    "file": "verify-20260914.mjs",
+    "schema_source": "D:\\Ai\\work together\\OCME\\schemas\\question-v0.1.schema.json",
+    "answer_method": "independent family-specific rules and explanation witnesses"
+  },
+  "outcome": "passed",
+  "counts": {
+    "total": 100,
+    "by_family": {
+      "qf-arithmetic-domain-boundary": 20,
+      "qf-variable-expression-evaluation": 20,
+      "qf-finite-sample-space-completeness": 20,
+      "qf-induction-proof-obligation": 20,
+      "qf-basic-counting-principle": 20
+    },
+    "by_source_mko": {
+      "mko-arithmetic-operations": 20,
+      "mko-variable-expression": 20,
+      "mko-sample-space": 20,
+      "mko-mathematical-induction": 20,
+      "mko-counting-principle": 20
+    },
+    "unique_ids": 100,
+    "unique_seeds": 100,
+    "unique_stems": 100,
+    "unique_semantic_templates": 100,
+    "exact_stem_duplicate_rate": 0,
+    "semantic_template_duplicate_rate": 0
+  },
+  "generation": {
+    "attempted": 100,
+    "accepted": 100,
+    "rejected": 0,
+    "rejection_rate": 0
+  },
+  "source_attribution_checks": {
+    "family_to_brief_mko": true,
+    "actual_source_counts_match_brief": true,
+    "existing_wrong_mko_negative_witness_rejected": true
+  },
+  "source_snapshot_checks": {
+    "algorithm": "sha256(UTF-8 source text with CRLF/CR normalized to LF)",
+    "windows_line_ending_normalization_witness_stable": true
+  },
+  "semantic_template_checks": {
+    "family_mode_specific_projection": true
+  },
+  "source_mko_presence": {
+    "mko-arithmetic-operations": true,
+    "mko-variable-expression": true,
+    "mko-sample-space": true,
+    "mko-mathematical-induction": true,
+    "mko-counting-principle": true
+  },
+  "source_mko_lf_normalized_text_sha256_match": {
+    "mko-arithmetic-operations": true,
+    "mko-variable-expression": true,
+    "mko-sample-space": true,
+    "mko-mathematical-induction": true,
+    "mko-counting-principle": true
+  },
+  "batch_sha256": "726b3f94ccd05d8c91cc7e306b42fd71b6d9040e194db91739a250d488fd1de7",
+  "byte_length": 154850,
+  "manifest_hash_match": true,
+  "explanation_witnesses_accurate": true,
+  "limitations_zh": "本報告只驗證有限題目的結構、來源快照、參數化答案與 witness；不構成普遍證明、形式 Evidence、人工審查、整合、發布或部署核准。",
+  "errors": []
+}

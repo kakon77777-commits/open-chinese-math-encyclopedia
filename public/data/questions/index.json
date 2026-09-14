@@ -1,9 +1,21 @@
 {
   "schema_version": "ocme-question-index-v0.1",
   "daily_target": 100,
-  "published_question_count": 200,
-  "last_published_at": "2026-09-13",
+  "published_question_count": 300,
+  "last_published_at": "2026-09-14",
   "batches": [
+    {
+      "id": "batch-20260914-domain-foundations",
+      "date": "2026-09-14",
+      "title_zh": "領域基礎與證明邊界",
+      "question_count": 100,
+      "status": "candidate_validated",
+      "path": "/data/questions/batches/batch-20260914-domain-foundations/questions.jsonl",
+      "manifest_path": "/data/questions/batches/batch-20260914-domain-foundations/manifest.json",
+      "validation_report_path": "/data/questions/batches/batch-20260914-domain-foundations/validation-report.json",
+      "sha256": "726b3f94ccd05d8c91cc7e306b42fd71b6d9040e194db91739a250d488fd1de7",
+      "source_mko_ids": ["mko-arithmetic-operations", "mko-variable-expression", "mko-sample-space", "mko-mathematical-induction", "mko-counting-principle"]
+    },
     {
       "id": "batch-20260913-foundational-language",
       "date": "2026-09-13",
