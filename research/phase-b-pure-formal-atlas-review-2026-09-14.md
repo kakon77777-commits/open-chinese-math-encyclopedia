@@ -51,5 +51,5 @@ deployment_authorized: false
 
 - Behavioral：`PASS` — review ledger 可被機械解析，14 node／33 hard edge 數量可重算。
 - Structural：`PARTIAL` — 新 Schema 候選能表達擴張與 hard/supporting 分層，但六個 legacy Canonical dependency mismatch 尚未逐項遷移。
-- Discriminative：`PASS`（候選契約範圍）— validator 能拒絕 hard cycle、hierarchy cycle、未知 supporting target、target collision、group drift 與隱藏的 alignment mismatch。
+- Discriminative：`PASS`（候選契約範圍）— validator 能拒絕 hard cycle、hierarchy cycle、未知 supporting target、target collision、group drift、空／遺漏 MKO catalogue 與隱藏的 alignment mismatch。
 - Mathematical／formal Evidence closure：`NOT_CLAIMED`。

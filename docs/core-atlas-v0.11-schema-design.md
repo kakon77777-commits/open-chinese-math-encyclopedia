@@ -68,6 +68,8 @@ Candidate migration 會從 v0.10 產生一份記憶體內的 v0.2 candidate，�
 
 `legacy_unresolved` 狀態必須以 exceptions 精確覆蓋實際 mismatch；少列、多列或內容不符都會驗證失敗。只有 mismatch 為 0 且 exceptions 為空時才能標 `complete`。這個 audit 不表示六項應採同一修法，也不撤銷現有 Canonical；每項仍需獨立語義審查。
 
+Canonical dependency alignment 只有在完整 MKO catalogue 已被提供且每個 Canonical target 都可觀察時才是 `measured`。空 catalogue、漏傳 catalogue 或缺任一 Canonical MKO 都會得到 `not_measured_missing_catalogue` 並使 validation 失敗；「沒有觀察到 mismatch」不得在缺資料時被解讀為 complete。
+
 ## Coverage contract
 
 下一版 coverage report 必須明示 unit、numerator、denominator 與 measurement status：

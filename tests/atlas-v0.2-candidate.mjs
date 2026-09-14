@@ -19,6 +19,7 @@ const migrated = await validateCoreAtlasV02Candidate(candidate, options)
 assert.equal(migrated.ok, true, migrated.errors.join('\n'))
 assert.equal(migrated.summary.entry_count, 80)
 assert.equal(migrated.summary.group_count, 8)
+assert.equal(migrated.summary.canonical_dependency_alignment_measurement, 'measured')
 assert.equal(migrated.summary.canonical_dependency_mismatch_count, 6)
 assert.equal(candidate.migration.canonical_dependency_alignment.status, 'legacy_unresolved')
 assert.equal(candidate.migration.canonical_dependency_alignment.exceptions.length, 6)
@@ -113,6 +114,19 @@ falseComplete.migration.canonical_dependency_alignment.status = 'complete'
 falseComplete.migration.canonical_dependency_alignment.exceptions = []
 assert.match((await validateCoreAtlasV02Candidate(falseComplete, options)).errors.join('\n'), /marked complete with 6 mismatch/)
 
+const emptyCatalogue = await validateCoreAtlasV02Candidate(falseComplete, { ...options, objects: [] })
+assert.equal(emptyCatalogue.ok, false)
+assert.equal(emptyCatalogue.summary.canonical_dependency_alignment_measurement, 'not_measured_missing_catalogue')
+assert.match(emptyCatalogue.errors.join('\n'), /cannot be complete without the full Canonical MKO catalogue/)
+
+const omittedCatalogue = await validateCoreAtlasV02Candidate(falseComplete, {
+  domains: registries.domains,
+  methods: registries.methods,
+})
+assert.equal(omittedCatalogue.ok, false)
+assert.equal(omittedCatalogue.summary.canonical_dependency_alignment_measurement, 'not_measured_missing_catalogue')
+assert.match(omittedCatalogue.errors.join('\n'), /requires a complete MKO catalogue/)
+
 const targetCollision = structuredClone(expanded)
 targetCollision.entries.at(-1).target_mko_id = 'mko-set'
 assert.match((await validateCoreAtlasV02Candidate(targetCollision, options)).errors.join('\n'), /seed target already exists/)
@@ -121,4 +135,4 @@ const groupCountDrift = structuredClone(expanded)
 groupCountDrift.groups.at(-1).expected_count = 2
 assert.match((await validateCoreAtlasV02Candidate(groupCountDrift, options)).errors.join('\n'), /expected 2 entries but found 1/)
 
-console.log('Atlas v0.2 candidate tests passed: expandable groups, hard/supporting separation, cycles, target collisions, group counts, and six explicit legacy dependency mismatches are discriminated.')
+console.log('Atlas v0.2 candidate tests passed: expandable groups, hard/supporting separation, cycles, target collisions, group counts, catalogue absence, and six explicit legacy dependency mismatches are discriminated.')

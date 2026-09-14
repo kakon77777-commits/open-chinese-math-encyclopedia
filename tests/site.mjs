@@ -30,10 +30,14 @@ try {
   }
 
   const html = await fs.readFile(path.join(output, 'index.html'), 'utf8')
+  const clientScript = await fs.readFile(path.join(output, 'src/main.js'), 'utf8')
   assert.match(html, /OCME · 開源中文數學百科/)
   assert.match(html, /https:\/\/ocme\.evemisslab\.com\//)
   assert.match(html, /\/src\/main\.js\?v=[a-f0-9]{12}/)
   assert.match(html, /\/src\/styles\.css\?v=[a-f0-9]{12}/)
+  assert.match(clientScript, /現階段我們只提供快速解答及解釋/)
+  assert.match(clientScript, /請使用擴充模式，問你喜歡的任何一個 AI/)
+  assert.match(clientScript, /詳細推導模式/)
 
   const atlas = JSON.parse(await fs.readFile(path.join(output, 'data/atlas/core-atlas.json'), 'utf8'))
   const index = JSON.parse(await fs.readFile(path.join(output, 'data/index.json'), 'utf8'))

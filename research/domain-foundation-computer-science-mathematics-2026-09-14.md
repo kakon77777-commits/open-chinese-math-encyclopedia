@@ -25,7 +25,7 @@ MIT 6.1200J 的正式課程綱要把集合、關係、圖、狀態機與不變�
 
 | 順序 | Candidate ID | 顯示名稱 | prerequisites | methods | 關鍵邊界 |
 | ---: | --- | --- | --- | --- | --- |
-| 1 | `atlas-decision-problem` | 決定問題 | `atlas-set`, `atlas-proposition`, `atlas-function-mapping` | `method-construction`, `method-direct-proof` | 將 yes-instances 視為輸入集合或布林謂詞；問題規格不等於已有算法 |
+| 1 | `atlas-decision-problem` | 決定問題 | `atlas-set`, `atlas-proposition`, `atlas-function-mapping` | `method-construction`, `method-direct-proof` | 將 yes-instances 表為 `P:X→Prop` 或輸入子集合；問題規格不等於已有算法 |
 | 2 | `atlas-computational-model` | 抽象計算模型 | `atlas-set`, `atlas-relation`, `atlas-natural-number` | `method-construction` | 最小 tuple 為 `(S,Init,Step,Halt)`；finite prefix 不表示所有 execution 終止 |
 | 3 | `atlas-algorithm-correctness` | 算法正確性 | `atlas-computational-model`, `atlas-proposition`, `atlas-proof` | `method-invariant`, `method-induction`, `method-formal-verification` | partial correctness、termination、total correctness、nondeterminism 與 stuck 分開 |
 | 4 | `atlas-asymptotic-resource-bound` | 漸近資源界 | `atlas-natural-number`, `atlas-arithmetic-operations`, `atlas-order-relation`, `atlas-function-mapping` | `method-direct-proof`, `method-counterexample-search` | 必須指定輸入大小、成本模型、上／下／緊界；有限 benchmark 不是漸近證明 |
@@ -38,7 +38,7 @@ MIT 6.1200J 的正式課程綱要把集合、關係、圖、狀態機與不變�
 - 最小 statement：在已指定輸入型別 `X` 上，決定問題以 `P:X→Prop` 或 yes-instance set 描述哪些輸入回答「是」；這個規格不保證存在 uniform decider 或終止算法。
 - 必須明示：布林值與命題在形式系統中可能需要一個可判定性橋；不能未經證明把任意 `Prop` 當成可執行 `Bool`。
 - 反例邊界：一組樣例輸入輸出不是完整問題規格；一段可在部分輸入運行的程式不自動證明可判定性或 total correctness。
-- Evidence：首輪無 Evidence；後續需要規格的有限示例 validator 與獨立的普遍性／可判定性正式義務，不能混成一個 green gate。
+- Evidence：首輪無 Evidence；有限示例 validator 只檢查樣例。只有特定條目另行宣稱可判定、可執行或存在 uniform decider 時，才產生對應的 effective-presentation／decider 正式義務；不能把任意 `P:X→Prop` 都當成必須可判定。
 - 依賴狀態：`mko-set`、`mko-proposition`、`mko-function-mapping` 目前皆為 Canonical，但 `subset` 尚未；可用集合／謂詞版本避開立即依賴 `mko-subset`。
 
 ## 高階審查結論與保留義務
