@@ -1,0 +1,58 @@
+{
+  "schema_version": "ocme-question-factory-batch-manifest-v0.1",
+  "batch_id": "batch-20260915-finite-set-operations",
+  "date": "2026-09-15",
+  "base_seed": 20260915,
+  "status": "candidate",
+  "generator": {
+    "role": "question_producer",
+    "model": "GPT-5.6 Terra",
+    "contract_version": "ocme-question-factory-v0.1"
+  },
+  "source_mko_ids": [
+    "mko-set-operations"
+  ],
+  "source_mko_snapshots": {
+    "mko-set-operations": {
+      "path": "public/data/mko/set-operations.json",
+      "commit_sha": "49a018ccd558a2f13990c66ad72a281a48f94e2d",
+      "sha256": "e857b27da045df1a33d58d7cd56b319d6c8ec23162a8cfc3c15f7c70d30f317b",
+      "provenance": "tracked_source_at_pinned_commit_not_claimed_merged_to_main"
+    }
+  },
+  "source_snapshot_algorithm": "sha256(UTF-8 source text with CRLF/CR normalized to LF)",
+  "counts": {
+    "total": 100,
+    "by_family": {
+      "qf-finite-set-union": 25,
+      "qf-finite-set-intersection": 25,
+      "qf-finite-set-difference": 25,
+      "qf-finite-relative-complement": 25
+    },
+    "by_source_mko": {
+      "mko-set-operations": 100
+    }
+  },
+  "generation": {
+    "attempted": 100,
+    "accepted": 100,
+    "rejected": 0,
+    "rejection_rate": 0
+  },
+  "artifacts": {
+    "brief": "../../briefs/2026-09-15.json",
+    "questions_jsonl": "questions.jsonl",
+    "questions_sha256": "f64b473d5731f99d54cfcb62ad382b4c148843223705bb9fd97a25b0a0b97c7e",
+    "byte_length": 122128,
+    "verifier": "../../verify-20260915.mjs"
+  },
+  "semantic_boundaries": [
+    "所有題目只操作明示列舉的有限集合；集合元素不重複，答案必須依外延相等比較並使用穩定排序，不得把列舉順序當成集合差異。",
+    "聯集包含至少屬於 A 或 B 的元素，重複元素只能出現一次；不得把元素數量直接相加而忽略重疊。",
+    "交集只包含同時屬於 A 與 B 的元素；空交集必須明確表示為空集合。",
+    "差集 A\\B 只保留屬於 A 且不屬於 B 的元素，具有方向性；不得把 A\\B 與 B\\A 混同。",
+    "補集只使用明示的有限全集 U，且 A 必須是 U 的子集合；答案是 U\\A。不得生成沒有指定全集的絕對補集題。",
+    "有限列舉重算不是集合運算普遍性質、交換律、分配律或德摩根律的形式證明。"
+  ],
+  "limitations_zh": "全部題目均為 candidate；有限列舉重算不構成集合恆等式、定理、形式 Evidence、人工審查或發布。"
+}

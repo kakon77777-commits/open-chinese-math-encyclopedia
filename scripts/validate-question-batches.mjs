@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -178,6 +179,19 @@ for (const batch of questionIndex.batches || []) {
       if (!sourcePath.startsWith(path.join(PUBLIC, 'data', 'mko') + path.sep)) fail(scope, `snapshot path escapes MKO data: ${snapshot.path}`)
       else if (typeof snapshot.sha256 !== 'string') fail(scope, `source MKO snapshot is missing LF-normalized text SHA-256: ${id}`)
       else if (sha256CanonicalText(await fs.readFile(sourcePath)) !== snapshot.sha256) fail(scope, `source MKO snapshot drift: ${id}`)
+      if (batch.source_commit_sha) {
+        if (snapshot.commit_sha !== batch.source_commit_sha) fail(scope, `source commit mismatch for ${id}`)
+        else {
+          try {
+            const resolvedCommit = execFileSync('git', ['rev-parse', '--verify', `${snapshot.commit_sha}^{commit}`], { cwd: ROOT, encoding: 'utf8' }).trim()
+            const committedBytes = execFileSync('git', ['show', `${snapshot.commit_sha}:${snapshot.path}`], { cwd: ROOT })
+            if (resolvedCommit !== snapshot.commit_sha) fail(scope, `source commit is not a full resolved SHA for ${id}`)
+            if (sha256CanonicalText(committedBytes) !== snapshot.sha256) fail(scope, `source commit blob drift: ${id}`)
+          } catch (error) {
+            fail(scope, `source commit blob unavailable for ${id}: ${error.message}`)
+          }
+        }
+      }
     }
     publishedCount += questions.length
   } catch (error) {

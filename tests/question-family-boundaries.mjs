@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { semanticTemplateForNewQuestionFamily, validateNewQuestionFamily } from '../lib/question-family-boundaries.js'
+import { promises as fs } from 'node:fs'
+import { semanticTemplateForNewQuestionFamily, sourceForNewQuestionFamily, validateNewQuestionFamily } from '../lib/question-family-boundaries.js'
 
 function candidate(family, parameters, value, explanation_zh, stem_zh) {
   parameters.semantic_template = semanticTemplateForNewQuestionFamily(family, parameters)
@@ -67,4 +68,65 @@ assert.deepEqual(validateNewQuestionFamily(counting).errors, [])
 const changedPadding = { ...counting.variant.parameters, stages: [500, 600] }
 assert.equal(semanticTemplateForNewQuestionFamily(counting.variant.family_id, changedPadding), counting.variant.parameters.semantic_template, 'irrelevant padding must not change semantic identity')
 
-console.log('Question family boundary tests passed: five new families enforce exact witnesses, semantic scope, source concepts, and mode-specific deduplication.')
+const union = candidate(
+  'qf-finite-set-union',
+  { A: [3, 1], B: [4, 3] },
+  '{1, 3, 4}',
+  '元素 3 同時出現但只保留一次；結果為 {1, 3, 4}。',
+  '令 A={1, 3}，B={3, 4}。求 A∪B（元素只列一次並依遞增排序）。',
+)
+assert.deepEqual(validateNewQuestionFamily(union).errors, [])
+assert.equal(sourceForNewQuestionFamily(union.variant.family_id), 'mko-set-operations')
+const permutedUnion = { ...union.variant.parameters, A: [1, 3], B: [3, 4] }
+assert.equal(semanticTemplateForNewQuestionFamily(union.variant.family_id, permutedUnion), union.variant.parameters.semantic_template)
+const duplicateUnionOutput = structuredClone(union)
+duplicateUnionOutput.answer.value = '{1, 3, 3, 4}'
+assert.match(validateNewQuestionFamily(duplicateUnionOutput).errors.join('\n'), /answer mismatch/)
+
+const intersection = candidate(
+  'qf-finite-set-intersection',
+  { A: [1], B: [2] },
+  '∅',
+  '沒有共同元素，因此交集明確為 ∅。',
+  '令 A={1}，B={2}。求 A∩B（元素只列一次並依遞增排序）。',
+)
+assert.deepEqual(validateNewQuestionFamily(intersection).errors, [])
+const falseNonemptyIntersection = structuredClone(intersection)
+falseNonemptyIntersection.answer.value = '{1}'
+assert.match(validateNewQuestionFamily(falseNonemptyIntersection).errors.join('\n'), /answer mismatch/)
+
+const difference = candidate(
+  'qf-finite-set-difference',
+  { A: [1, 2], B: [2, 3] },
+  '{1}',
+  '1 屬於 A 而不屬於 B；反向 B\\A 會是 {3}，不可混同。',
+  '令 A={1, 2}，B={2, 3}。求方向性差集 A\\B（元素只列一次並依遞增排序）。',
+)
+assert.deepEqual(validateNewQuestionFamily(difference).errors, [])
+const reversedDifference = structuredClone(difference)
+reversedDifference.answer.value = '{3}'
+assert.match(validateNewQuestionFamily(reversedDifference).errors.join('\n'), /answer mismatch/)
+
+const complement = candidate(
+  'qf-finite-relative-complement',
+  { U: [1, 2, 3], A: [1] },
+  '{2, 3}',
+  '全集 U 已明示且 A⊆U；2 在 U 中但不在 A 中，所以 U\\A={2, 3}。',
+  '令明示全集 U={1, 2, 3}，且 A={1}⊆U。求相對補集 U\\A（元素只列一次並依遞增排序）。',
+)
+assert.deepEqual(validateNewQuestionFamily(complement).errors, [])
+const outsideUniverse = structuredClone(complement)
+outsideUniverse.variant.parameters.A = [4]
+outsideUniverse.variant.parameters.semantic_template = semanticTemplateForNewQuestionFamily(outsideUniverse.variant.family_id, outsideUniverse.variant.parameters)
+assert.match(validateNewQuestionFamily(outsideUniverse).errors.join('\n'), /subset of U/)
+const missingUniverse = structuredClone(complement)
+delete missingUniverse.variant.parameters.U
+missingUniverse.variant.parameters.semantic_template = semanticTemplateForNewQuestionFamily(missingUniverse.variant.family_id, missingUniverse.variant.parameters)
+assert.match(validateNewQuestionFamily(missingUniverse).errors.join('\n'), /U must be an explicit finite integer set/)
+
+const setBatchManifest = JSON.parse(await fs.readFile('public/data/questions/batches/batch-20260915-finite-set-operations/manifest.json', 'utf8'))
+assert.match(setBatchManifest.source_mko_snapshots['mko-set-operations'].commit_sha, /^[a-f0-9]{40}$/)
+const ciWorkflow = await fs.readFile('.github/workflows/ci.yml', 'utf8')
+assert.match(ciWorkflow, /fetch-depth:\s*0/, 'commit-bound question provenance requires non-shallow CI checkout')
+
+console.log('Question family boundary tests passed: nine post-baseline families enforce exact witnesses, semantic scope, source concepts, and mode-specific deduplication.')
