@@ -93,6 +93,7 @@
         { "$ref": "#/$defs/groupNode" },
         { "$ref": "#/$defs/functionCallNode" },
         { "$ref": "#/$defs/membershipNode" },
+        { "$ref": "#/$defs/setSubsetNode" },
         { "$ref": "#/$defs/mappingNode" },
         { "$ref": "#/$defs/tendsToNode" }
       ]
@@ -160,6 +161,11 @@
     "membershipNode": {
       "type": "object", "required": ["type", "element", "set"],
       "properties": { "type": { "const": "membership" }, "element": { "$ref": "#/$defs/astNode" }, "set": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "setSubsetNode": {
+      "type": "object", "required": ["type", "subset", "superset"],
+      "properties": { "type": { "const": "set_subset" }, "subset": { "$ref": "#/$defs/astNode" }, "superset": { "$ref": "#/$defs/astNode" } },
       "additionalProperties": false
     },
     "mappingNode": {

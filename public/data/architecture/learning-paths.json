@@ -141,14 +141,16 @@
       "id":"path-set-language-to-topology-candidate",
       "title_zh":"集合語言到拓撲前置候選路徑",
       "audience":["upper_secondary","undergraduate"],
-      "goal_zh":"從集合、元素隸屬與基本集合運算建立閱讀拓撲空間定義所需的集合語言。",
+      "goal_zh":"從集合、元素隸屬、子集合與基本集合運算建立閱讀拓撲空間定義所需的集合語言。",
       "nodes":[
         {"object_id":"mko-set","position":1,"requirement":"required","rationale_zh":"先確立集合是由隸屬條件刻畫的對象。"},
         {"object_id":"mko-set-membership","position":2,"requirement":"required","rationale_zh":"再以元素是否屬於集合表達運算定義。"},
-        {"object_id":"mko-set-operations","position":3,"requirement":"required","rationale_zh":"最後建立聯集、交集、差集與相對補集。"}
+        {"object_id":"mko-subset","position":3,"requirement":"required","rationale_zh":"由逐元素隸屬建立集合之間的包含關係。"},
+        {"object_id":"mko-set-operations","position":3,"requirement":"required","rationale_zh":"平行建立聯集、交集、差集與相對補集。"}
       ],
       "edges":[
         {"from":"mko-set","to":"mko-set-membership","relation":"recommended_before"},
+        {"from":"mko-set-membership","to":"mko-subset","relation":"required_before"},
         {"from":"mko-set-membership","to":"mko-set-operations","relation":"required_before"}
       ],
       "review":{"status":"candidate","reviewer":"Codex local AI","version":1}

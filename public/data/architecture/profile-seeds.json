@@ -236,6 +236,23 @@
       "method_ids":["method-direct-proof"],
       "curriculum_alignment_ids":["curriculum-ocme-university-core:foundations.set-operations"],
       "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.74,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-15 research packet 建立的集合運算候選，待人工審查全集與補集邊界。"}
+    },
+    {
+      "object_id":"mko-subset",
+      "classification_assertions":[
+        ["domain","foundations_logic","primary",1.0,"子集合是由元素隸屬所定義的集合間基本關係。"],
+        ["domain","topology","supporting",0.8,"開集、閉集與拓撲結構需要集合包含語言。"],
+        ["domain","probability_statistics","supporting",0.5,"事件被建模為樣本空間的子集合。"],
+        ["object_kind","relation","primary",1.0,"此物件比較兩個集合的逐元素包含。"],
+        ["representation","set_theoretic","primary",1.0,"以 A⊆B 與逐元素蘊含表示。"],
+        ["method","method-direct-proof","primary",0.9,"包含證明從任意左側元素推得右側隸屬。"]
+      ],
+      "difficulty":{"audience":"upper_secondary","task":"conceptual_understanding","levels":[3,2,3,3,3,3,1,2,3,4,4,4]},
+      "path_ids":["path-set-language-to-topology-candidate"],
+      "order_roles":["logical_order","pedagogical_order","formalization_order","curriculum_order"],
+      "method_ids":["method-direct-proof"],
+      "curriculum_alignment_ids":["curriculum-ocme-university-core:foundations.subset"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.76,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-15 research packet 建立的子集合候選，待人工審查非嚴格包含、嚴格包含與相等邊界。"}
     }
   ]
 }

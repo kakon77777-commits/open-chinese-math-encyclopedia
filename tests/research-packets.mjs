@@ -12,6 +12,7 @@ const cases = [
   ['atlas-mathematical-induction', 'mko-mathematical-induction'],
   ['atlas-counting-principle', 'mko-counting-principle'],
   ['atlas-set-operations', 'mko-set-operations'],
+  ['atlas-subset', 'mko-subset'],
 ]
 
 for (const [atlasId, mkoId] of cases) {

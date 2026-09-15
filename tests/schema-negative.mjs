@@ -14,12 +14,14 @@ const membership = await loadObject('mko-set-membership')
 const mapping = await loadObject('mko-function-mapping')
 const tendsTo = await loadObject('mko-tends-to-relation')
 const setOperations = await loadObject('mko-set-operations')
+const subset = await loadObject('mko-subset')
 
 assert.equal(validateV03(structuredClone(theorem)), true)
 assert.equal(validateV04(structuredClone(membership)), true)
 assert.equal(validateV04(structuredClone(mapping)), true)
 assert.equal(validateV04(structuredClone(tendsTo)), true)
 assert.equal(validateV04(structuredClone(setOperations)), true)
+assert.equal(validateV04(structuredClone(subset)), true)
 
 const missingCompiler = structuredClone(theorem)
 delete missingCompiler.formula.compiler
@@ -40,6 +42,10 @@ assert.equal(validateV04(malformedMapping), false)
 const malformedSetOperation = structuredClone(setOperations)
 malformedSetOperation.formula.semantic_ast.right = { type: 'unknown' }
 assert.equal(validateV04(malformedSetOperation), false)
+
+const malformedSubset = structuredClone(subset)
+delete malformedSubset.formula.semantic_ast.superset
+assert.equal(validateV04(malformedSubset), false)
 
 const oldCompilerForV04 = structuredClone(tendsTo)
 oldCompilerForV04.formula.compiler.version = '0.3.0'
