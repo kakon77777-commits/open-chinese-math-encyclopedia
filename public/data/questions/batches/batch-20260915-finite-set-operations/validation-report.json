@@ -1,0 +1,74 @@
+{
+  "report_version": "ocme-question-factory-validation-v0.1",
+  "batch_id": "batch-20260915-finite-set-operations",
+  "checked_at": "2026-09-15",
+  "verifier": {
+    "file": "verify-20260915.mjs",
+    "schema_source": "D:\\Ai\\work together\\OCME\\schemas\\question-v0.1.schema.json",
+    "answer_method": "parsed extensional finite-set reconstruction with canonical input/output enforcement"
+  },
+  "outcome": "passed",
+  "counts": {
+    "total": 100,
+    "by_family": {
+      "qf-finite-set-union": 25,
+      "qf-finite-set-intersection": 25,
+      "qf-finite-set-difference": 25,
+      "qf-finite-relative-complement": 25
+    },
+    "by_source_mko": {
+      "mko-set-operations": 100
+    },
+    "unique_ids": 100,
+    "unique_seeds": 100,
+    "unique_stems": 100,
+    "unique_semantic_templates": 100,
+    "exact_stem_duplicate_rate": 0,
+    "semantic_template_duplicate_rate": 0
+  },
+  "generation": {
+    "attempted": 100,
+    "accepted": 100,
+    "rejected": 0,
+    "rejection_rate": 0
+  },
+  "semantic_template_checks": {
+    "recursive_sorted_key_canonical_json": true,
+    "independently_rebuilt_template_count": 100
+  },
+  "source_attribution_checks": {
+    "family_to_brief_mko_exact": true,
+    "actual_source_counts_match_brief": true
+  },
+  "negative_witnesses": {
+    "unordered_extensional_equality_accepted": true,
+    "duplicate_output_rejected": true,
+    "duplicate_input_rejected": true,
+    "input_order_permutation_same_template": true,
+    "difference_direction_reversed_rejected": true,
+    "complement_missing_U_or_not_subset_rejected": true,
+    "union_overlap_double_count_rejected": true,
+    "empty_intersection_nonempty_rejected": true
+  },
+  "source_mko_presence": {
+    "mko-set-operations": true
+  },
+  "source_mko_commit_blob_checks": {
+    "mko-set-operations": {
+      "commit_resolves_to_full_sha": true,
+      "tracked_path_blob_readable": true,
+      "commit_blob_lf_normalized_sha256_match": true,
+      "working_tree_lf_normalized_sha256_match": true,
+      "working_tree_matches_commit_blob": true
+    }
+  },
+  "source_mko_lf_normalized_text_sha256_match": {
+    "mko-set-operations": true
+  },
+  "batch_sha256": "f64b473d5731f99d54cfcb62ad382b4c148843223705bb9fd97a25b0a0b97c7e",
+  "byte_length": 122128,
+  "manifest_hash_match": true,
+  "explanation_witnesses_accurate": true,
+  "limitations_zh": "本報告只驗證明示有限集合的外延、格式與 witness；不構成集合定理、形式 Evidence、人工審查、整合、發布或部署核准。",
+  "errors": []
+}

@@ -20,6 +20,9 @@ try {
     'data/questions/batches/batch-20260914-domain-foundations/questions.jsonl',
     'data/questions/batches/batch-20260914-domain-foundations/manifest.json',
     'data/questions/batches/batch-20260914-domain-foundations/validation-report.json',
+    'data/questions/batches/batch-20260915-finite-set-operations/questions.jsonl',
+    'data/questions/batches/batch-20260915-finite-set-operations/manifest.json',
+    'data/questions/batches/batch-20260915-finite-set-operations/validation-report.json',
   ]
   for (const relative of required) {
     assert.equal((await fs.stat(path.join(output, relative))).isFile(), true, `missing site artifact: ${relative}`)
@@ -46,9 +49,9 @@ try {
   assert.equal(atlas.entries.length, 80)
   assert.equal(index.objects.length, 15)
   assert.equal(questions.daily_target, 100)
-  assert.equal(questions.published_question_count, 300)
-  assert.equal(questions.batches.length, 3)
-  assert.equal(questions.batches[0].id, 'batch-20260914-domain-foundations')
+  assert.equal(questions.published_question_count, 400)
+  assert.equal(questions.batches.length, 4)
+  assert.equal(questions.batches[0].id, 'batch-20260915-finite-set-operations')
   assert.equal(questions.batches[0].question_count, 100)
   assert.equal(manifest.files.some(file => file.path === 'data/index.json'), true)
   assert.equal(manifest.files.every(file => /^[a-f0-9]{64}$/.test(file.sha256)), true)

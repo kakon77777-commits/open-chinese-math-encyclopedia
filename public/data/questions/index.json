@@ -1,9 +1,22 @@
 {
   "schema_version": "ocme-question-index-v0.1",
   "daily_target": 100,
-  "published_question_count": 300,
-  "last_published_at": "2026-09-14",
+  "published_question_count": 400,
+  "last_published_at": "2026-09-15",
   "batches": [
+    {
+      "id": "batch-20260915-finite-set-operations",
+      "date": "2026-09-15",
+      "title_zh": "有限集合運算",
+      "question_count": 100,
+      "status": "candidate_validated",
+      "path": "/data/questions/batches/batch-20260915-finite-set-operations/questions.jsonl",
+      "manifest_path": "/data/questions/batches/batch-20260915-finite-set-operations/manifest.json",
+      "validation_report_path": "/data/questions/batches/batch-20260915-finite-set-operations/validation-report.json",
+      "sha256": "f64b473d5731f99d54cfcb62ad382b4c148843223705bb9fd97a25b0a0b97c7e",
+      "source_commit_sha": "49a018ccd558a2f13990c66ad72a281a48f94e2d",
+      "source_mko_ids": ["mko-set-operations"]
+    },
     {
       "id": "batch-20260914-domain-foundations",
       "date": "2026-09-14",
