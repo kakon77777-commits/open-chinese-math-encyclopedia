@@ -26,6 +26,22 @@ assert.equal(membership.semantic_ast.element.name, 'x')
 assert.equal(membership.semantic_ast.set.name, 'A')
 assert.match(membership.mathml, /∈/)
 
+const setUnion = compileFormula('A\\cup B')
+assert.equal(setUnion.semantic_ast.type, 'set_union')
+assert.match(setUnion.mathml, /∪/)
+
+const setIntersection = compileFormula('A\\cap B')
+assert.equal(setIntersection.semantic_ast.type, 'set_intersection')
+assert.match(setIntersection.mathml, /∩/)
+
+const setDifference = compileFormula('A\\setminus B')
+assert.equal(setDifference.semantic_ast.type, 'set_difference')
+assert.match(setDifference.mathml, /∖/)
+
+const setPrecedence = compileFormula('A\\cup B\\cap C')
+assert.equal(setPrecedence.semantic_ast.type, 'set_union')
+assert.equal(setPrecedence.semantic_ast.right.type, 'set_intersection')
+
 const mapping = compileFormula('f:X\\to Y')
 assert.equal(mapping.semantic_ast.type, 'mapping')
 assert.equal(mapping.semantic_ast.function.name, 'f')
@@ -43,6 +59,7 @@ assert.equal(legacyVersion.compiler.version, '0.3.0')
 
 assert.throws(() => compileFormula('\\unknown{x}'), FormulaSyntaxError)
 assert.throws(() => compileFormula('\\in A'), FormulaSyntaxError)
+assert.throws(() => compileFormula('\\cup A'), FormulaSyntaxError)
 assert.throws(() => compileFormula('f:X Y'), FormulaSyntaxError)
 assert.throws(() => compileFormula('a^'), FormulaSyntaxError)
 assert.throws(() => compileFormula(''), TypeError)

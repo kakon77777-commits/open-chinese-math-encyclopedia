@@ -83,6 +83,9 @@
         { "$ref": "#/$defs/equationNode" },
         { "$ref": "#/$defs/additionNode" },
         { "$ref": "#/$defs/subtractionNode" },
+        { "$ref": "#/$defs/setUnionNode" },
+        { "$ref": "#/$defs/setIntersectionNode" },
+        { "$ref": "#/$defs/setDifferenceNode" },
         { "$ref": "#/$defs/powerNode" },
         { "$ref": "#/$defs/subscriptNode" },
         { "$ref": "#/$defs/fractionNode" },
@@ -107,6 +110,21 @@
     "subtractionNode": {
       "type": "object", "required": ["type", "left", "right"],
       "properties": { "type": { "const": "subtraction" }, "left": { "$ref": "#/$defs/astNode" }, "right": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "setUnionNode": {
+      "type": "object", "required": ["type", "left", "right"],
+      "properties": { "type": { "const": "set_union" }, "left": { "$ref": "#/$defs/astNode" }, "right": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "setIntersectionNode": {
+      "type": "object", "required": ["type", "left", "right"],
+      "properties": { "type": { "const": "set_intersection" }, "left": { "$ref": "#/$defs/astNode" }, "right": { "$ref": "#/$defs/astNode" } },
+      "additionalProperties": false
+    },
+    "setDifferenceNode": {
+      "type": "object", "required": ["type", "left", "right"],
+      "properties": { "type": { "const": "set_difference" }, "left": { "$ref": "#/$defs/astNode" }, "right": { "$ref": "#/$defs/astNode" } },
       "additionalProperties": false
     },
     "powerNode": {

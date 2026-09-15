@@ -92,6 +92,16 @@
       "tags": ["集合", "基礎", "關係", "Lean", "Mathlib"]
     },
     {
+      "id": "mko-set-operations",
+      "title": "集合運算",
+      "type": "definition",
+      "version": "0.10.0",
+      "path": "/data/mko/set-operations.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["集合", "聯集", "交集", "差集", "補集", "AI候選", "待形式化"]
+    },
+    {
       "id": "mko-sample-space",
       "title": "樣本空間",
       "type": "concept",
