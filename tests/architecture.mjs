@@ -12,13 +12,13 @@ import {
 const bundle = await loadArchitectureBundle()
 const valid = await validateArchitectureBundle(bundle)
 assert.equal(valid.ok, true, valid.errors.join('\n'))
-assert.equal(valid.summary.object_count, 14)
-assert.equal(valid.summary.profile_count, 14)
+assert.equal(valid.summary.object_count, 15)
+assert.equal(valid.summary.profile_count, 15)
 assert.equal(valid.summary.domain_count, 20)
 assert.equal(valid.summary.method_count, 20)
-assert.equal(valid.summary.learning_path_count, 7)
+assert.equal(valid.summary.learning_path_count, 8)
 assert.equal(valid.summary.curriculum_framework_count, 4)
-assert.equal(valid.summary.curriculum_alignment_count, 18)
+assert.equal(valid.summary.curriculum_alignment_count, 19)
 assert.equal(valid.summary.difficulty_dimension_count, 12)
 
 const theorem = await loadArchitectureProfile('mko-euclid-pythagorean-theorem')
@@ -44,7 +44,7 @@ for (const objectId of ['mko-arithmetic-operations', 'mko-variable-expression', 
 }
 
 const summary = await getArchitectureSummary()
-assert.equal(summary.profile_count, 14)
+assert.equal(summary.profile_count, 15)
 assert.equal(summary.difficulty_dimensions.length, 12)
 
 const unknownDomain = structuredClone(bundle)
@@ -76,4 +76,10 @@ const malformedResult = await validateArchitectureBundle(malformedDifficulty)
 assert.equal(malformedResult.ok, false)
 assert.equal(malformedResult.errors.some(error => error.includes('formalization_burden') || error.includes('difficulty dimensions')), true)
 
-console.log('Architecture tests passed: 14 profiles, 20 domains, 20 methods, 7 paths, 12 dimensions and negative gates.')
+const setOperations = await loadArchitectureProfile('mko-set-operations')
+assert.equal(setOperations.review.status, 'candidate')
+assert.equal(setOperations.classification.assertions.some(item => item.axis === 'domain' && item.term_id === 'foundations_logic' && item.role === 'primary'), true)
+assert.equal(setOperations.classification.assertions.every(item => item.source.method === 'ai_candidate' && item.source.reviewed === false), true)
+assert.deepEqual(setOperations.learning.path_ids, ['path-set-language-to-topology-candidate'])
+
+console.log('Architecture tests passed: 15 profiles, 20 domains, 20 methods, 8 paths, 12 dimensions and negative gates.')

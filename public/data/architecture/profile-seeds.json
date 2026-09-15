@@ -220,6 +220,22 @@
       "method_ids":["method-construction"],
       "curriculum_alignment_ids":["curriculum-ocme-general:discrete.counting-principle"],
       "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.72,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-13 research packet 建立的組合計數候選，待人工審查不重疊與階段條件。"}
+    },
+    {
+      "object_id":"mko-set-operations",
+      "classification_assertions":[
+        ["domain","foundations_logic","primary",1.0,"集合運算是集合語言與後續結構定義的基礎操作。"],
+        ["domain","topology","supporting",0.7,"拓撲空間以開集族及其聯集、交集封閉條件建立。"],
+        ["object_kind","operation","primary",1.0,"此物件以隸屬條件定義聯集、交集、差集與相對補集。"],
+        ["representation","set_theoretic","primary",1.0,"四種運算以集合記號與元素隸屬條件表示。"],
+        ["method","method-direct-proof","primary",0.8,"基本集合等式可由逐元素隸屬的雙向推理建立。"]
+      ],
+      "difficulty":{"audience":"upper_secondary","task":"conceptual_understanding","levels":[3,2,3,3,3,3,2,2,3,4,4,4]},
+      "path_ids":["path-set-language-to-topology-candidate"],
+      "order_roles":["logical_order","pedagogical_order","formalization_order","curriculum_order"],
+      "method_ids":["method-direct-proof"],
+      "curriculum_alignment_ids":["curriculum-ocme-university-core:foundations.set-operations"],
+      "assessment":{"method":"ai_candidate","reviewed":false,"reviewer":"Codex local AI","confidence":0.74,"review_status":"candidate","review_version":1,"review_rationale_zh":"依 2026-09-15 research packet 建立的集合運算候選，待人工審查全集與補集邊界。"}
     }
   ]
 }

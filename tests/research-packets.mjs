@@ -11,6 +11,7 @@ const cases = [
   ['atlas-sample-space', 'mko-sample-space'],
   ['atlas-mathematical-induction', 'mko-mathematical-induction'],
   ['atlas-counting-principle', 'mko-counting-principle'],
+  ['atlas-set-operations', 'mko-set-operations'],
 ]
 
 for (const [atlasId, mkoId] of cases) {

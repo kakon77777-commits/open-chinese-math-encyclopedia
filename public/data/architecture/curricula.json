@@ -24,6 +24,7 @@
     {"object_id":"mko-variable-expression","framework_id":"curriculum-ocme-university-core","item_id":"algebra.variable-expression","relation":"introduced_in","status":"candidate","rationale_zh":"變數與代數式提供方程、多項式與函數表示的入口。"},
     {"object_id":"mko-sample-space","framework_id":"curriculum-ocme-university-core","item_id":"probability.sample-space","relation":"introduced_in","status":"candidate","rationale_zh":"樣本空間提供事件與機率模型的結果論域。"},
     {"object_id":"mko-mathematical-induction","framework_id":"curriculum-ocme-university-core","item_id":"methods.mathematical-induction","relation":"introduced_in","status":"candidate","rationale_zh":"數學歸納法是自然數族命題與離散證明的核心方法。"},
-    {"object_id":"mko-counting-principle","framework_id":"curriculum-ocme-general","item_id":"discrete.counting-principle","relation":"introduced_in","status":"candidate","rationale_zh":"基本計數原理提供有限選擇的加法與乘法結構。"}
+    {"object_id":"mko-counting-principle","framework_id":"curriculum-ocme-general","item_id":"discrete.counting-principle","relation":"introduced_in","status":"candidate","rationale_zh":"基本計數原理提供有限選擇的加法與乘法結構。"},
+    {"object_id":"mko-set-operations","framework_id":"curriculum-ocme-university-core","item_id":"foundations.set-operations","relation":"introduced_in","status":"candidate","rationale_zh":"集合運算提供拓撲、機率、分析與離散數學共同使用的集合構造語言。"}
   ]
 }

@@ -1,0 +1,68 @@
+{
+  "$schema": "../../../schemas/mko-v0.4.schema.json",
+  "schema_version": "mko-v0.4",
+  "id": "mko-set-operations",
+  "semantic_family_id": "sf-set-operations",
+  "type": "definition",
+  "version": "0.10.0",
+  "language": "zh-Hant",
+  "titles": { "zh-Hant": "集合運算", "en": "Set operations" },
+  "summary": { "zh-Hant": "聯集、交集、差集與相對補集以元素隸屬條件從既有集合構造新集合。" },
+  "statement": { "zh-Hant": "對同一論域中的集合 A、B，聯集收納至少屬於其中一集的元素，交集收納同時屬於兩集的元素，差集 A\\B 收納屬於 A 但不屬於 B 的元素；補集必須相對明示全集 U，以 U\\A 表示。" },
+  "formula": {
+    "tex": "A\\cup B",
+    "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mrow><mi>A</mi><mo>∪</mo><mi>B</mi></mrow></math>",
+    "semantic_ast": {
+      "type": "set_union",
+      "left": { "type": "symbol", "name": "A", "glyph": "A" },
+      "right": { "type": "symbol", "name": "B", "glyph": "B" }
+    },
+    "compiler": {
+      "id": "ocme-formula-core",
+      "version": "0.4.0",
+      "source_sha256": "e018d5051b1d22761fdfcc1f66fdd566562e30565b489c71876b10fc5794a449"
+    }
+  },
+  "assumptions": [
+    { "id": "a1", "zh-Hant": "A 與 B 是同一 ambient type 或同一明示論域 U 中的集合。" },
+    { "id": "a2", "zh-Hant": "使用補集時，全集 U 或 ambient type 已被明確指定。" }
+  ],
+  "symbols": [
+    { "token": "A", "role": "left_set", "role_zh": "左集合", "scope": "operation" },
+    { "token": "B", "role": "right_set", "role_zh": "右集合", "scope": "operation" },
+    { "token": "∪", "role": "set_union", "role_zh": "聯集運算", "scope": "representative_formula" }
+  ],
+  "dependencies": [
+    { "id": "mko-set-membership", "title_zh": "集合隸屬", "reason_zh": "四種集合運算都以元素是否隸屬輸入集合來定義輸出集合。" }
+  ],
+  "explanation": {
+    "paragraphs_zh": [
+      "A∪B 包含 A 或 B 中出現的所有元素，重複出現仍只算一個集合元素；A∩B 只保留兩集共有的元素。",
+      "A\\B 具有方向性，只保留屬於 A 且不屬於 B 的元素，因此通常不同於 B\\A。",
+      "補集不是脫離論域的絕對操作。在有限題目中必須先列出全集 U，A 的相對補集才是 U\\A；在 Lean 的 Set α 中，補集相對 ambient type α 的 univ 解讀。"
+    ],
+    "common_misconception_zh": "常見誤解是把聯集和交集互換、認為 A\\B 與 B\\A 相同，或在沒有指定全集時直接列出補集。"
+  },
+  "proofs": [],
+  "computational_companions": [],
+  "verification": {
+    "computational_status": "not_evaluated_no_computational_claim",
+    "warning_zh": "本條目是集合運算的 AI 候選；有限集合列舉只能檢查具體例子，不構成四種運算普遍性質的證明。",
+    "evidence_refs": [],
+    "producers": [
+      { "id": "lean-mathlib", "adapter": "formal_system", "config_path": "formal/lean/lakefile.toml", "status": "configured" }
+    ]
+  },
+  "formalization": {
+    "status": "not_formalized",
+    "target_systems": ["Lean 4", "Mathlib"],
+    "next_obligation_zh": "分別綁定 Set.mem_union、intersection membership、Set.mem_sdiff 與 Set.mem_compl_iff 的精確聲明、來源、版本與 axiom receipt。"
+  },
+  "provenance": {
+    "origin": "ocme_local_ai_materialization_candidate",
+    "note_zh": "依 research/atlas-set-operations.md 的來源與語義決定整理；內容為 OCME 原創改寫，待人工審查。",
+    "content_license": "CC-BY-SA-4.0",
+    "code_license": "MIT",
+    "created_at": "2026-09-15"
+  }
+}

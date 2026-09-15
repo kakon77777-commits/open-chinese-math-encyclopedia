@@ -28,4 +28,4 @@ console.log(
   `${result.summary.group_count} groups, ${result.summary.hard_prerequisite_edge_count} hard edges, ` +
   `${result.summary.canonical_dependency_mismatch_count} explicit legacy alignment exception(s).`,
 )
-console.log('Candidate-only boundary: the public v0.10 Atlas remains unchanged and no Phase B node is authorized.')
+console.log('Candidate-only boundary: the public Atlas schema/version and 80-node set remain v0.10; no Phase B node is authorized.')
