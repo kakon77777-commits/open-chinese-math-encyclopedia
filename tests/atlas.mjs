@@ -6,8 +6,8 @@ const atlas = await loadCoreAtlas()
 const result = await validateCoreAtlas()
 assert.equal(result.ok, true, result.errors.join('\n'))
 assert.equal(atlas.entries.length, 80)
-assert.equal(atlas.entries.filter(x => x.maturity === 'canonical_mko').length, 15)
-assert.equal((await getMaterializationQueue()).length, 65)
+assert.equal(atlas.entries.filter(x => x.maturity === 'canonical_mko').length, 16)
+assert.equal((await getMaterializationQueue()).length, 64)
 const representedPrimaryDomains = new Set(atlas.entries.map(entry => entry.primary_domain))
 const canonicalPrimaryDomains = new Set(atlas.entries.filter(entry => entry.maturity === 'canonical_mko').map(entry => entry.primary_domain))
 assert.deepEqual([...canonicalPrimaryDomains].sort(), [...representedPrimaryDomains].sort())
@@ -36,4 +36,4 @@ seed.canonical_mko_id = 'mko-does-not-exist'
 seed.materialization_priority = 'canonical'
 assert.equal((await validateCoreAtlas(fakeCanonical)).ok, false)
 
-console.log('Core atlas tests passed: 80 nodes, 15 canonical MKOs, 65 queued seeds and negative graph/maturity cases.')
+console.log('Core atlas tests passed: 80 nodes, 16 canonical MKOs, 64 queued seeds and negative graph/maturity cases.')

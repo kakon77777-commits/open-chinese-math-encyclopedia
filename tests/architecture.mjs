@@ -12,13 +12,13 @@ import {
 const bundle = await loadArchitectureBundle()
 const valid = await validateArchitectureBundle(bundle)
 assert.equal(valid.ok, true, valid.errors.join('\n'))
-assert.equal(valid.summary.object_count, 15)
-assert.equal(valid.summary.profile_count, 15)
+assert.equal(valid.summary.object_count, 16)
+assert.equal(valid.summary.profile_count, 16)
 assert.equal(valid.summary.domain_count, 20)
 assert.equal(valid.summary.method_count, 20)
 assert.equal(valid.summary.learning_path_count, 8)
 assert.equal(valid.summary.curriculum_framework_count, 4)
-assert.equal(valid.summary.curriculum_alignment_count, 19)
+assert.equal(valid.summary.curriculum_alignment_count, 20)
 assert.equal(valid.summary.difficulty_dimension_count, 12)
 
 const theorem = await loadArchitectureProfile('mko-euclid-pythagorean-theorem')
@@ -44,7 +44,7 @@ for (const objectId of ['mko-arithmetic-operations', 'mko-variable-expression', 
 }
 
 const summary = await getArchitectureSummary()
-assert.equal(summary.profile_count, 15)
+assert.equal(summary.profile_count, 16)
 assert.equal(summary.difficulty_dimensions.length, 12)
 
 const unknownDomain = structuredClone(bundle)
@@ -82,4 +82,11 @@ assert.equal(setOperations.classification.assertions.some(item => item.axis === 
 assert.equal(setOperations.classification.assertions.every(item => item.source.method === 'ai_candidate' && item.source.reviewed === false), true)
 assert.deepEqual(setOperations.learning.path_ids, ['path-set-language-to-topology-candidate'])
 
-console.log('Architecture tests passed: 15 profiles, 20 domains, 20 methods, 8 paths, 12 dimensions and negative gates.')
+const subset = await loadArchitectureProfile('mko-subset')
+assert.equal(subset.review.status, 'candidate')
+assert.equal(subset.classification.assertions.some(item => item.axis === 'domain' && item.term_id === 'foundations_logic' && item.role === 'primary'), true)
+assert.equal(subset.classification.assertions.some(item => item.axis === 'object_kind' && item.term_id === 'relation' && item.role === 'primary'), true)
+assert.equal(subset.classification.assertions.every(item => item.source.method === 'ai_candidate' && item.source.reviewed === false), true)
+assert.deepEqual(subset.learning.path_ids, ['path-set-language-to-topology-candidate'])
+
+console.log('Architecture tests passed: 16 profiles, 20 domains, 20 methods, 8 paths, 12 dimensions and negative gates.')

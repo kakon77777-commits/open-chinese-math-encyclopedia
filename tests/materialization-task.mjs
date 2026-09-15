@@ -9,13 +9,13 @@ import {
 const atlas = await loadCoreAtlas()
 const tasks = buildMaterializationTasks(atlas)
 
-assert.equal(tasks.length, 65)
+assert.equal(tasks.length, 64)
 assert.equal(tasks.every(task => task.schema_version === 'ocme-materialization-task-v0.1'), true)
 assert.equal(tasks.every(task => task.state === 'queued'), true)
 assert.equal(tasks.every(task => task.task_id === `task-${task.atlas_id}`), true)
-assert.equal(new Set(tasks.map(task => task.task_id)).size, 65)
-assert.equal(new Set(tasks.map(task => task.atlas_id)).size, 65)
-assert.equal(new Set(tasks.map(task => task.target_mko_id)).size, 65)
+assert.equal(new Set(tasks.map(task => task.task_id)).size, 64)
+assert.equal(new Set(tasks.map(task => task.atlas_id)).size, 64)
+assert.equal(new Set(tasks.map(task => task.target_mko_id)).size, 64)
 
 const seedIds = atlas.entries
   .filter(entry => entry.maturity === 'atlas_seed')
@@ -37,6 +37,6 @@ const serialized1 = serializeMaterializationTasks(tasks)
 const serialized2 = serializeMaterializationTasks(buildMaterializationTasks(atlas))
 assert.equal(serialized1, serialized2)
 assert.equal(serialized1.endsWith('\n'), true)
-assert.equal(serialized1.trimEnd().split('\n').length, 65)
+assert.equal(serialized1.trimEnd().split('\n').length, 64)
 
-console.log('Materialization task derivation tests passed: 65 deterministic Atlas-seed tasks.')
+console.log('Materialization task derivation tests passed: 64 deterministic Atlas-seed tasks.')

@@ -9,7 +9,7 @@ import {
 import { listEvidence } from '../lib/evidence-store.js'
 
 const index = await listObjects()
-assert.equal(index.length, 15)
+assert.equal(index.length, 16)
 assert.deepEqual(index.map(entry => entry.id), [
   'mko-right-triangle',
   'mko-euclidean-length',
@@ -20,6 +20,7 @@ assert.deepEqual(index.map(entry => entry.id), [
   'mko-set',
   'mko-proposition',
   'mko-set-membership',
+  'mko-subset',
   'mko-set-operations',
   'mko-sample-space',
   'mko-function-mapping',
@@ -104,6 +105,7 @@ for (const [objectId, astType] of [
   ['mko-mathematical-induction', 'function_call'],
   ['mko-counting-principle', 'function_call'],
   ['mko-set-operations', 'set_union'],
+  ['mko-subset', 'set_subset'],
 ]) {
   const candidate = await loadObject(objectId)
   assert.equal(candidate.version, '0.10.0')
@@ -119,12 +121,13 @@ assert.deepEqual((await loadObject('mko-sample-space')).dependencies.map(dep => 
 assert.deepEqual((await loadObject('mko-mathematical-induction')).dependencies.map(dep => dep.id), ['mko-natural-number', 'mko-proposition'])
 assert.deepEqual((await loadObject('mko-counting-principle')).dependencies.map(dep => dep.id), ['mko-natural-number', 'mko-arithmetic-operations'])
 assert.deepEqual((await loadObject('mko-set-operations')).dependencies.map(dep => dep.id), ['mko-set-membership'])
+assert.deepEqual((await loadObject('mko-subset')).dependencies.map(dep => dep.id), ['mko-set-membership'])
 
 const graph = await buildDependencyGraph()
 assert.equal(graph.schema_version, 'ocme-dependency-graph-v0.3')
-assert.equal(graph.nodes.length, 15)
-assert.equal(graph.edges.length, 12)
+assert.equal(graph.nodes.length, 16)
+assert.equal(graph.edges.length, 13)
 assert.equal(graph.edges.some(edge => edge.from === 'mko-set-membership' && edge.to === 'mko-function-mapping'), true)
 assert.equal(graph.edges.some(edge => edge.from === 'mko-function-mapping' && edge.to === 'mko-tends-to-relation'), true)
 assert.equal(graph.nodes.every(node => Array.isArray(node.evidence_refs)), true)
-console.log('Smoke tests passed: 15 MKO objects, 9 evidence objects, 5 formal proofs and 12 dependency edges.')
+console.log('Smoke tests passed: 16 MKO objects, 9 evidence objects, 5 formal proofs and 13 dependency edges.')

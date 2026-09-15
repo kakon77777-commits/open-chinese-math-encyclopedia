@@ -92,6 +92,16 @@
       "tags": ["集合", "基礎", "關係", "Lean", "Mathlib"]
     },
     {
+      "id": "mko-subset",
+      "title": "子集合",
+      "type": "definition",
+      "version": "0.10.0",
+      "path": "/data/mko/subset.json",
+      "evidence_ref_count": 0,
+      "producer_ids": ["lean-mathlib"],
+      "tags": ["集合", "子集合", "包含", "關係", "AI候選", "待形式化"]
+    },
+    {
       "id": "mko-set-operations",
       "title": "集合運算",
       "type": "definition",
